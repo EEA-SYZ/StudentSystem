@@ -1,5 +1,9 @@
 #include "transmitter.hpp"
 
+std::string trm::Sender::link;
+std::string trm::Sender::self;
+std::string trm::Sender::selfAsSender;
+
 int trm::GenerateID() noexcept
 {
     static int count = 0;
@@ -168,7 +172,7 @@ double trm::FuzzyMatch(const std::string &str1, const std::string &str2) noexcep
         }
     }
 
-    return LCS[len1][len2] / (double) std::min(len1, len2);
+    return LCS[len1][len2] / (double) (len1 + len2) / 2;
 }
 
 
@@ -223,6 +227,16 @@ trm::Account::Account(const std::string &content) noexcept
     };
 }
 
+std::string trm::Account::operator[](const std::string &tagKey) noexcept
+{
+    for (const auto &[k, v] : tags) {
+        if (k == tagKey) {
+            return v;
+        }
+    }
+    return "";
+}
+
 trm::CourseInformation::operator std::string() const noexcept
 {
     return Combine({
@@ -274,7 +288,6 @@ trm::Book::Book(const std::string &content) noexcept
         trm::Split(data[5]),
         ToNum<unsigned int>(data[6]),
         ToNum<unsigned int>(data[7]),
-        trm::Split(data[8])
     };
 }
 
@@ -288,16 +301,13 @@ trm::Book::operator std::string() const noexcept
         trm::Combine(bookAuthor),
         ToStr(bookTot),
         ToStr(bookBorrowed),
-        trm::Combine(borrowLog)
     });
 }
 
-trm::Date::operator std::string() noexcept
+trm::Date::operator std::string() const noexcept
 {
     return trm::Combine({
-        ToStr(year),
-        ToStr(month),
-        ToStr(day)
+        ToStr(currantTime)
     });
 }
 
@@ -315,17 +325,43 @@ trm::Date::Date(const std::string & content) noexcept
 {
     auto data = trm::Split(content);
     *this = {
-        ToNum<unsigned int>(data[0]),
-        ToNum<unsigned int>(data[1]),
-        ToNum<unsigned int>(data[2])
+        ToNum<time_t>(data[0])
     };
 }
 
-int trm::Date::operator-(const Date &other) noexcept {
-    bool isLearYear = year % 4 == 0 || (year % 100 != 0 && year % 400 == 0); 
-    int exceed = 0;
-    for (int i = 1; i < month; i++) {
+trm::BorrowLog::operator std::string() const noexcept
+{
+    return trm::Combine({
+        ToStr(borrowLast),
+        start,
+        borrower,
+        bookIsbn,
+    });
+}
 
+trm::BorrowLog::BorrowLog(const std::string &content) noexcept
+{
+    auto data = trm::Split(content);
+    *this = {
+        ToNum<int>(data[0]),
+        data[1],
+        data[2],
+        data[3],
+    };
+}
+
+trm::Sender::Sender(const Information &content) noexcept
+{
+    id = GenerateID();
+    if (!MakeRequest(link, {id, selfAsSender, content})) {
+        fail = true;
     }
-    return 0;
+}
+
+std::pair<bool, trm::Information> trm::Sender::Poll() noexcept
+{
+    if (fail) {
+        return {true, {rpl::FAIL}};
+    }
+    return PollReply(self, id);
 }

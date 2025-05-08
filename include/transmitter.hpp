@@ -200,20 +200,33 @@ namespace rqs{
     const std::string DELETE_COURSE = _AS_"DELETE_COURSE";
     /**
      * @brief 查看所有课程
-     * 
+     * @param code 学工号
+     * @return SUCC or FAIL
+     * @retval SUCC 课程信息列表 @see @struct CourseInformation
+     * @retval FAIL NO_COURSE_EXITS
      */
     const std::string CHECK_ALL_COURSE = _AS_"CHECK_ALL_COURSE";
     /**
-     * @brief sudo增加课程
-     * 
-     *  
+     * @brief 管理员增加课程
+     * @param code 学工号
+     * @param password 密码
+     * @param courseName 课程编号
+     * @param courseInformation 课程信息 @see @struct CourseInformation 
+     * @return SUCC or FAIL，或者 ACCESS_DENIED
+     * @retval FAIL COURSE_EXITS课程已存在等
+     * @note ACCESS REQUIRED ADM_ADD_COUR 
      */ 
-    const std::string MODIFY_ADD_COURSE = _AS_"MODIFY_ADD_COURSE";
+    const std::string ADM_ADD_COUR = _AS_"ADM_ADD_COUR";
     /**
-     * @brief sudo 删除课程
-     *  
+     * @brief 管理员删除课程
+     * @param code 学工号
+     * @param password 密码
+     * @param courseName 课程编号
+     * @return SUCC or FAIL，或者 ACCESS_DENIED
+     * @retval FAIL NO_MATCH_COURSE待删课程不存在等
+     * @note ACCESS REQUIRED ADM_DELETE_COURSE 
     */  
-    const std::string MODIFY_DELETE_COURSE = _AS_"MODIFY_DELETE_COURSE";
+    const std::string ADM_DELETE_COUR = _AS_"ADM_DELETE_COUR";
     
     #pragma endregion
 
@@ -324,14 +337,6 @@ namespace rqs{
      */
     const std::string REQUEST_RESERVE = _AS_"REQUEST_RESERVE";
     /**
-     * @brief 检查权限
-     * @param id 身份证号
-     * @param phone 手机号
-     * @return YES or NO
-     * @retval NO 身份证号和手机号不匹配；
-     */
-    const std::string CHECK_RESERVE_ACCESS = _AS_"CHECK_RESERVE_ACCESS";//感觉好像不是很常用，要不要封装起来待定
-    /**
      * @brief 取消预约
      * @param date 日期 @see @struct Date
      * @param time 时间
@@ -339,24 +344,35 @@ namespace rqs{
      * @param phone 手机号
      * @return SUCC or FAIL 或者 RESERVE_ACCESS_DENIED
      * @retval FAIL NO_MATCH_RESERVE 待取消的预约不存在
-     * @note ACCESS REQUIRED CANCEL_RESERVE
+     * @note ACCESS REQUIRED CANCEL_RESERVE 但不在Acess名称空间里
     */
     const std::string CANCEL_RESERVE = _AS_"CANCEL_RESERVE";
      /**
-     * @brief 查询预约状态
-     * 
+     * @brief 查询特定预约状态
+     * @param date 日期 @see @struct Date
+     * @param time 时间
+     * @param id 身份证号
+     * @param phone 手机号
+     * @return SUCC or FAIL 
+     * @retval FAIL NO_MATCH_RESERVE 待查询的预约不存在
+     * @retval SUCC 预约状态 
      */
     const std::string CHECK_RESERVE_STATUS = _AS_"CHECK_RESERVE_STATUS"; 
     /**
-     * @brief sudo修改预约状态
-     * 
-     */
-    const std::string MODIFY_RESERVE_STATUS = _AS_"MODIFY_RESERVE_STATUS";
+     * @brief 查询预约状态列表
+     * @param id
+     * @param phone
+     * @return SUCC or FAIL
+     * @retval FAIL NO_RESERVE_EXISTS 没有预约记录
+     * @retval SUCC 预约状态列表
+    */
+    const std::string CHECK_RESERVE_STATUS_LIST = _AS_"CHECK_RESERVE_STATUS_LIST"; 
+   //预约状态的改变还没想好具体怎么写,可能会包装一个结构体还是枚举什么的自动对应状态 
     /**
      * @brief sudo修改可预约名额
      * 
     */ 
-    const std::string MODIFY_RESERVE_NUMBER = _AS_"MODIFY_RESERVE_NUMBER";
+    const std::string ADM_RESERVE_NUMBER = _AS_"ADM_RESERVE_NUMBER";
     
 #pragma endregion
 
@@ -490,13 +506,17 @@ namespace rpl{
     const std::string NO_ACCOUNT = _AS_"NO_ACCOUNT";
     const std::string WRONG_PASSWORD = _AS_"WRONG_PASSWORD";
     const std::string NO_TAG = _AS_"NO_TAG";
+    
     const std::string NO_MATCH_COURSE = _AS_"NO_MATCH_COURSE";
     const std::string COURSE_EXISTS = _AS_"COURSE_EXISTS";
+    const std::string NO_COURSE_EXITS=_AS_"NO_COURSE_EXITS";
+
     const std::string NO_MATCH_RESERVE = _AS_"NO_MATCH_RESERVE";
     const std::string NO_LEFT_RESERVE = _AS_"NO_LEFT_RESERVE";
     const std::string NO_MATCH_TIME = _AS_"NO_MATCH_TIME";
-    const std::string RESERVE_EXISTS = _AS_"RESERVE_EXISTS";
     const std::string NO_DERESERVE_ACCESS= _AS_"NO_DERESERVE_ACCESS";
+    const std::string RESERVE_EXISTS = _AS_"RESERVE_EXISTS";
+    const std::string NO_RESERVE_EXISTS = _AS_"NO_RESERVE_EXISTS";
 }
 namespace Access{
     const std::string ADM = _AS_"ADM";                   // 拥有这个权限表示拥有所有权限
@@ -519,8 +539,9 @@ namespace Access{
 
     const std::string ADD_COURSE = _AS_"ADD_COURSE";
     const std::string DELETE_COURSE = _AS_"DELETE_COURSE";
+    const std::string ADM_ADD_COUR = _AS_"ADM_ADD_COUR";
+    const std::string ADM_DELETE_COUR = _AS_"ADM_DELETE_COUR";
 
-    const std::string CANCEL_RESERVE= _AS_"CANCEL_RESERVE";
     const std::string BOOK_MANAGE = _AS_"BOOK_MANAGE";
 }
 struct Account{

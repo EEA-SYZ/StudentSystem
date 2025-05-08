@@ -22,6 +22,8 @@ public:
     trm::Information CancelReserve(const trm::Information& infomation) noexcept;
     trm::Information CheckTime(const trm::Information& infomation) noexcept;
     trm::Information CheckReserveTime(const trm::Information& infomation) noexcept;
+    trm::Information CheckReserveStatus(const trm::Information& infomation) noexcept;
+    trm::Information CheckReserveList(const trm::Information& infomation) noexcept;
 protected:
     ReserveSystem() noexcept;
     ~ReserveSystem() noexcept;

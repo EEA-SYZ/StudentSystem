@@ -25,7 +25,7 @@
                 "-I", "${workspaceFolder}\\include",
 
                 "-std=gnu++20",
-                "-D", "EEA"
+                "-D", "COURSE"
             ],
             "options": {
                 "cwd": "${fileDirname}"

@@ -49,6 +49,10 @@ trm::Information ssys::CourseSystem::AddCourse(const trm::Information& informati
       {
         return {trm::rpl::FAIL,trm::rpl::COURSE_EXISTS};
       }
+    if(!courseBase[information[3]].Exists())
+      {
+        return {trm::rpl::FAIL,trm::rpl::NO_MATCH_COURSE};
+      }
     //待实现，按年级和课程属性来增加（模拟真实选课）
     return {trm::rpl::SUCC};
 }

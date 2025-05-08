@@ -178,13 +178,23 @@ int main()
     }
 #endif
 #ifdef COURSE
-    f(ssys.AddCourse({trm::rqs::ADD_COURSE,"adm","123","10086"}));
-    f(ssys.AddCourse({trm::rqs::ADD_COURSE,"adm","123","10086"}));
-    f(ssys.SearchCourseInformation({trm::rqs::SEARCH_COURSE_INFORMATION,"adm","10086"}));
-    f(ssys.SearchCourseInformation({trm::rqs::SEARCH_COURSE_INFORMATION,"adm","12345"}));
-    f(ssys.DeleteCourse({trm::rqs::DELETE_COURSE,"adm","123","10086"}));
-    f(ssys.DeleteCourse({trm::rqs::DELETE_COURSE,"adm","123","10086"}));
-    f(ssys.SearchCourseInformation({trm::rqs::SEARCH_COURSE_INFORMATION,"adm","10086"}));
+    f(ssys.AddCourse({trm::rqs::ADD_COURSE,"adm","123","10086"})); // succ
+    f(ssys.AddCourse({trm::rqs::ADD_COURSE,"adm","123","10086"})); // fail course exist
+    f(ssys.AddCourse({trm::rqs::ADD_COURSE,"adm","123","12345"})); // fail no match course
+    f(ssys.AdmAddCour({trm::rqs::ADM_ADD_COUR,"adm","123","10086"})); // fail course exist
+    f(ssys.SearchCourseInformation({trm::rqs::SEARCH_COURSE_INFORMATION,"adm","10086"})); // yes courseinformation
+    f(ssys.SearchCourseInformation({trm::rqs::SEARCH_COURSE_INFORMATION,"adm","12345"})); // no no match course
+    f(ssys.AdmAddCour({trm::rqs::ADM_ADD_COUR,"adm","123","12345",trm::CourseInformation{"离散数学","李四","A1 203",{"1","2","3","4","5"}}})); // succ
+    f(ssys.SearchCourseInformation({trm::rqs::SEARCH_COURSE_INFORMATION,"adm","12345"})); // succ 
+    f(ssys.CheckAllCourse({trm::rqs::CHECK_ALL_COURSE,"adm"})); // succ course list
+    f(ssys.DeleteCourse({trm::rqs::DELETE_COURSE,"adm","123","10086"})); // succ
+    f(ssys.DeleteCourse({trm::rqs::DELETE_COURSE,"adm","123","10086"})); // no match course
+    f(ssys.SearchCourseInformation({trm::rqs::SEARCH_COURSE_INFORMATION,"adm","10086"})); // no match course
+    f(ssys.AdmDeleteCour({trm::rqs::ADM_DELETE_COUR,"adm","123","12345"})); // succ
+    f(ssys.AdmDeleteCour({trm::rqs::ADM_DELETE_COUR,"adm","123","12345"})); // no match course
+    f(ssys.AddCourse({trm::rqs::ADD_COURSE,"adm","123","12345"})); // no match course
+    f(ssys.DeleteCourse({trm::rqs::DELETE_COURSE,"adm","123","12345"})); // succ
+    f(ssys.CheckAllCourse({trm::rqs::CHECK_ALL_COURSE,"adm"})); // no course exist
 #endif
     while (1) ;
 

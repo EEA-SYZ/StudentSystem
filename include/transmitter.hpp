@@ -183,7 +183,8 @@ namespace rqs{
      * @param password 密码
      * @param courseName 课程编号
      * @return SUCC or FAIL，或者 ACCESS_DENIED
-     * @retval FAIL COURSE_EXITS课程已存在等
+     * @retval FAIL COURSE_EXITS 课程已存在等
+     * @retval FAIL NO_MATCH_COURSE 待增加课程不存在等
      * @note ACCESS REQUIRED ADD_COURSE
      */
     const std::string ADD_COURSE = _AS_"ADD_COURSE";
@@ -588,7 +589,7 @@ struct Book{
     Book(const std::string &constent) noexcept;
     operator std::string() const noexcept;
 };
-
+//courseName, teacher, location, weeks（vector<string>）
 struct CourseInformation {
     std::string courseName;
     std::string teacher;    // 上课老师

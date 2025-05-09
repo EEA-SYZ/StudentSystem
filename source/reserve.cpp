@@ -2,7 +2,8 @@
 
 ssys::ReserveSystem::ReserveSystem() noexcept
 {
-    
+    reserveBase["10"]["1"]["20"].Push(std::make_pair("15:00", "10")); // 预约信息
+    //TODO
 }
 
 ssys::ReserveSystem::~ReserveSystem() noexcept
@@ -97,7 +98,7 @@ trm::Information ssys::ReserveSystem::CheckReserveStatus(const trm::Information&
     }
 }
 
-trm::Information ssys::ReserveSystem::CheckReserveList(const trm::Information& information) noexcept
+trm::Information ssys::ReserveSystem::CheckReserveStatusList(const trm::Information& information) noexcept
 {
     assert(information[0] == trm::rqs::CHECK_RESERVE_STATUS_LIST); // Procession not matched.
     if(!clientBase[trm::IdAndPhone{information[1],information[2]}].Exists())//检查是否存在预约信息
@@ -115,3 +116,55 @@ trm::Information ssys::ReserveSystem::CheckReserveList(const trm::Information& i
     }
     return reserveList;
 }
+
+trm::Information ssys::ReserveSystem::AdmModifyReserveNumber(const trm::Information& information) noexcept
+{
+    assert(information[0] == trm::rqs::ADM_MODIFY_RESERVE_NUMBER); // Procession not matched.
+    auto accessReply = SSys::Get().CheckAccess({trm::rqs::CHECK_ACCESS, information[1], information[2], trm::Access::ADM_SET_RESERVE_NUMBER});
+    if (accessReply[0] != trm::rpl::YES) {
+        return {trm::rpl::ACCESS_DENIED};
+    }
+    auto dateInformation=trm::ReserveDate(information[3]);
+    auto reserveList=reserveBase[dateInformation.month][dateInformation.week][dateInformation.date][information[4]];//找到指定日期的预约信息
+    if(!reserveList.Exists())//检查是否存在预约信息
+    {
+        return {trm::rpl::FAIL,trm::rpl::NO_MATCH_TIME};
+    }
+    reserveList=information[5];//将可预约数量加入数据库
+    return {trm::rpl::SUCC};
+}
+
+trm::Information ssys::ReserveSystem::AdmAddReserveTime(const trm::Information& information) noexcept
+{
+    assert(information[0] == trm::rqs::ADM_ADD_RESERVE_TIME); // Procession not matched.
+    auto accessReply = SSys::Get().CheckAccess({trm::rqs::CHECK_ACCESS, information[1], information[2], trm::Access::ADM_ADD_RESERVE_TIME});
+    if (accessReply[0] != trm::rpl::YES) {
+        return {trm::rpl::ACCESS_DENIED};
+    }
+    auto dateInformation=trm::ReserveDate(information[3]);
+    auto reserveList=reserveBase[dateInformation.month][dateInformation.week][dateInformation.date];//找到指定日期的预约信息
+    if(reserveList[information[4]].Exists())//检查是否存在预约信息
+    {
+        return {trm::rpl::FAIL,trm::rpl::TIME_HAVE_SET};
+    }
+    reserveList[information[4]]=information[5];//将可预约时间加入数据库
+    return {trm::rpl::SUCC};
+}
+
+trm::Information ssys::ReserveSystem::AdmDeleteReserveTime(const trm::Information& information) noexcept
+{
+    assert(information[0] == trm::rqs::ADM_DELETE_RESERVE_TIME); // Procession not matched.
+    auto accessReply = SSys::Get().CheckAccess({trm::rqs::CHECK_ACCESS, information[1], information[2], trm::Access::ADM_DELETE_RESERVE_TIME});
+    if (accessReply[0] != trm::rpl::YES) {
+        return {trm::rpl::ACCESS_DENIED};
+    }
+    auto dateInformation=trm::ReserveDate(information[3]);
+    auto reserveList=reserveBase[dateInformation.month][dateInformation.week][dateInformation.date];//找到指定日期的预约信息
+    if(!reserveList[information[4]].Exists())//检查是否存在预约信息
+    {
+        return {trm::rpl::FAIL,trm::rpl::NO_MATCH_TIME};
+    }
+    reserveList[information[4]].Clear();//清除预约时间
+    return {trm::rpl::SUCC};
+}
+

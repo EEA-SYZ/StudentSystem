@@ -271,6 +271,33 @@ int main()
     f(ssys.DeleteCourse({trm::rqs::DELETE_COURSE,"adm","123","12345"})); // succ
     f(ssys.CheckAllCourse({trm::rqs::CHECK_ALL_COURSE,"adm"})); // no course exist
 #endif
+#ifdef RESERVE
+    f(ssys.RequestReserve({trm::rqs::REQUEST_RESERVE,"10::1::20","15:00","123","321"})); // succ
+    f(ssys.RequestReserve({trm::rqs::REQUEST_RESERVE,"10::1::20","15:30","123","321"})); // fail no match reserve
+    f(ssys.RequestReserve({trm::rqs::REQUEST_RESERVE,"10::1::20","15:00","123","321"})); // fail already reserved
+    f(ssys.AdmAddReserveTime({trm::rqs::ADM_ADD_RESERVE_TIME,"adm","123","10::1::20","15:30","10"}));//succ 
+    f(ssys.AdmAddReserveTime({trm::rqs::ADM_ADD_RESERVE_TIME,"adm","123","10::1::20","15:00","10"}));//fail time have set
+    f(ssys.RequestReserve({trm::rqs::REQUEST_RESERVE,"10::1::20","15:30","123","321"})); // succ
+    f(ssys.CheckTime({trm::rqs::CHECK_TIME,"10::1::20"}));
+    f(ssys.CheckReserveTime({trm::rqs::CHECK_RESERVE_TIME,"10::1::20","15:30"})); //yes
+    f(ssys.CheckReserveTime({trm::rqs::CHECK_RESERVE_TIME,"10::1::20","16:00"})); //no no match time
+    f(ssys.CheckReserveStatus({trm::rqs::CHECK_RESERVE_STATUS,"10::1::20","15:30","123","321"})); //yes
+    f(ssys.CheckReserveStatus({trm::rqs::CHECK_RESERVE_STATUS,"10::1::20","16:00","123","321"})); //no no match reserve
+    f(ssys.CheckReserveStatusList({trm::rqs::CHECK_RESERVE_STATUS_LIST,"123","321"})); //yes
+    f(ssys.CancelReserve({trm::rqs::CANCEL_RESERVE,"10::1::20","15:30","123","321"})); //yes
+    f(ssys.CancelReserve({trm::rqs::CANCEL_RESERVE,"10::1::20","15:00","123","321"})); //yes
+    f(ssys.CancelReserve({trm::rqs::CANCEL_RESERVE,"10::1::20","16:30","123","321"})); //no no match reserve
+    f(ssys.CancelReserve({trm::rqs::CANCEL_RESERVE,"10::1::20","15:30","123","123"})); //reserve accesee denied
+    f(ssys.CheckReserveStatusList({trm::rqs::CHECK_RESERVE_STATUS_LIST,"123","321"})); //no no reserve exist
+    f(ssys.CheckReserveStatus({trm::rqs::CHECK_RESERVE_STATUS,"10::1::20","15:30","123","321"})); //no no match reserve
+    f(ssys.AdmDeleteReserveTime({trm::rqs::ADM_DELETE_RESERVE_TIME,"adm","123","10::1::20","15:30"})); //succ
+    f(ssys.AdmDeleteReserveTime({trm::rqs::ADM_DELETE_RESERVE_TIME,"adm","123","10::1::20","15:00"})); //no no match reserve
+    f(ssys.AdmAddReserveTime({trm::rqs::ADM_ADD_RESERVE_TIME,"adm","123","10::1::20","15:30","10"}));//succ 
+    f(ssys.AdmModifyReserveNumber({trm::rqs::ADM_MODIFY_RESERVE_NUMBER,"adm","123","10::1::20","15:30","0"})); //succ
+    f(ssys.AdmModifyReserveNumber({trm::rqs::ADM_MODIFY_RESERVE_NUMBER,"adm","123","10::1::20","16:30","0"})); //fail no match reserve
+    f(ssys.CheckReserveTime({trm::rqs::CHECK_RESERVE_TIME,"10::1::20","15:30"})); // no no left reserve 
+    f(ssys.CheckReserveStatusList({trm::rqs::CHECK_RESERVE_STATUS_LIST,"123","321"})); //yes
+#endif
     while (1) ;
 
     return 0;

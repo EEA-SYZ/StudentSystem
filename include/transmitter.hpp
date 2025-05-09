@@ -394,12 +394,44 @@ namespace rqs{
      * @retval SUCC 预约状态列表
     */
     const std::string CHECK_RESERVE_STATUS_LIST = _AS_"CHECK_RESERVE_STATUS_LIST"; 
+
    //预约状态的改变还没想好具体怎么写,可能会包装一个结构体还是枚举什么的自动对应状态 
+
     /**
-     * @brief sudo修改可预约名额
-     * 
-    */ 
-    const std::string ADM_RESERVE_NUMBER = _AS_"ADM_RESERVE_NUMBER";
+     * @brief 管理员增加可预约时间
+     * @param code 学工号
+     * @param password 密码
+     * @param date 日期 @see @struct Date
+     * @param time 时间
+     * @param number 可预约数量
+     * @return SUCC or FAIL 或者 ACCESS_DENIED
+     * @retval FAIL TIME_HAVE_SET 预约时间已设置
+     * @note ACCESS REQUIRED ADM_ADD_RESERVE_TIME 
+    */
+    const std::string ADM_ADD_RESERVE_TIME = _AS_"ADM_ADD_RESERVE_TIME"; 
+    /**
+     * @brief 管理员删除可预约时间
+     * @param code 学工号
+     * @param password 密码
+     * @param date 日期 @see @struct Date
+     * @param time 时间
+     * @return SUCC or FAIL 或者 ACCESS_DENIED
+     * @retval FAIL NO_MATCH_TIME 待删除的预约时间不存在
+     * @note ACCESS REQUIRED ADM_DELETE_RESERVE_TIME 
+    */
+    const std::string ADM_DELETE_RESERVE_TIME = _AS_"ADM_DELETE_RESERVE_TIME";
+    /**
+     * @brief 管理员修改可预约数量 
+     * @param code 学工号
+     * @param password 密码
+     * @param date 日期 @see @struct Date
+     * @param time 时间
+     * @param number 可预约数量
+     * @return SUCC or FAIL 或者 ACCESS_DENIED
+     * @retval FAIL NO_MATCH_TIME 待修改的数量对应的预约时间不存在
+     * @note ACCESS REQUIRED ADM_MODIFTY_RESERVE_NUMBER
+     */
+    const std::string ADM_MODIFY_RESERVE_NUMBER = _AS_"ADM_MODIFY_RESERVE_NUMBER";
     
 #pragma endregion
 
@@ -544,7 +576,8 @@ namespace rpl{
     const std::string NO_DERESERVE_ACCESS= _AS_"NO_DERESERVE_ACCESS";
     const std::string RESERVE_EXISTS = _AS_"RESERVE_EXISTS";
     const std::string NO_RESERVE_EXISTS = _AS_"NO_RESERVE_EXISTS";
-    
+    const std::string TIME_HAVE_SET = _AS_"TIME_HAVE_SET";
+
     const std::string NO_BOOK = _AS_"NO_BOOK";
     const std::string EXIST_BOOK = _AS_"EXIST_BOOK";
     const std::string NO_SPARE_BOOK = _AS_"NO_SPARE_BOOK";
@@ -573,8 +606,11 @@ namespace Access{
     const std::string ADM_ADD_COUR = _AS_"ADM_ADD_COUR";
     const std::string ADM_DELETE_COUR = _AS_"ADM_DELETE_COUR";
 
-    const std::string CANCEL_RESERVE= _AS_"CANCEL_RESERVE";
-    
+    const std::string ADM_SET_RESERVE_NUMBER = _AS_"ADM_SET_RESERVE_NUMBER"; // 管理员设置可预约数量
+    const std::string ADM_ADD_RESERVE_TIME = _AS_"ADM_SET_RESERVE_TIME"; // 管理员增加可预约时间
+    const std::string ADM_DELETE_RESERVE_TIME = _AS_"ADM_DELETE_RESERVE_TIME"; // 管理员删除可预约时间
+    const std::string ADM_MODIFTY_RESERVE_NUMBER = _AS_"ADM_MODIFTY_RESERVE_NUMBER"; // 管理员修改可预约数量
+
     const std::string BOOK_MANAGE = _AS_"BOOK_MANAGE";
     const std::string BORROW_BOOK = _AS_"BORROW_BOOK";
 }

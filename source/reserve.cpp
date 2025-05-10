@@ -60,8 +60,8 @@ trm::Information ssys::ReserveSystem::RequestReserve(const trm::Information& inf
     }
     auto dateInformation=trm::ReserveDate(information[1]);
     auto number=reserveBase[dateInformation.month][dateInformation.week][dateInformation.date][information[2]];
-    number=ToStr(ToNum(number)-1);//将可预约数量减一
-    clientBase[trm::IdAndPhone{information[3],information[4]}][information[1]].Push(std::make_pair(information[2], "HAVE RESERVED, READY TO USE")); // 将预约信息加入数据库
+    number=ToStr(ToNum(number)-1);//将可预约数量减一//未 test
+    clientBase[trm::IdAndPhone{information[3],information[4]}][information[1]].Push(information[2], "HAVE RESERVED, READY TO USE"); // 将预约信息加入数据库
     return {trm::rpl::SUCC};
     //也许会返回成功预约的时间和状态，就类似自动跳转
 }
@@ -147,7 +147,7 @@ trm::Information ssys::ReserveSystem::AdmAddReserveTime(const trm::Information& 
     {
         return {trm::rpl::FAIL,trm::rpl::TIME_HAVE_SET};
     }
-    reserveList.Push(std::make_pair(information[4],information[5]));//将可预约时间加入数据库
+    reserveList.Push(information[4],information[5]);//将可预约时间加入数据库
     return {trm::rpl::SUCC};
 }
 

@@ -13,6 +13,8 @@
     screen.draw(____)
 #endif
 
+#define _ASSETS_ "../assets/"
+
 /**
  * @brief 实现 UI 界面的布局和绘制。
  * @namespace ui
@@ -136,6 +138,7 @@ class Control;
      * @class 输入框类
      * @brief 允许用户输入文本的组件。
      * @note minSize 属性由组件决定。
+     * @note exceedLimitCallback 回调函数 event 参数失效。
      */
     class InputBox;
     /**
@@ -171,6 +174,12 @@ class Control;
      * @note countCallback、finishCallback 回调函数 event 参数失效。
      */
     class LoadingRingWithText;
+    /**
+     * @class 图片框类
+     * @brief 显示图片的组件。
+     * @note minSize 属性由用户决定。
+     */
+    class PictureBox;
 
 /*******************************************
  * @brief 所有组件类的接口声明。*
@@ -316,10 +325,11 @@ public:
     /**
      * @fn 更新组件内容尺寸位置
      * @param resetMinSize 是否重置最小尺寸
-     * @note 调用时机：组件最终尺寸和位置变化时，调用 Update(false)；组件内容尺寸和位置变化时，调用 Update(true)。
+     * @note 调用时机：组件最终尺寸和位置变化时，调用 UpdateInQueue(false)；组件内容尺寸和位置变化时，调用 UpdateInQueue(true)。
      * @note 实现功能：确定内容的最终尺寸和位置。
      */
     virtual void Update  (bool resetMinSize = true)                                 noexcept = 0;
+    void UpdateInQueue(bool argv = true) noexcept { inQueue = true; resetMinSize = resetMinSize || argv; } // 用以提升性能
     /**
      * @fn 处理事件
      * @param event 事件
@@ -334,6 +344,12 @@ public:
      * @note 实现功能：绘制组件。
      */
     virtual void Draw    (sf::RenderWindow &screen)                                 noexcept = 0;
+    /**
+     * @fn 帧刷新组件
+     * @note 调用时机：每一帧刷新时。
+     * @note 实现功能：刷新组件。
+     */
+    virtual void Tick    ()                                                         noexcept;
 
     /*****************************************
      * @brief 父容器更新内容的尺寸和位置的接口。*
@@ -356,7 +372,13 @@ public:
      * @param absolute 最终绝对位置
      */
     void SetGlobalPosition(Direction directrion, int absolute)          noexcept;
+    /**
+     * @note 外部调用时，要先调用 screen.Tick()。
+     */
     unsigned int GetGlobalSize    (Direction direction) const noexcept { return globalSize[direction]; }
+    /**
+     * @note 外部调用时，要先调用 screen.Tick()。
+     */
     int          GetGlobalPosition(Direction direction) const noexcept { return globalPosition[direction]; }
 
     ValueType    GetSizeValueType(Direction direction) const noexcept { return sizeValueType[direction]; }
@@ -371,6 +393,8 @@ public:
     virtual ~Control() noexcept;
 protected:
     sf::String name = "default";
+    bool inQueue = false;
+    bool resetMinSize = false; // 用以提升性能
 
     /******************************
      * @brief 封装的工具方法和属性。*
@@ -512,6 +536,7 @@ public:
     void Update (bool resetMinSize = true)                                 noexcept = 0;
     void Process(const sf::Event &event, const sf::RenderWindow &screen)   noexcept;
     void Draw   (sf::RenderWindow &screen)                                 noexcept;
+    void Tick   ()                                                         noexcept;
 
     ~Container() noexcept;
 protected:
@@ -640,7 +665,7 @@ class Center : public Container{
 public:
     Center() noexcept
     {
-        Update(true);
+        UpdateInQueue(true);
     }
     
     /*******************************************
@@ -751,7 +776,7 @@ class HorizontalBox : public LinearBox{
 public:
     HorizontalBox() noexcept
     {
-        Update(true);
+        UpdateInQueue(true);
     }
     
     /*******************************************
@@ -800,7 +825,7 @@ class VerticalBox : public LinearBox{
 public:
     VerticalBox() noexcept
     {
-        Update(true);
+        UpdateInQueue(true);
     }
     
     /*******************************************
@@ -849,7 +874,7 @@ class Margin : public Container{
 public:
     Margin() noexcept
     {
-        Update(true);
+        UpdateInQueue(true);
     }
     
     /*******************************************
@@ -911,7 +936,7 @@ public:
     Label() noexcept
     {
         SetFont(FONT_FILE_PATH);
-        Update(true);
+        UpdateInQueue(true);
     }
     const sf::String &GetContent() const noexcept { return content; }
     bool              GetError()   const noexcept { return error; }
@@ -1041,7 +1066,7 @@ public:
         label->SetPreset(Preset::WRAP_AT_CENTER);
         layer.Add(rect);
         layer.Add(label);
-        Update(true);
+        UpdateInQueue(true);
     }
     void SetEnterCallback(Callback function)     noexcept { enterCallback = function; }
     void SetLeaveCallback(Callback function)     noexcept { leaveCallback = function; }
@@ -1079,6 +1104,7 @@ public:
     void Update (bool resetMinSize = true) noexcept;
     void Process(const sf::Event &event, const sf::RenderWindow &screen)   noexcept;
     void Draw   (sf::RenderWindow &screen) noexcept;
+    void Tick() noexcept;
 protected:
     /******************************
      * @brief 封装的工具方法和属性。*
@@ -1130,11 +1156,12 @@ public:
         layer.Add(button);
         layer.Add(rect);
         layer.Add(label);
-        Update(true);
+        UpdateInQueue(true);
     }
     void SetBeginCallback(Callback function)  noexcept { beginCallback = function; }
     void SetInputCallback(Callback function)  noexcept { inputCallback = function; }
     void SetEndCallback(Callback function)    noexcept { endCallback = function; }
+    void SetExceedLimitCallback(Callback function) noexcept { exceedLimitCallback = function; }
     const sf::String &GetText() const noexcept { return textCopy; }
     bool GetInputting()         const noexcept { return inputting; }
     bool GetError()             const noexcept { return button->GetError() || label->GetError(); }
@@ -1183,6 +1210,7 @@ public:
     void Update (bool resetMinSize = true)                                 noexcept;
     void Process(const sf::Event &event, const sf::RenderWindow &screen)   noexcept;
     void Draw   (sf::RenderWindow &screen)                                 noexcept;
+    void Tick   ()                                                         noexcept;
 protected:
     /******************************
      * @brief 封装的工具方法和属性。*
@@ -1228,6 +1256,7 @@ protected:
     Callback beginCallback = DO_NOTHING;
     Callback inputCallback = DO_NOTHING;
     Callback endCallback = DO_NOTHING;
+    Callback exceedLimitCallback = DO_NOTHING;
 };
 
 class ScrollBar : public Control{
@@ -1287,6 +1316,7 @@ public:
     void Update (bool resetMinSize = true)                                 noexcept = 0;
     void Process(const sf::Event &event, const sf::RenderWindow &screen)   noexcept;
     void Draw   (sf::RenderWindow &screen)                                 noexcept;
+    void Tick   ()                                                         noexcept;
 protected:
     Callback enteredCallback = DO_NOTHING;
     Callback leaveCallback = DO_NOTHING;
@@ -1320,7 +1350,7 @@ protected:
      * @brief 样式属性。*
      * ******************
      */
-    float sensitivity = 1;
+    float sensitivity = 2;
     bool reserve = false;
     sf::Color backColor = sf::Color::White;
     sf::Color frontColor = sf::Color::Blue;
@@ -1332,7 +1362,7 @@ class HorizontalScrollBar : public ScrollBar{
 public:
     HorizontalScrollBar() noexcept
     {
-        Update();
+        UpdateInQueue();
     }
     
     /*******************************************
@@ -1382,7 +1412,7 @@ class VerticalScrollBar : public ScrollBar{
 public:
     VerticalScrollBar() noexcept
     {
-        Update();
+        UpdateInQueue();
     }
 
     /*******************************************
@@ -1468,6 +1498,7 @@ public:
     void Update(bool resetMinSize = true)                                 noexcept = 0;
     void Process(const sf::Event &event, const sf::RenderWindow &screen)  noexcept;
     void Draw(sf::RenderWindow &screen)                                   noexcept;
+    void Tick()                                                           noexcept;
 protected:
     /******************************
      * @brief 封装的工具方法和属性。*
@@ -1522,7 +1553,7 @@ public:
         layer.Add(box);
         layer.Add(bar);
 
-        Update(true);
+        UpdateInQueue(true);
     }
     
     /***************************
@@ -1586,7 +1617,7 @@ public:
         layer.Add(box);
         layer.Add(bar);
 
-        Update(true);
+        UpdateInQueue(true);
     }
 
     /*******************************************
@@ -1644,7 +1675,7 @@ public:
         circle.setFillColor(sf::Color::Transparent);
         circle.setOutlineColor(sf::Color::White);
         circle.setOutlineThickness(10);
-        Update();
+        UpdateInQueue();
     }
     void SetCallback(Callback function) noexcept { callback = function; }
 
@@ -1721,7 +1752,7 @@ public:
         ring->SetCallback([this](const sf::String &name, const sf::Event &event){
             this->Count();
         });
-        Update(true);
+        UpdateInQueue(true);
     }
     void SetCountCallback(Callback function) noexcept { countCallback = function; }
     void SetFinishedCallback(Callback function) noexcept { finishedCallback = function; }
@@ -1760,6 +1791,7 @@ public:
     void Update(bool resetMinSize = true) noexcept;
     void Process(const sf::Event &event, const sf::RenderWindow &screen) noexcept;
     void Draw(sf::RenderWindow &screen) noexcept;
+    void Tick() noexcept;
 protected:
     Callback countCallback = DO_NOTHING;
     Callback finishedCallback = DO_NOTHING;
@@ -1793,6 +1825,69 @@ protected:
     int count = 5;
 };
 
+class PictureBox : public Control {
+public:
+    PictureBox() noexcept
+    {
+        ;
+    }
+    bool GetError() const noexcept { return error; }
+
+    /*******************************************
+     * @brief 约定的常量和数据类型以及外工具方法。*
+     * *****************************************
+     */
+
+    /***************************
+     * @brief 内容属性控制接口。*
+     * *************************
+     */
+    void SetPicture(const sf::String &filename) noexcept;
+    void SetScale(unsigned int percentage) noexcept;
+    void KeepWidth(unsigned int absolute) noexcept;
+    void KeepHeight(unsigned int absolute) noexcept;
+
+    /***************************
+     * @brief 样式属性控制接口。*
+     * *************************
+     */
+
+    /************************************
+     * @brief 实现了的和待实现的抽象方法。*
+     * **********************************
+     */
+    void Update(bool resetMinSize = true) noexcept;
+    void Process(const sf::Event &event, const sf::RenderWindow &screen) noexcept {}
+    void Draw(sf::RenderWindow &screen) noexcept;
+protected:
+    /******************************
+     * @brief 封装的工具方法和属性。*
+     * ****************************
+     */
+
+    /******************************
+     * @brief 封装的数据类型和常量。*
+     * ****************************
+     */
+
+    /********************
+     * @brief 内容属性。*
+     * ******************
+     */
+    sf::Texture texture;
+    struct{
+        unsigned int width = 200;
+        unsigned int height = 100;
+    }originSize;
+    sf::Sprite sprite;
+
+    /********************
+     * @brief 样式属性。*
+     * ******************
+     */
+    bool error = false;
+};
+    
 class Example : public Control {
 public:
     Example() noexcept
@@ -1822,6 +1917,7 @@ public:
     void Update(bool resetMinSize = true) noexcept = 0;
     void Process(const sf::Event &event, const sf::RenderWindow &screen) noexcept = 0;
     void Draw(sf::RenderWindow &screen) noexcept = 0;
+    void Tick() noexcept = 0; // 组合时需重写
 protected:
     /******************************
      * @brief 封装的工具方法和属性。*

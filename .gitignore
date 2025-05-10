@@ -1,8 +1,11 @@
 .vscode/
 /test/data/
 /test/test.exe
+/test/out.txt
 /server/data/
 /server/server.exe
 /client/client.exe
 /*.bat
 /*.py
+debug/*.bat
+debug/debug.exe

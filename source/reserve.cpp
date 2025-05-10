@@ -143,7 +143,7 @@ trm::Information ssys::ReserveSystem::AdmAddReserveTime(const trm::Information& 
     }
     auto dateInformation=trm::ReserveDate(information[3]);
     auto reserveList=reserveBase[dateInformation.month][dateInformation.week][dateInformation.date];//找到指定日期的预约信息
-    if(reserveList[information[4]].Exists())//检查是否存在预约信息
+    if(reserveList[information[4]].Exists())
     {
         return {trm::rpl::FAIL,trm::rpl::TIME_HAVE_SET};
     }

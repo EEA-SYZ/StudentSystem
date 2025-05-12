@@ -362,11 +362,15 @@ void ui::Screen::Tick() noexcept
                 Process(event, screen);
             }
         }
-        screen.clear();
         Container::Tick();
-        Draw(screen);
-        screen.display();
     }
+}
+
+void ui::Screen::Draw() noexcept
+{
+    screen.clear();
+    Container::Draw(screen);
+    screen.display();
 }
 
 void ui::Flat::Update(bool resetMinSize) noexcept
@@ -692,6 +696,26 @@ void ui::Button::SetFontColor(const sf::Color &color) noexcept
     label->SetFontColor(color);
 }
 
+void ui::Button::SetFlatOutlineColor(const sf::Color &color) noexcept
+{
+    flatOutlineColor = color;
+}
+
+void ui::Button::SetFocusOutlineColor(const sf::Color &color) noexcept
+{
+    focusOutlineColor = color;
+}
+
+void ui::Button::SetFlatBackColor(const sf::Color &color) noexcept
+{
+    flatBackColor = color;
+}
+
+void ui::Button::SetFocusBackColor(const sf::Color &color) noexcept
+{
+    focusBackColor = color;
+}
+
 void ui::Button::SetFont(const sf::String &fontFile) noexcept
 {
     label->SetFont(fontFile);
@@ -782,14 +806,14 @@ void ui::Button::Process(const sf::Event &event, const sf::RenderWindow &screen)
 void ui::Button::Draw(sf::RenderWindow &screen) noexcept
 {
     if (entered) {
-        rect->SetOutlineColor(sf::Color::Blue);
+        rect->SetOutlineColor(focusOutlineColor);
     } else {
-        rect->SetOutlineColor(sf::Color::White);
+        rect->SetOutlineColor(flatOutlineColor);
     }
     if (pressed) {
-        rect->SetFillColor(sf::Color::Blue);
+        rect->SetFillColor(focusBackColor);
     } else {
-        rect->SetFillColor(sf::Color::Transparent);
+        rect->SetFillColor(flatBackColor);
     }
     layer.Draw(screen);
 
@@ -947,7 +971,7 @@ void ui::InputBox::Process(const sf::Event &event, const sf::RenderWindow &scree
 {
     button->Process(event, screen);
 
-    auto input = [this](sf::Uint32 c){
+    auto input = [&](sf::Uint32 c){
         switch (c) {
             case '\b':
                 SetText(textCopy.substring(0, textCopy.getSize() - 1));

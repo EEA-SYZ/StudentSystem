@@ -118,7 +118,6 @@ void lab::EnterCourse::Load(ui::Screen *screen) noexcept
         }
     }
 }
-
 void lab::EnterCourse::Logic(ui::Screen *screen) noexcept
 {
     backbtn->SetClickCallback(UI_CALLBACK{

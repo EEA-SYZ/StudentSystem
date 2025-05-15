@@ -8,8 +8,7 @@ void lab::EnterCourse::Load(ui::Screen *screen) noexcept
    mar->SetMargin(80, 80, 200, 200);}
    auto box = new ui::VerticalBox();
    box->Add(mar);
-   auto box = new ui::VerticalBox();
-   screen->Add(box);
+  
 }
 void lab::EnterCourse::Logic(ui::Screen *screen) noexcept
 {

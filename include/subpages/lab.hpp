@@ -46,7 +46,21 @@ protected:
     void Logic(ui::Screen *screen) noexcept;
     void Ready(ui::Screen *screen) noexcept;
 };
-
-}
-    
+class ReserveTimeList : public PageBase {
+private:
+    ;
+protected:
+    void Load(ui::Screen *screen) noexcept;
+    void Logic(ui::Screen *screen) noexcept;
+    void Ready(ui::Screen *screen) noexcept;
+};
+class ReserveStatusList : public PageBase {
+private:
+    ;
+protected:
+    void Load(ui::Screen *screen) noexcept;
+    void Logic(ui::Screen *screen) noexcept;
+    void Ready(ui::Screen *screen) noexcept;
+};
+}  
 #endif

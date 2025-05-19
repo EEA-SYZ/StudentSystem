@@ -502,3 +502,13 @@ void lab::Reserve::Load(ui::Screen *screen) noexcept
         }
     }
 }
+
+void lab::Reserve::Logic(ui::Screen *screen) noexcept
+{
+    ;
+}
+
+void lab::Reserve::Ready(ui::Screen *screen) noexcept
+{
+    ;
+}

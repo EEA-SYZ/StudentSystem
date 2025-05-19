@@ -32,7 +32,7 @@ void lab::EnterCourse::Load(ui::Screen *screen) noexcept
                     auto btn1 = new ui::Button;{
                         btn1->AddTo(hbtnbox1);
                         btn1->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                        btn1->SetCaption(L"查询");
+                        btn1->SetCaption("查询");
                     }
                 }
                 
@@ -45,7 +45,7 @@ void lab::EnterCourse::Load(ui::Screen *screen) noexcept
                 auto btn2 = new ui::Button;{
                     btn2->AddTo(hbtnbox2);
                     btn2->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                    btn2->SetCaption(L"查看课程");
+                    btn2->SetCaption("查看课程");
                 }
             }
         }
@@ -79,7 +79,7 @@ void lab::CourseList::Load(ui::Screen *screen) noexcept
                 backbtn->AddTo(flat);
                 backbtn->SetHPreset(ui::Control::Preset::WRAP_AT_END);
                 backbtn->SetVPreset(ui::Control::Preset::WRAP_AT_FRONT);
-                backbtn->SetCaption(L"返回");
+                backbtn->SetCaption("返回");
             }
             auto vsbox = new ui::VerticalScrollingBox;{
                 vsbox->AddTo(flat);
@@ -96,27 +96,27 @@ void lab::CourseList::Load(ui::Screen *screen) noexcept
                     auto label10 = new ui::Label;{
                         label10->AddTo(hbox1);
                         label10->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                        label10->SetContent(L"课程编号");
+                        label10->SetContent("课程编号");
                     }
                     auto label11 = new ui::Label;{
                         label11->AddTo(hbox1);
                         label11->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                        label11->SetContent(L"课程名称");
+                        label11->SetContent("课程名称");
                     }
                     auto label12 = new ui::Label;{
                         label12->AddTo(hbox1);
                         label12->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                        label12->SetContent(L"教师");
+                        label12->SetContent("教师");
                     }
                     auto label13 = new ui::Label;{
                         label13->AddTo(hbox1);
                         label13->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                        label13->SetContent(L"教室");
+                        label13->SetContent("教室");
                     }
                     auto label14 = new ui::Label;{
                         label14->AddTo(hbox1);
                         label14->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                        label14->SetContent(L"上课周数");
+                        label14->SetContent("上课周数");
                     }
                 }
                 auto hbox2 = new ui::HorizontalBox;{
@@ -129,27 +129,27 @@ void lab::CourseList::Load(ui::Screen *screen) noexcept
                     auto label20 = new ui::Label;{
                         label20->AddTo(hbox2);
                         label20->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                        label20->SetContent(L"课程编号");
+                        label20->SetContent("课程编号");
                     }
                     auto label21 = new ui::Label;{
                         label21->AddTo(hbox2);
                         label21->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                        label21->SetContent(L"课程名称");
+                        label21->SetContent("课程名称");
                     }
                     auto label22 = new ui::Label;{
                         label22->AddTo(hbox2);
                         label22->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                        label22->SetContent(L"教师");
+                        label22->SetContent("教师");
                     }
                     auto label23 = new ui::Label;{
                         label23->AddTo(hbox2);
                         label23->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                        label23->SetContent(L"教室");
+                        label23->SetContent("教室");
                     }
                     auto label24 = new ui::Label;{
                         label24->AddTo(hbox2);
                         label24->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                        label24->SetContent(L"上课周数");
+                        label24->SetContent("上课周数");
                     }
                 }
             } 
@@ -183,7 +183,7 @@ void lab::AddAndDelete::Load(ui::Screen *screen) noexcept
             backbtn->AddTo(flat);
             backbtn->SetHPreset(ui::Control::Preset::WRAP_AT_END);
             backbtn->SetVPreset(ui::Control::Preset::WRAP_AT_FRONT);
-            backbtn->SetCaption(L"返回");
+            backbtn->SetCaption("返回");
         }
         auto hbox = new ui::HorizontalBox; {
             hbox->AddTo(flat);
@@ -196,12 +196,12 @@ void lab::AddAndDelete::Load(ui::Screen *screen) noexcept
             auto label = new ui::Label; {
                 label->AddTo(hbox);
                 label->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                label->SetContent(L"课程编号");
+                label->SetContent("课程编号");
             }
             auto label2 = new ui::Label; {
                 label2->AddTo(hbox);
                 label2->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                label2->SetContent(L"课程名称");
+                label2->SetContent("课程名称");
             }
             auto vbox = new ui::VerticalBox; {
                 vbox->AddTo(hbox);
@@ -214,12 +214,12 @@ void lab::AddAndDelete::Load(ui::Screen *screen) noexcept
                 auto btn1 = new ui::Button; {
                     btn1->AddTo(vbox);
                     btn1->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                    btn1->SetCaption(L"添加");
+                    btn1->SetCaption("添加");
                 }
                 auto btn2 = new ui::Button; {
                     btn2->AddTo(vbox);
                     btn2->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                    btn2->SetCaption(L"删除");
+                    btn2->SetCaption("删除");
                 }
             }
         }
@@ -268,7 +268,7 @@ void lab::EnterReserve::Load(ui::Screen *screen) noexcept
                     auto btn1 = new ui::Button;{
                         btn1->AddTo(hbtnbox1);
                         btn1->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                        btn1->SetCaption(L"查询");
+                        btn1->SetCaption("查询");
                     }
                 }
                 
@@ -281,7 +281,7 @@ void lab::EnterReserve::Load(ui::Screen *screen) noexcept
                 auto btn2 = new ui::Button;{
                     btn2->AddTo(hbtnbox2);
                     btn2->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                    btn2->SetCaption(L"查看全部预约");//可能要稍作修改
+                    btn2->SetCaption("查看全部预约");//可能要稍作修改
                 }
             }
         }
@@ -321,17 +321,17 @@ void lab::ReserveTimeList::Load(ui::Screen *screen) noexcept
                 auto label10 = new ui::Label;{
                     label10->AddTo(hbox1);
                     label10->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                    label10->SetContent(L"日期");
+                    label10->SetContent("日期");
                 }
                 auto label11 = new ui::Label;{
                     label11->AddTo(hbox1);
                     label11->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                    label11->SetContent(L"时间");
+                    label11->SetContent("时间");
                 }
                 auto label12 = new ui::Label;{
                     label12->AddTo(hbox1);
                     label12->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                    label12->SetContent(L"剩余名额");
+                    label12->SetContent("剩余名额");
                 }
                 
             }
@@ -345,17 +345,17 @@ void lab::ReserveTimeList::Load(ui::Screen *screen) noexcept
                 auto label20 = new ui::Label;{
                     label20->AddTo(hbox2);
                     label20->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                    label20->SetContent(L"日期");
+                    label20->SetContent("日期");
                 }
                 auto label21 = new ui::Label;{
                     label21->AddTo(hbox2);
                     label21->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                    label21->SetContent(L"时间");
+                    label21->SetContent("时间");
                 }
                 auto label22 = new ui::Label;{
                     label22->AddTo(hbox2);
                     label22->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                    label22->SetContent(L"剩余名额");
+                    label22->SetContent("剩余名额");
                 }
             }
         } 
@@ -395,17 +395,17 @@ void lab::ReserveStatusList::Load(ui::Screen *screen) noexcept
                 auto label10 = new ui::Label;{
                     label10->AddTo(hbox1);
                     label10->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                    label10->SetContent(L"日期");
+                    label10->SetContent("日期");
                 }
                 auto label11 = new ui::Label;{
                     label11->AddTo(hbox1);
                     label11->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                    label11->SetContent(L"时间");
+                    label11->SetContent("时间");
                 }
                 auto label12 = new ui::Label;{
                     label12->AddTo(hbox1);
                     label12->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                    label12->SetContent(L"预约状态");
+                    label12->SetContent("预约状态");
                 }
                 
             }
@@ -419,17 +419,17 @@ void lab::ReserveStatusList::Load(ui::Screen *screen) noexcept
                 auto label20 = new ui::Label;{
                     label20->AddTo(hbox2);
                     label20->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                    label20->SetContent(L"日期");
+                    label20->SetContent("日期");
                 }
                 auto label21 = new ui::Label;{
                     label21->AddTo(hbox2);
                     label21->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                    label21->SetContent(L"时间");
+                    label21->SetContent("时间");
                 }
                 auto label22 = new ui::Label;{
                     label22->AddTo(hbox2);
                     label22->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                    label22->SetContent(L"预约状态");
+                    label22->SetContent("预约状态");
                 }
             }
         } 

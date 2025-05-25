@@ -74,11 +74,28 @@ protected:
 
 class EnterReserve : public PageBase {
 private:
-    ui::InputBox *input = nullptr;
+    ui::InputBox *input2 = nullptr;
+    ui::InputBox *idinput = nullptr;
+    ui::InputBox *phinput = nullptr;
     ui::Button *backbtn = nullptr;
     ui::Button *btn1 = nullptr;
     ui::Label *glabel = nullptr;
     ui::Button *btn2 = nullptr;
+    ui::Button *addbtn = nullptr;
+    ui::Button *debtn = nullptr;
+    ui::Label *label0 = nullptr;
+    ui::Label *label1 = nullptr;
+    ui::Label *label2 = nullptr;
+    ui::Button *tempbackbtn = nullptr;
+    ui::HorizontalBox *hbox = nullptr;
+    ui::HorizontalBox *hinput3 = nullptr;
+    ui::HorizontalBox *hinput4 = nullptr;
+    ui::Button *btn3 = nullptr;
+    ui::Button *cfbtn =nullptr;
+    ui::InputBox *dinput1=nullptr;
+    ui::InputBox *dinput2=nullptr;
+    ui::InputBox *dinput3=nullptr;
+    ui::VerticalBox *vinput=nullptr;
 protected:
     void Load(ui::Screen *screen) noexcept;
     void Logic(ui::Screen *screen) noexcept;
@@ -111,5 +128,6 @@ protected:
     void Logic(ui::Screen *screen) noexcept;
     void Ready(ui::Screen *screen) noexcept;
 };
-}  
+} // namespace lab
+
 #endif // __LAB_HPP__

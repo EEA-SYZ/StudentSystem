@@ -41,6 +41,7 @@ void vio::EnterLibrary::Load(ui::Screen *screen) noexcept
                 searchBox = new ui::InputBox;{
                     searchBox->AddTo(topBox);
                     searchBox->SetSize(1000, 30);
+                    searchBox->SetText("在此输入搜索内容");
                 }
                 searchOptBtn = new ui::Button;{
                     searchOptBtn->AddTo(topBox);
@@ -179,8 +180,12 @@ void vio::EnterLibrary::Logic(ui::Screen *screen) noexcept
         userInput = searchBox->GetText();
     });
 
+    searchBox->SetEndCallback(UI_CALLBACK{
+        if (searchBox->GetText() == "") searchBox->SetText("在此输入搜索内容");
+    });
+
     searchBox->SetBeginCallback(UI_CALLBACK{
-        searchBox->SetText("在此输入搜索内容");
+        if (searchBox->GetText() == "在此输入搜索内容") searchBox->SetText("");
     });
 
     returnBtn->SetClickCallback(UI_CALLBACK{
@@ -213,7 +218,6 @@ void vio::EnterLibrary::Logic(ui::Screen *screen) noexcept
 
     searchBtn->SetClickCallback(UI_CALLBACK{
         searchBtn->Disable();
-        
         if (userInput == "") {
             hinderBox->FreeAll();
             hinderBox->Add(new ui::Label("注意，查询内容不能为空，请检查输入"));
@@ -234,22 +238,27 @@ void vio::EnterLibrary::Logic(ui::Screen *screen) noexcept
             else if (optStr == "出版日期") searchType = trm::rqs::BOOK_PUBLISHDATE;
             else if (optStr == "馆藏位置") searchType = trm::rqs::BOOK_STROEPOSTION;
             else if (optStr == "分类") searchType = trm::rqs::BOOK_CATAGORY;
+            else searchType = trm::rqs::BOOK_NAME;
 
             Listen(new trm::Sender({trm::rqs::SEARCH_BOOK, userInput, ToStr(searchType), "false", "false"}), SD_CALLBACK{
                 hinderBox->FreeAll();
-                if (reply[0] == trm::rpl::FAIL) {
-                    hinderBox->Add(new ui::Label("查询失败，请检查输入"));
-                }
-                else if (reply[0] == trm::rpl::TIME_OUT) {
-                    hinderBox->Add(new ui::Label("服务端未响应，请稍后再试"));
-                }
-                else {
-                    books.clear();
-                    for (auto bookInfo : reply) {
-                        books.push_back(trm::Book(bookInfo));
+                if (!reply.empty()) {
+                    if (reply[0] == trm::rpl::FAIL) {
+                        hinderBox->Add(new ui::Label("查询失败，请检查输入"));
+                        return;
                     }
-                    SwitchTo(new BookList);
+                    else if (reply[0] == trm::rpl::TIME_OUT) {
+                        hinderBox->Add(new ui::Label("服务端未响应，请稍后再试"));
+                        return;
+                    }
+                    else {
+                        books.clear();
+                        for (auto bookInfo : reply) {
+                            books.push_back(trm::Book(bookInfo));
+                        }
+                    }
                 }
+                SwitchTo(new BookList);
             });
         }
         searchBtn->Enable();

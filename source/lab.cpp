@@ -819,7 +819,7 @@ void lab::EnterReserve::Logic(ui::Screen *screen) noexcept
     });
     btn3->SetClickCallback(UI_CALLBACK{
         btn3->Enable(false);
-       Listen(new trm::Sender({trm::rqs::CHECK_RESERVE_STATUS,rdate,rtime,idandphone}),SD_CALLBACK{
+       Listen(new trm::Sender({trm::rqs::CHECK_RESERVE_STATUS,rdate,rtime,idandphone.id,idandphone.phone}),SD_CALLBACK{
             btn2->Hide();
             addbtn->Hide();
             debtn->Hide();
@@ -835,7 +835,7 @@ void lab::EnterReserve::Logic(ui::Screen *screen) noexcept
                 label0->SetContent("日期:"+reply[1]);
                 label1->SetContent("时间:"+reply[2]);
                 label2->SetContent("预约状态:"+reply[3]);
-                label2->SetFontSize(20);
+                label2->SetFontSize(20);//这几个label要清空,能清空吗
             }
         });
     });

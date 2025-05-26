@@ -865,6 +865,9 @@ void lab::EnterReserve::Logic(ui::Screen *screen) noexcept
     cfbtn2->SetClickCallback(UI_CALLBACK{
         SwitchTo(new lab::ReserveStatusList);
     });
+    cfbtn2->SetClickCallback(UI_CALLBACK{
+        SwitchTo(new lab::ReserveStatusList);
+    });
 }
 
 void lab::EnterReserve::Ready(ui::Screen *screen) noexcept

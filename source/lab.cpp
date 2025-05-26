@@ -798,11 +798,17 @@ void lab::EnterReserve::Logic(ui::Screen *screen) noexcept
            {
                glabel->SetContent("该时间不在可预约的时间段中");
                glabel->Show();
+               label0->SetContent("");
+               label1->SetContent("");
+               label2->SetContent("");
            }
            else if(reply[0]==trm::rpl::NO&&reply[1]==trm::rpl::NO_LEFT_RESERVE)
            {
                glabel->SetContent("该预约时间名额已满");
-               glabel->Show();
+               glabel->Show(); 
+               label0->SetContent("");
+               label1->SetContent("");
+               label2->SetContent("");
            }
            else{
             btn2->Hide();
@@ -830,6 +836,10 @@ void lab::EnterReserve::Logic(ui::Screen *screen) noexcept
             if(reply[0]==trm::rpl::FAIL)
             {
                 glabel->SetContent("查询的预约不存在");//不对劲
+                glabel->Hide();
+                label0->SetContent("");
+                label1->SetContent("");
+                label2->SetContent("");
             }
             else{
                 label0->SetContent("日期:"+reply[1]);
@@ -850,6 +860,7 @@ void lab::EnterReserve::Logic(ui::Screen *screen) noexcept
     cfbtn1->SetClickCallback(UI_CALLBACK{
        vinput->HideAll(); 
        hbox->ShowAll();
+       glabel->Show();
     });
     cfbtn2->SetClickCallback(UI_CALLBACK{
         SwitchTo(new lab::ReserveStatusList);

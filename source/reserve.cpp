@@ -92,7 +92,7 @@ trm::Information ssys::ReserveSystem::CancelReserve(const trm::Information& info
 trm::Information ssys::ReserveSystem::CheckReserveStatus(const trm::Information& information) noexcept
 {
     assert(information[0] == trm::rqs::CHECK_RESERVE_STATUS); // Procession not matched.
-    auto reserve=clientBase[information[3]][information[1]][information[2]];
+    auto reserve=clientBase[trm::IdAndPhone{information[3],information[4]}][information[2]];
     if(reserve.Exists())//检查是否存在预约信息
     {
         return {trm::rpl::SUCC,information[1],information[2],reserve};
@@ -108,16 +108,16 @@ trm::Information ssys::ReserveSystem::CheckReserveStatusList(const trm::Informat
     assert(information[0] == trm::rqs::CHECK_RESERVE_STATUS_LIST); // Procession not matched.
     trm::Information reserveList;
     reserveList.push_back(trm::rpl::SUCC);
+    if(!clientBase[trm::IdAndPhone{information[1],information[2]}].Size())//检查是否存在预约信息
+    {
+        return {trm::rpl::FAIL,trm::rpl::NO_RESERVE_EXISTS};
+    }
     for(auto [date,reserve]:clientBase[trm::IdAndPhone{information[1],information[2]}])
     {
         for(auto [time,status]:reserve)
         {
             reserveList.push_back(trm::Combine({date,time,status},' '));//将预约信息加入列表
         }
-    }
-    if(reserveList.size() == 1 && reserveList[0] == trm::rpl::SUCC)//检查是否存在预约信息
-    {
-        return {trm::rpl::FAIL,trm::rpl::NO_RESERVE_EXISTS};
     }
     return reserveList;
 }

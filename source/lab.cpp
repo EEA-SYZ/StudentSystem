@@ -978,7 +978,7 @@ void lab::ReserveStatusList::Logic(ui::Screen *screen)noexcept
 
 void lab::ReserveStatusList::Ready(ui::Screen *screen)noexcept
 {
-    Listen(new trm::Sender({trm::rqs::CHECK_RESERVE_STATUS_LIST,idandphone}),SD_CALLBACK{
+    Listen(new trm::Sender({trm::rqs::CHECK_RESERVE_STATUS_LIST,idandphone.id,idandphone.phone}),SD_CALLBACK{
         if(reply[0]==trm::rpl::FAIL){//timeout
             auto glabel = new ui::Label;{
                 glabel->AddTo(vsbox);

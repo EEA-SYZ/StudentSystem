@@ -1113,7 +1113,7 @@ void lab::Reserve::Logic(ui::Screen *screen) noexcept
         SwitchTo(new lab::EnterReserve);
     });
 }
-
+//还是push不上
 void lab::Reserve::Ready(ui::Screen *screen) noexcept
 {
     ;

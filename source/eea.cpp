@@ -939,10 +939,20 @@ void eea::MainPage::Logic(ui::Screen *screen) noexcept
         SwitchTo(new Login);
     });
     reserveBtn->SetClickCallback(UI_CALLBACK{
-        SwitchTo(new lab::EnterReserve);
+       if(account[trm::tag::NAME]==trm::tag::ADM|| account[trm::tag::NAME]==trm::tag::TEACHER) {
+            SwitchTo(new lab::AdmReserve);
+        } 
+        else {
+            SwitchTo(new lab::EnterReserve);
+        } 
     });
-    courseBtn->SetClickCallback(UI_CALLBACK{
-        SwitchTo(new lab::EnterCourse);
+    courseBtn->SetClickCallback(UI_CALLBACK{ // 我要改一下
+        if(account[trm::tag::NAME]==trm::tag::UNGRSTUDENT|| account[trm::tag::NAME]==trm::tag::GRADUATE) {
+            SwitchTo(new lab::EnterCourse);
+        } 
+        else {
+            SwitchTo(new lab::AdmCourse);
+        }
     });
     libraryBtn->SetClickCallback(UI_CALLBACK{
         SwitchTo(new vio::EnterLibrary);

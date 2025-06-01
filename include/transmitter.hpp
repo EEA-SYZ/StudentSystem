@@ -700,6 +700,7 @@ namespace tag{
     const std::string GRADUATE = _AS_"GRADUATE"; // 研究生
     const std::string TEACHER = _AS_"TEACHER"; // 教师
     const std::string NAME = _AS_"NAME"; // 姓名
+    const std::string ADM = _AS_"ADM"; // 管理员
 }
 using Access = acc::Access;
 struct AccessBox {

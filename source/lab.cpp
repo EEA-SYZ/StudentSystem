@@ -519,6 +519,100 @@ void lab::DeleteCourse::Ready(ui::Screen *screen) noexcept
     hbox->HideAll();
     debtn->Enable(false);
 }
+
+void lab::AdmAddCourse::Load(ui::Screen *screen) noexcept
+{
+    
+}
+
+void lab::AdmAddCourse::Logic(ui::Screen *screen) noexcept
+{
+
+}
+
+void lab::AdmAddCourse::Ready(ui::Screen *screen) noexcept
+{
+    
+}
+
+void lab::AdmDeleteCourse::Load(ui::Screen *screen) noexcept
+{
+    
+}
+
+void lab::AdmDeleteCourse::Logic(ui::Screen *screen) noexcept
+{
+
+}
+
+void lab::AdmDeleteCourse::Ready(ui::Screen *screen) noexcept
+{
+
+}
+
+void lab::AdmCourse::Load(ui::Screen *screen) noexcept
+{
+    auto mar = new ui::Margin; {
+        mar->AddTo(screen);
+        mar->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+        mar->SetMargin(200, 200, 200, 200);
+    }
+    {
+        auto flat = new ui::Flat; {
+            mar->Add(flat);
+            flat->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+        }
+        {
+            backbtn = new ui::Button; {
+                backbtn->AddTo(flat);
+                backbtn->SetPreset(ui::Control::Preset::WRAP_AT_FRONT);
+                backbtn->SetCaption("返回");//private
+            }
+            auto  glabel = new ui::Label; {
+                glabel->AddTo(flat);
+                glabel->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                glabel->SetContent("欢迎！");
+                glabel->SetVAnchor(5);
+            }
+            auto vbox1 = new ui::VerticalBox; {
+                vbox1->AddTo(flat);
+                vbox1->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+            }
+            {
+                addbtn = new ui::Button; {
+                    addbtn->AddTo(vbox1);
+                    addbtn->SetPreset(ui::Control::Preset::WRAP_AT_CENTER);
+                    addbtn->SetCaption("添加课程库中的课程");//private
+                }
+                debtn = new ui::Button; {
+                    debtn->AddTo(vbox1);
+                    debtn->SetPreset(ui::Control::Preset::WRAP_AT_CENTER);
+                    debtn->SetCaption("删除课程库中的课程");//private
+                }
+            }
+            
+        }
+    }  
+}
+
+void lab::AdmCourse::Logic(ui::Screen *screen) noexcept
+{
+    backbtn->SetClickCallback(UI_CALLBACK{
+        SwitchTo(new eea::MainPage);
+    });
+    addbtn->SetClickCallback(UI_CALLBACK{
+        SwitchTo(new lab::AdmAddCourse);
+    });
+    debtn->SetClickCallback(UI_CALLBACK{
+        SwitchTo(new lab::AdmDeleteCourse);
+    });
+}
+
+void lab::AdmCourse::Ready(ui::Screen *screen) noexcept
+{
+   ; 
+}
+
 void lab::EnterReserve::Load(ui::Screen *screen) noexcept
 {
     auto mar=new ui::Margin();{
@@ -565,7 +659,7 @@ void lab::EnterReserve::Load(ui::Screen *screen) noexcept
                         auto vdbox1 =new ui::VerticalBox;{
                             vdbox1->AddTo(hinput1);
                             vdbox1->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                        }
+                        } // 待修改成可选择的时间
                         {
                             auto dlabel1 =new ui::Label;{
                                 dlabel1->AddTo(vdbox1);
@@ -659,36 +753,15 @@ void lab::EnterReserve::Load(ui::Screen *screen) noexcept
                 btn2->SetVAnchor(75);
                 btn2->SetCaption("查看预约列表"); // 可能要稍作修改
             } //private
-            hbox = new ui::HorizontalBox; {
-                hbox->AddTo(flat);
-                hbox->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                hbox->SetHSize(80);
-                hbox->SetVSize(20); // private
-            }
-            {
-                
-                label0 = new ui::Label; {
-                    label0->AddTo(hbox);
-                    label0->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                }
-                label1 = new ui::Label; {
-                    label1->AddTo(hbox);
-                    label1->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                }
-                label2 = new ui::Label; {
-                    label2->AddTo(hbox);
-                    label2->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                }
-            }
             vinput =new ui::VerticalBox();{
                 vinput->AddTo(flat);
                 vinput->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
                 vinput->SetVSize(30);
                 vinput->SetHSize(80);
-                vinput->SetVAnchor(50);
+                vinput->SetVAnchor(60);
             }
             {
-                hinput3 =new ui::HorizontalBox();{
+                auto hinput3 =new ui::HorizontalBox();{
                     hinput3->AddTo(vinput);
                     hinput3->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
                 }
@@ -704,7 +777,7 @@ void lab::EnterReserve::Load(ui::Screen *screen) noexcept
                         idinput->SetPreset(ui::Control::Preset::FILL_FROM_CENTER); // private
                     }
                 }
-                hinput4 =new ui::HorizontalBox();{
+                auto hinput4 =new ui::HorizontalBox();{
                     hinput4->AddTo(vinput);
                     hinput4->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
                 }
@@ -789,7 +862,6 @@ void lab::EnterReserve::Logic(ui::Screen *screen) noexcept
         vinput->ShowAll();
         cfbtn1->Enable();
         cfbtn2->Hide();
-        hbox->HideAll();
         relbtn->Enable();
     });
     cfbtn1->SetClickCallback(UI_CALLBACK{
@@ -806,7 +878,6 @@ void lab::EnterReserve::Logic(ui::Screen *screen) noexcept
 
 void lab::EnterReserve::Ready(ui::Screen *screen) noexcept
 {
-    hbox->HideAll();
     vinput->HideAll();
     cfbtn1->Enable(false);
     cfbtn2->Enable(false);

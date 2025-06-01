@@ -106,6 +106,32 @@ protected:
     void Logic(ui::Screen *screen) noexcept;
     void Ready(ui::Screen *screen) noexcept; 
 };
+class AdmAddCourse: public PageBase {
+private:
+    ;
+protected:
+    void Load(ui::Screen *screen) noexcept;
+    void Logic(ui::Screen *screen) noexcept;
+    void Ready(ui::Screen *screen) noexcept; 
+};
+class AdmDeleteCourse: public PageBase {
+private:
+    ;
+protected:
+    void Load(ui::Screen *screen) noexcept;
+    void Logic(ui::Screen *screen) noexcept;
+    void Ready(ui::Screen *screen) noexcept; 
+};
+class AdmCourse: public PageBase {
+private:
+    ui::Button *backbtn = nullptr;
+    ui::Button *addbtn = nullptr;
+    ui::Button *debtn = nullptr;
+protected:
+    void Load(ui::Screen *screen) noexcept;
+    void Logic(ui::Screen *screen) noexcept;
+    void Ready(ui::Screen *screen) noexcept; 
+};
 
 class EnterReserve : public PageBase {
 private:

@@ -604,6 +604,7 @@ void lab::DeleteCourse::Ready(ui::Screen *screen) noexcept
 
 void lab::AdmAddCourse::Load(ui::Screen *screen) noexcept
 {
+<<<<<<< HEAD
     auto mar = new ui::Margin; {
         mar->AddTo(screen);
         mar->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
@@ -713,10 +714,14 @@ void lab::AdmAddCourse::Load(ui::Screen *screen) noexcept
                 }
             }
     }
+=======
+    
+>>>>>>> e0c59df (准备写管理员界面了)
 }
 
 void lab::AdmAddCourse::Logic(ui::Screen *screen) noexcept
 {
+<<<<<<< HEAD
     backbtn->SetClickCallback(UI_CALLBACK{
         SwitchTo(new lab::EnterCourse);
     });
@@ -771,15 +776,40 @@ void lab::AdmAddCourse::Logic(ui::Screen *screen) noexcept
             });
         }
     });
+=======
+
+>>>>>>> e0c59df (准备写管理员界面了)
 }
 
 void lab::AdmAddCourse::Ready(ui::Screen *screen) noexcept
 {
+<<<<<<< HEAD
     ;    
+=======
+    
+>>>>>>> e0c59df (准备写管理员界面了)
 }
 
 void lab::AdmDeleteCourse::Load(ui::Screen *screen) noexcept
 {
+<<<<<<< HEAD
+=======
+    
+}
+
+void lab::AdmDeleteCourse::Logic(ui::Screen *screen) noexcept
+{
+
+}
+
+void lab::AdmDeleteCourse::Ready(ui::Screen *screen) noexcept
+{
+
+}
+
+void lab::AdmCourse::Load(ui::Screen *screen) noexcept
+{
+>>>>>>> e0c59df (准备写管理员界面了)
     auto mar = new ui::Margin; {
         mar->AddTo(screen);
         mar->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
@@ -791,6 +821,7 @@ void lab::AdmDeleteCourse::Load(ui::Screen *screen) noexcept
             flat->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
         }
         {
+<<<<<<< HEAD
             auto hbox1=new ui::HorizontalBox; {
                 hbox1->AddTo(flat);
                 hbox1->SetHPreset(ui::Control::Preset::FILL_FROM_CENTER);
@@ -817,11 +848,14 @@ void lab::AdmDeleteCourse::Load(ui::Screen *screen) noexcept
                 glabel->SetSizeWrap(ui::Control::Direction::HORIZONTAL, false);
                 glabel->SetHSize(700);//private
             }
+=======
+>>>>>>> e0c59df (准备写管理员界面了)
             backbtn = new ui::Button; {
                 backbtn->AddTo(flat);
                 backbtn->SetPreset(ui::Control::Preset::WRAP_AT_FRONT);
                 backbtn->SetCaption("返回");//private
             }
+<<<<<<< HEAD
             hbox = new ui::HorizontalBox; {
                 hbox->AddTo(flat);
                 hbox->SetVPreset(ui::Control::Preset::WRAP_AT_CENTER);
@@ -903,6 +937,51 @@ void lab::AdmDeleteCourse::Ready(ui::Screen *screen) noexcept
 {
     hbox->HideAll();
     debtn->Enable(false);   
+=======
+            auto  glabel = new ui::Label; {
+                glabel->AddTo(flat);
+                glabel->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                glabel->SetContent("欢迎！");
+                glabel->SetVAnchor(5);
+            }
+            auto vbox1 = new ui::VerticalBox; {
+                vbox1->AddTo(flat);
+                vbox1->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+            }
+            {
+                addbtn = new ui::Button; {
+                    addbtn->AddTo(vbox1);
+                    addbtn->SetPreset(ui::Control::Preset::WRAP_AT_CENTER);
+                    addbtn->SetCaption("添加课程库中的课程");//private
+                }
+                debtn = new ui::Button; {
+                    debtn->AddTo(vbox1);
+                    debtn->SetPreset(ui::Control::Preset::WRAP_AT_CENTER);
+                    debtn->SetCaption("删除课程库中的课程");//private
+                }
+            }
+            
+        }
+    }  
+}
+
+void lab::AdmCourse::Logic(ui::Screen *screen) noexcept
+{
+    backbtn->SetClickCallback(UI_CALLBACK{
+        SwitchTo(new eea::MainPage);
+    });
+    addbtn->SetClickCallback(UI_CALLBACK{
+        SwitchTo(new lab::AdmAddCourse);
+    });
+    debtn->SetClickCallback(UI_CALLBACK{
+        SwitchTo(new lab::AdmDeleteCourse);
+    });
+}
+
+void lab::AdmCourse::Ready(ui::Screen *screen) noexcept
+{
+   ; 
+>>>>>>> e0c59df (准备写管理员界面了)
 }
 
 void lab::EnterReserve::Load(ui::Screen *screen) noexcept

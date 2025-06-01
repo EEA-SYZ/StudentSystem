@@ -38,6 +38,7 @@ protected:
     static trm::ReserveDate rdate;
     static std::string rtime;
     static trm::Notice selectedNotice;
+    static trm::CourseInformation courseinfo;
 
     static trm::Information argvs;
     

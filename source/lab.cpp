@@ -55,20 +55,32 @@ void lab::EnterCourse::Load(ui::Screen *screen) noexcept
             addbtn = new ui::Button;{
                 addbtn->AddTo(flat);
                 addbtn->SetPreset(ui::Control::Preset::WRAP_AT_CENTER);
-                addbtn->SetVAnchor(30);
-                addbtn->SetCaption("添加课程");//private
+                addbtn->SetVAnchor(25);
+                addbtn->SetCaption("我要选课");//private
             }
             debtn = new ui::Button;{
                 debtn->AddTo(flat);
                 debtn->SetPreset(ui::Control::Preset::WRAP_AT_CENTER);
-                debtn->SetVAnchor(45);
-                debtn->SetCaption("删除课程");//private
+                debtn->SetVAnchor(35);
+                debtn->SetCaption("我要退课课程");//private
             }
             btn2 = new ui::Button;{
                     btn2->AddTo(flat);
                     btn2->SetPreset(ui::Control::Preset::WRAP_AT_CENTER);
                     btn2->SetCaption("查看全部课程");//private
-                    btn2->SetVAnchor(60);
+                    btn2->SetVAnchor(70);
+            }
+            admaddbtn = new ui::Button; {
+                admaddbtn->AddTo(flat);
+                admaddbtn->SetPreset(ui::Control::Preset::WRAP_AT_CENTER);
+                admaddbtn->SetCaption("我要开课");//private
+                admaddbtn->SetVAnchor(45);
+            }
+            admdebtn = new ui::Button; {
+                admdebtn->AddTo(flat);
+                admdebtn->SetPreset(ui::Control::Preset::WRAP_AT_CENTER);
+                admdebtn->SetCaption("我要撤课");//private
+                admdebtn->SetVAnchor(55);
             }
             hbox = new ui::HorizontalBox; {
                 hbox->AddTo(flat);
@@ -130,11 +142,11 @@ void lab::EnterCourse::Logic(ui::Screen *screen) noexcept
        else
        {
         Listen(new trm::Sender({trm::rqs::SEARCH_COURSE_INFORMATION,account.code,coursename}),SD_CALLBACK{
-        //if (reply[0] == trm::rpl::TIME_OUT) {
-        //    glabel->SetContent("服务端未响应，请检查后重试");
-        //    glabel->Show();
-        //}
-        if(reply[0] == trm::rpl::NO) {
+        if (reply[0] == trm::rpl::TIME_OUT) {
+            glabel->SetContent("服务端未响应，请检查后重试");
+            glabel->Show();
+        }
+        else if(reply[0] == trm::rpl::NO) {
             glabel->SetContent("无匹配课程,请重新输入");
             glabel->Show();
         }
@@ -173,6 +185,29 @@ void lab::EnterCourse::Ready(ui::Screen *screen) noexcept
 {
     hbox->HideAll();
     tempbackbtn->Enable(false);
+    auto add=std::find(account.access.begin(),account.access.end(),trm::acc::ADM_ADD_COUR);
+    auto del=std::find(account.access.begin(),account.access.end(),trm::acc::ADM_DELETE_COUR);
+    auto adm = std::find(account.access.begin(), account.access.end(), trm::acc::ADM);
+    if(adm!=account.access.end()) {
+        admaddbtn->Show();
+        admdebtn->Show();
+    }
+    else if(add!=account.access.end() ) {
+        admaddbtn->Show();
+        admdebtn->Hide();
+        admdebtn->Enable(false);
+    }
+    else if(del!=account.access.end()) {
+        admaddbtn->Hide();
+        admdebtn->Show();
+        admaddbtn->Enable(false);
+    }
+    else {
+        admaddbtn->Hide();
+        admdebtn->Hide();
+        admaddbtn->Enable(false);
+        admdebtn->Enable(false);
+    }
 }
 
 void lab::CourseList::Load(ui::Screen *screen) noexcept
@@ -214,7 +249,14 @@ void lab::CourseList::Logic(ui::Screen *screen) noexcept
 void lab::CourseList::Ready(ui::Screen *screen) noexcept
 {
     Listen(new trm::Sender({trm::rqs::CHECK_ALL_COURSE,account.code}),SD_CALLBACK{
-        if(reply[0] == trm::rpl::FAIL) {
+        if (reply[0] == trm::rpl::TIME_OUT) {
+            auto glabel = new ui::Label; {
+                glabel->AddTo(vsbox);
+                glabel->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                glabel->SetContent("服务端未响应，请检查后重试");
+            }
+        }
+        else if(reply[0] == trm::rpl::FAIL) {
             auto glabel = new ui::Label; {
                 glabel->AddTo(vsbox);
                 glabel->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
@@ -362,9 +404,13 @@ void lab::AddCourse::Logic(ui::Screen *screen) noexcept
             glabel->Show();
         }
         Listen(new trm::Sender({trm::rqs::ADD_COURSE,account.code,account.hashedPassword,coursename}),SD_CALLBACK{
-            if(reply[0] == trm::rpl::FAIL&&reply[1] == trm::rpl::NO_MATCH_COURSE) {
-                glabel->SetContent("无匹配课程,请重新输入");
-                glabel->Show();
+        if (reply[0] == trm::rpl::TIME_OUT) {
+            glabel->SetContent("服务端未响应，请检查后重试");
+            glabel->Show();
+        }
+        else if(reply[0] == trm::rpl::FAIL&&reply[1] == trm::rpl::NO_MATCH_COURSE) {
+            glabel->SetContent("无匹配课程,请重新输入");
+            glabel->Show();
             }
             else if(reply[0] == trm::rpl::FAIL&&reply[1] == trm::rpl::COURSE_EXISTS) {
                 glabel->SetContent("课程已存在,请重新输入");
@@ -381,6 +427,7 @@ void lab::AddCourse::Logic(ui::Screen *screen) noexcept
                 addbtn->Enable();
             }
         });
+        btn1->Enable();
     });
     addbtn->SetClickCallback(UI_CALLBACK{
                 rpllabel->SetContent("添加成功");
@@ -481,7 +528,7 @@ void lab::DeleteCourse::Logic(ui::Screen *screen) noexcept
     });
     input->SetInputCallback(UI_CALLBACK{
         coursename = input->GetText();
-        glabel->SetContent("请输入课程代号");//inputting
+        glabel->SetContent("请输入课程代号"); // inputting
         glabel->Show();
     });
     btn1->SetClickCallback(UI_CALLBACK{
@@ -492,7 +539,11 @@ void lab::DeleteCourse::Logic(ui::Screen *screen) noexcept
             glabel->Show();
         }
         Listen(new trm::Sender({trm::rqs::DELETE_COURSE,account.code,account.hashedPassword,coursename}),SD_CALLBACK{
-            if(reply[0] == trm::rpl::FAIL&&reply[1] == trm::rpl::NO_MATCH_COURSE) {
+            if (reply[0] == trm::rpl::TIME_OUT) {
+                glabel->SetContent("服务端未响应，请检查后重试");
+                glabel->Show();
+            }
+            else if(reply[0] == trm::rpl::FAIL&&reply[1] == trm::rpl::NO_MATCH_COURSE) {
                 glabel->SetContent("待删课程不存在,请重新输入");
                 glabel->Show();
             }
@@ -507,7 +558,8 @@ void lab::DeleteCourse::Logic(ui::Screen *screen) noexcept
                 debtn->Enable();
             }
         });
-    });
+        btn1->Enable();
+    }); // 这里的debtn其实是伪debtn
     debtn->SetClickCallback(UI_CALLBACK{
                 rpllabel->SetContent("删除成功");
                 rpllabel->Show();
@@ -522,35 +574,181 @@ void lab::DeleteCourse::Ready(ui::Screen *screen) noexcept
 
 void lab::AdmAddCourse::Load(ui::Screen *screen) noexcept
 {
-    
+    auto mar = new ui::Margin; {
+        mar->AddTo(screen);
+        mar->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+        mar->SetMargin(200, 200, 200, 200);
+    }
+    {
+            auto vbox1=new ui::VerticalBox; {
+                vbox1->AddTo(mar);
+                vbox1->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+            }
+            {
+                backbtn = new ui::Button; {
+                    backbtn->AddTo(vbox1);
+                    backbtn->SetPreset(ui::Control::Preset::WRAP_AT_FRONT);
+                    backbtn->SetCaption("返回");//private
+                }
+                glabel = new ui::Label; {
+                    glabel->AddTo(vbox1);
+                    glabel->SetHPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                    glabel->SetVPreset(ui::Control::Preset::WRAP_AT_FRONT);
+                    glabel->SetHSize(70);//private
+                }
+                auto hbox1 = new ui::HorizontalBox; {
+                    hbox1->AddTo(vbox1);
+                    hbox1->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                }
+                {
+                    input1 = new ui::InputBox; {
+                        input1->AddTo(hbox1);
+                        input1->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                    }
+                    auto label1 = new ui::Label; {
+                        label1->AddTo(hbox1);
+                        label1->SetHPreset(ui::Control::Preset::WRAP_AT_FRONT);
+                        label1->SetVPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                        label1->SetContent("课程代号");
+                    }
+                }    
+                auto hbox2 = new ui::HorizontalBox; {
+                    hbox2->AddTo(vbox1);
+                    hbox2->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                }
+                {
+                    input2 = new ui::InputBox; {
+                        input2->AddTo(hbox2);
+                        input2->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                    }
+                    auto label2 = new ui::Label; {
+                        label2->AddTo(hbox2);
+                        label2->SetHPreset(ui::Control::Preset::WRAP_AT_FRONT);
+                        label2->SetVPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                        label2->SetContent("课程名称");
+                    }
+                }
+                auto hbox3 = new ui::HorizontalBox; {
+                    hbox3->AddTo(vbox1);
+                    hbox3->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                }
+                {
+                    input3 = new ui::InputBox; {
+                        input3->AddTo(hbox3);
+                        input3->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                    }
+                    auto label3 = new ui::Label; {
+                        label3->AddTo(hbox3);
+                        label3->SetHPreset(ui::Control::Preset::WRAP_AT_FRONT);
+                        label3->SetVPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                        label3->SetContent("上课老师");
+                    }
+                }
+                auto hbox4 = new ui::HorizontalBox; {
+                    hbox4->AddTo(vbox1);
+                    hbox4->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                }
+                {
+                    input4 = new ui::InputBox; {
+                        input4->AddTo(hbox4);
+                        input4->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                    }
+                    auto label4 = new ui::Label; {
+                        label4->AddTo(hbox4);
+                        label4->SetHPreset(ui::Control::Preset::WRAP_AT_FRONT);
+                        label4->SetVPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                        label4->SetContent("上课地点");
+                    }
+                }
+                auto hbox5 = new ui::HorizontalBox; {
+                    hbox5->AddTo(vbox1);
+                    hbox5->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                }
+                {
+                    input5 = new ui::InputBox; {
+                        input5->AddTo(hbox5);
+                        input5->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                    }
+                    auto label5 = new ui::Label; {
+                        label5->AddTo(hbox5);
+                        label5->SetHPreset(ui::Control::Preset::WRAP_AT_FRONT);
+                        label5->SetVPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                        label5->SetContent("上课周数");
+                    }//待修改
+                }
+                cfbtn = new ui::Button; {
+                    cfbtn->AddTo(vbox1);
+                    cfbtn->SetPreset(ui::Control::Preset::WRAP_AT_END);
+                    cfbtn->SetCaption("确认");//private
+                }
+            }
+    }
 }
 
 void lab::AdmAddCourse::Logic(ui::Screen *screen) noexcept
 {
-
+    backbtn->SetClickCallback(UI_CALLBACK{
+        SwitchTo(new lab::EnterCourse);
+    });
+    input1->SetInputCallback(UI_CALLBACK{
+        coursename = input1->GetText();
+        glabel->SetContent("请输入课程代号");
+        glabel->Show();
+    });
+    input2->SetInputCallback(UI_CALLBACK{
+        courseinfo.courseName = input2->GetText();
+        glabel->SetContent("请输入课程名称");
+        glabel->Show();
+    });
+    input3->SetInputCallback(UI_CALLBACK{
+        courseinfo.teacher = input3->GetText();
+        glabel->SetContent("请输入上课老师");
+        glabel->Show();
+    });
+    input4->SetInputCallback(UI_CALLBACK{
+        courseinfo.location = input4->GetText();
+        glabel->SetContent("请输入上课地点");
+        glabel->Show();
+    });
+    input5->SetInputCallback(UI_CALLBACK{
+        courseinfo.weeks = trm::Split(input5->GetText(),' ');
+        glabel->SetContent("请输入上课周数");
+        glabel->Show();
+    });
+    cfbtn->SetClickCallback(UI_CALLBACK{
+        if(coursename==""||courseinfo.courseName==""||courseinfo.teacher==""||courseinfo.location==""||courseinfo.weeks.empty()) {
+            glabel->SetContent("请填写完整信息");
+            glabel->Show();
+        }
+        else {
+            Listen(new trm::Sender({trm::rqs::ADM_ADD_COUR,account.code,account.hashedPassword,coursename,courseinfo}),SD_CALLBACK{
+                if (reply[0] == trm::rpl::TIME_OUT) {
+                    glabel->SetContent("服务端未响应，请检查后重试");
+                    glabel->Show();
+                }
+                else if(reply[0] == trm::rpl::FAIL&&reply[1] == trm::rpl::COURSE_EXISTS) {
+                    glabel->SetContent("课程已开设,请重新输入");
+                    glabel->Show();
+                }
+                else if(reply[0]==trm::rpl::ACCESS_DENIED) {
+                    glabel->SetContent("权限不足");
+                    glabel->Show();
+                }
+                else {
+                    glabel->SetContent("添加成功");
+                    glabel->Show();
+                }
+            });
+        }
+    });
 }
 
 void lab::AdmAddCourse::Ready(ui::Screen *screen) noexcept
 {
-    
+    ;    
 }
 
 void lab::AdmDeleteCourse::Load(ui::Screen *screen) noexcept
-{
-    
-}
-
-void lab::AdmDeleteCourse::Logic(ui::Screen *screen) noexcept
-{
-
-}
-
-void lab::AdmDeleteCourse::Ready(ui::Screen *screen) noexcept
-{
-
-}
-
-void lab::AdmCourse::Load(ui::Screen *screen) noexcept
 {
     auto mar = new ui::Margin; {
         mar->AddTo(screen);
@@ -563,54 +761,140 @@ void lab::AdmCourse::Load(ui::Screen *screen) noexcept
             flat->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
         }
         {
+            auto hbox1=new ui::HorizontalBox; {
+                hbox1->AddTo(flat);
+                hbox1->SetHPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                hbox1->SetVPreset(ui::Control::Preset::WRAP_AT_FRONT);
+                hbox1->SetVAnchor(10);
+                hbox1->SetHSize(80);
+            }
+            {
+                input = new ui::InputBox; {
+                    input->AddTo(hbox1);//inputting
+                    input->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                }
+                btn1 = new ui::Button; {
+                    btn1->AddTo(hbox1);
+                    btn1->SetPreset(ui::Control::Preset::WRAP_AT_END);//private
+                    btn1->SetCaption("查找");
+                }
+            }
+            glabel = new ui::Label; {
+                glabel->AddTo(flat);
+                glabel->SetHPreset(ui::Control::Preset::WRAP_AT_CENTER);
+                glabel->SetVPreset(ui::Control::Preset::WRAP_AT_FRONT);
+                glabel->SetVAnchor(25);
+                glabel->SetSizeWrap(ui::Control::Direction::HORIZONTAL, false);
+                glabel->SetHSize(700);//private
+            }
             backbtn = new ui::Button; {
                 backbtn->AddTo(flat);
                 backbtn->SetPreset(ui::Control::Preset::WRAP_AT_FRONT);
                 backbtn->SetCaption("返回");//private
             }
-            auto  glabel = new ui::Label; {
-                glabel->AddTo(flat);
-                glabel->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                glabel->SetContent("欢迎！");
-                glabel->SetVAnchor(5);
-            }
-            auto vbox1 = new ui::VerticalBox; {
-                vbox1->AddTo(flat);
-                vbox1->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-            }
-            {
-                addbtn = new ui::Button; {
-                    addbtn->AddTo(vbox1);
-                    addbtn->SetPreset(ui::Control::Preset::WRAP_AT_CENTER);
-                    addbtn->SetCaption("添加课程库中的课程");//private
+            hbox = new ui::HorizontalBox; {
+                hbox->AddTo(flat);
+                hbox->SetVPreset(ui::Control::Preset::WRAP_AT_CENTER);
+                hbox->SetHPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                hbox->SetSizeWrap(ui::Control::Direction::VERTICAL, false);
+                hbox->SetVSize(200);
+                hbox->SetVAnchor(55);
+                }//hideall
+                {
+                    label0 = new ui::Label; {
+                        label0->AddTo(hbox);
+                        label0->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                    }
+                    label1 = new ui::Label; {
+                        label1->AddTo(hbox);
+                        label1->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                    }
+                    label2 = new ui::Label; {
+                        label2->AddTo(hbox);
+                        label2->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                    }
+                    label3 = new ui::Label; {
+                        label3->AddTo(hbox);
+                        label3->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                    }
+                    label4 = new ui::Label; {
+                        label4->AddTo(hbox);
+                        label4->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                        label4->SetFontSize(20);
+                    }
+                    debtn = new ui::Button; {
+                        debtn->AddTo(hbox);
+                        debtn->SetHPreset(ui::Control::Preset::WRAP_AT_END);
+                        debtn->SetVPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                        debtn->SetCaption("删除");//private
+                    }
                 }
-                debtn = new ui::Button; {
-                    debtn->AddTo(vbox1);
-                    debtn->SetPreset(ui::Control::Preset::WRAP_AT_CENTER);
-                    debtn->SetCaption("删除课程库中的课程");//private
-                }
-            }
-            
+            rpllabel = new ui::Label; {
+                rpllabel->AddTo(flat);
+                rpllabel->SetPreset(ui::Control::Preset::PLACE_AT_END);//maybe
+                rpllabel->SetHSize(600);
+                rpllabel->SetVSize(100);
+                rpllabel->SetHAnchor(95);
+                rpllabel->SetVAnchor(95);
+            }//private
         }
-    }  
+    }
 }
 
-void lab::AdmCourse::Logic(ui::Screen *screen) noexcept
+void lab::AdmDeleteCourse::Logic(ui::Screen *screen) noexcept
 {
     backbtn->SetClickCallback(UI_CALLBACK{
-        SwitchTo(new eea::MainPage);
+        SwitchTo(new lab::EnterCourse);
     });
-    addbtn->SetClickCallback(UI_CALLBACK{
-        SwitchTo(new lab::AdmAddCourse);
+    input->SetInputCallback(UI_CALLBACK{
+        coursename = input->GetText();
+        glabel->SetContent("请输入课程代号"); // inputting
+        glabel->Show();
     });
+    btn1->SetClickCallback(UI_CALLBACK{
+        btn1->Enable(false);
+        if(coursename=="") 
+        {
+            glabel->SetContent("课程代号不能为空");
+            glabel->Show();
+        }
+        Listen(new trm::Sender({trm::rqs::ADM_DELETE_COUR,account.code,account.hashedPassword,coursename}),SD_CALLBACK{
+            if (reply[0] == trm::rpl::TIME_OUT) {
+                glabel->SetContent("服务端未响应，请检查后重试");
+                glabel->Show();
+            }
+            else if(reply[0] == trm::rpl::FAIL&&reply[1] == trm::rpl::NO_MATCH_COURSE) {
+                glabel->SetContent("待撤销的课程不存在,请重新输入");
+                glabel->Show();
+            }
+           else if(reply[0]==trm::rpl::ACCESS_DENIED) {
+                glabel->SetContent("权限不足");
+                glabel->Show();
+            }
+            else {
+                hbox->ShowAll();
+                label0->SetContent("课程编号："+reply[1]);
+                auto coursereply=trm::Split(reply[2]);
+                label1->SetContent("课程名称："+coursereply[0]);
+                label2->SetContent("上课老师："+coursereply[1]);
+                label3->SetContent("上课地点："+coursereply[2]);
+                label4->SetContent("上课周数："+coursereply[3]);
+                label4->SetFontSize(20);
+                debtn->Enable();
+            }
+        });
+        btn1->Enable();
+    }); // 这里的debtn其实是伪debtn
     debtn->SetClickCallback(UI_CALLBACK{
-        SwitchTo(new lab::AdmDeleteCourse);
+        rpllabel->SetContent("删除成功");
+        rpllabel->Show();
     });
 }
 
-void lab::AdmCourse::Ready(ui::Screen *screen) noexcept
+void lab::AdmDeleteCourse::Ready(ui::Screen *screen) noexcept
 {
-   ; 
+    hbox->HideAll();
+    debtn->Enable(false);   
 }
 
 void lab::EnterReserve::Load(ui::Screen *screen) noexcept
@@ -922,7 +1206,13 @@ void lab::ReserveTimeList::Logic(ui::Screen *screen) noexcept
 void lab::ReserveTimeList::Ready(ui::Screen *screen) noexcept
 {
     Listen(new trm::Sender({trm::rqs::CHECK_TIME,rdate}),SD_CALLBACK{
-        if(reply[0]==trm::rpl::FAIL){
+        if (reply[0] == trm::rpl::TIME_OUT) {
+            auto glabel = new ui::Label;{
+                glabel->AddTo(vsbox);
+                glabel->SetContent("服务端未响应，请检查后重试");
+            }
+        }
+        else if(reply[0]==trm::rpl::FAIL){
             auto glabel = new ui::Label;{
                 glabel->AddTo(vsbox);
                 glabel->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
@@ -998,7 +1288,14 @@ void lab::ReserveStatusList::Logic(ui::Screen *screen)noexcept
 void lab::ReserveStatusList::Ready(ui::Screen *screen)noexcept
 {
     Listen(new trm::Sender({trm::rqs::CHECK_RESERVE_STATUS_LIST,idandphone.id,idandphone.phone}),SD_CALLBACK{
-        if(reply[0]==trm::rpl::FAIL){//timeout
+        if (reply[0] == trm::rpl::TIME_OUT) {
+            auto glabel = new ui::Label;{
+                glabel->AddTo(vsbox);
+                glabel->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                glabel->SetContent("服务端未响应，请检查后重试");
+            }
+        }
+        else if(reply[0]==trm::rpl::FAIL){//timeout
             auto glabel = new ui::Label;{
                 glabel->AddTo(vsbox);
                 glabel->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
@@ -1171,7 +1468,11 @@ void lab::Request::Logic(ui::Screen *screen) noexcept
         glabel->Show();
         rpllabel->Show(); 
         Listen(new trm::Sender({trm::rqs::REQUEST_RESERVE, rdate, rtime,idandphone.id,idandphone.phone}), SD_CALLBACK{
-            if(reply[0] == trm::rpl::FAIL && reply[1] == trm::rpl::NO_MATCH_TIME)
+            if(reply[0] == trm::rpl::TIME_OUT)
+            {
+                glabel->SetContent("服务端未响应，请检查后重试");
+            }
+            else if(reply[0] == trm::rpl::FAIL && reply[1] == trm::rpl::NO_MATCH_TIME)
             {
                 rpllabel->SetContent("该时间不在可预约的时间段中");
             }
@@ -1196,7 +1497,12 @@ void lab::Request::Ready(ui::Screen *screen) noexcept
     vbox->HideAll();
     cfbtn->Enable(false);
     Listen(new trm::Sender({trm::rqs::CHECK_RESERVE_TIME,rdate,rtime}),SD_CALLBACK{
-           if(reply[0]==trm::rpl::NO&&reply[1]==trm::rpl::NO_MATCH_TIME) 
+            if(reply[0] == trm::rpl::TIME_OUT) {
+                glabel->SetContent("服务端未响应，请检查后重试");
+                glabel->Show();
+                hbox->HideAll();
+            }
+           else if(reply[0]==trm::rpl::NO&&reply[1]==trm::rpl::NO_MATCH_TIME) 
            {
                glabel->SetContent("该时间不在可预约的时间段中");
                glabel->Show();
@@ -1350,7 +1656,11 @@ void lab::Cancel::Logic(ui::Screen *screen) noexcept
         glabel->Show();
         rpllabel->Show(); 
         Listen(new trm::Sender({trm::rqs::CANCEL_RESERVE, rdate, rtime,idandphone.id,idandphone.phone}), SD_CALLBACK{
-            if(reply[0] == trm::rpl::FAIL && reply[1] == trm::rpl::NO_MATCH_RESERVE)
+            if(reply[0] == trm::rpl::TIME_OUT)
+            {
+                glabel->SetContent("服务端未响应，请检查后重试");
+            }
+            else if(reply[0] == trm::rpl::FAIL && reply[1] == trm::rpl::NO_MATCH_RESERVE)
             {
                 rpllabel->SetContent("待删除预约不存在");
             }
@@ -1371,10 +1681,15 @@ void lab::Cancel::Ready(ui::Screen *screen) noexcept
     vbox->HideAll();
     cfbtn->Enable(false);
     Listen(new trm::Sender({trm::rqs::CHECK_RESERVE_STATUS,rdate,rtime,idandphone.id,idandphone.phone}),SD_CALLBACK{
-        if(reply[0]==trm::rpl::FAIL)
-            {
-                glabel->SetContent("查询的预约不存在");//不对劲
-            }
+        if(reply[0] == trm::rpl::TIME_OUT) {
+            glabel->SetContent("服务端未响应，请检查后重试");
+            glabel->Show();
+            hbox->HideAll();
+        }
+        else if(reply[0]==trm::rpl::FAIL)
+        {
+            glabel->SetContent("查询的预约不存在");//不对劲
+        }
         else{
             label0->SetContent("日期:"+reply[1]);
             label1->SetContent("时间:"+reply[2]);

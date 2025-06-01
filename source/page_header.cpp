@@ -11,6 +11,7 @@ std::string clpg::PageBase::coursename = "";
 trm::IdAndPhone clpg::PageBase::idandphone;
 trm::ReserveDate clpg::PageBase::rdate;
 std::string clpg::PageBase::rtime="";
+trm::CourseInformation clpg::PageBase::courseinfo;
 
 trm::Notice clpg::PageBase::selectedNotice = {"", ""};
 

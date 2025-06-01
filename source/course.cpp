@@ -99,6 +99,7 @@ trm::Information ssys::CourseSystem::AdmDeleteCour(const trm::Information& infor
     {
         return {trm::rpl::FAIL,trm::rpl::NO_MATCH_COURSE};
     }
+    auto temp = courseBase[information[3]];
     courseBase[information[3]].Clear();//删除课程
     return {trm::rpl::SUCC, information[3]};
 }

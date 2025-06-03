@@ -459,7 +459,13 @@ namespace rqs{
      * @note ACCESS REQUIRED ADM_MODIFTY_RESERVE_NUMBER
      */
     const std::string ADM_MODIFY_RESERVE_NUMBER = _AS_"ADM_MODIFY_RESERVE_NUMBER";
-    
+    /**
+     * @brief 管理员修改可预约状态
+     * @param code 学工号
+     * 
+     */
+    //todo
+
 #pragma endregion
 
 #pragma region 通知与公示系统
@@ -682,6 +688,7 @@ enum Access{
     ADM_ADD_RESERVE_TIME, // 管理员增加可预约时间
     ADM_DELETE_RESERVE_TIME, // 管理员删除可预约时间
     ADM_MODIFTY_RESERVE_NUMBER, // 管理员修改可预约数量
+    ADM_MODIFY_RESERVE_STATUS, // 管理员修改预约状态
 
     BOOK_MANAGE,
     BORROW_BOOK,

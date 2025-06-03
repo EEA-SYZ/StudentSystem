@@ -39,6 +39,7 @@ protected:
     static std::string rtime;
     static trm::Notice selectedNotice;
     static trm::CourseInformation courseinfo;
+    static std::string rnum;
 
     static trm::Information argvs;
     

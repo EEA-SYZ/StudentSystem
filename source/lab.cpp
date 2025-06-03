@@ -62,11 +62,7 @@ void lab::EnterCourse::Load(ui::Screen *screen) noexcept
                 debtn->AddTo(flat);
                 debtn->SetPreset(ui::Control::Preset::WRAP_AT_CENTER);
                 debtn->SetVAnchor(35);
-<<<<<<< HEAD
-                debtn->SetCaption("我要退课");//private
-=======
                 debtn->SetCaption("我要退课课程");//private
->>>>>>> 35922fd (course 的管理员界面好了，不过还没调试)
             }
             btn2 = new ui::Button;{
                     btn2->AddTo(flat);
@@ -146,32 +142,6 @@ void lab::EnterCourse::Logic(ui::Screen *screen) noexcept
        else
        {
         Listen(new trm::Sender({trm::rqs::SEARCH_COURSE_INFORMATION,account.code,coursename}),SD_CALLBACK{
-<<<<<<< HEAD
-            if (reply[0] == trm::rpl::TIME_OUT) {
-                glabel->SetContent("服务端未响应，请检查后重试");
-                glabel->Show();
-            }
-            else if(reply[0] == trm::rpl::NO) {
-                glabel->SetContent("无匹配课程,请重新输入");
-                glabel->Show();
-            }
-            else {
-                btn2->Hide();
-                addbtn->Hide();
-                debtn->Hide();
-                admaddbtn->Hide();
-                admdebtn->Hide();
-                hbox->ShowAll();
-                tempbackbtn->Enable();
-                auto coursereply=trm::Split(reply[2]);
-                label0->SetContent("课程编号:"+reply[1]);
-                label1->SetContent("课程名称:"+coursereply[0]);
-                label2->SetContent("上课老师:"+coursereply[1]);
-                label3->SetContent("上课地点:"+coursereply[2]);
-                label4->SetContent("上课周数:"+coursereply[3]);
-                label4->SetFontSize(20);//待改善
-            }});
-=======
         if (reply[0] == trm::rpl::TIME_OUT) {
             glabel->SetContent("服务端未响应，请检查后重试");
             glabel->Show();
@@ -179,10 +149,24 @@ void lab::EnterCourse::Logic(ui::Screen *screen) noexcept
         else if(reply[0] == trm::rpl::NO) {
             glabel->SetContent("无匹配课程,请重新输入");
             glabel->Show();
->>>>>>> 35922fd (course 的管理员界面好了，不过还没调试)
         }
-        btn1->Enable();
-    });
+        else {
+            btn2->Hide();
+            addbtn->Hide();
+            hbox->ShowAll();
+            tempbackbtn->Enable();
+            auto coursereply=trm::Split(reply[2]);
+            label0->SetContent("课程编号:"+reply[1]);
+            label1->SetContent("课程名称:"+coursereply[0]);
+            label2->SetContent("上课老师:"+coursereply[1]);
+            label3->SetContent("上课地点:"+coursereply[2]);
+            label4->SetContent("上课周数:"+coursereply[3]);
+            label4->SetFontSize(20);//待改善
+        }});
+        }
+            btn1->Enable();
+        }
+    );
     addbtn->SetClickCallback(UI_CALLBACK{
         SwitchTo(new lab::AddCourse);
     });
@@ -207,53 +191,6 @@ void lab::EnterCourse::Ready(ui::Screen *screen) noexcept
 {
     hbox->HideAll();
     tempbackbtn->Enable(false);
-<<<<<<< HEAD
-    admaddbtn->Hide();
-    admdebtn->Hide();
-    admaddbtn->Enable(false);
-    admdebtn->Enable(false);
-    Listen(new trm::Sender({trm::rqs::CHECK_ACCESS, account.code,account.hashedPassword,trm::AccessBox{trm::acc::ADM}}), SD_CALLBACK{
-        if (reply[0] == trm::rpl::TIME_OUT) {
-            glabel->SetContent("服务端未响应，请检查后重试");
-            glabel->Show();
-        }
-        else if(reply[0] == trm::rpl::YES) {
-            admaddbtn->Show();
-            admdebtn->Show();
-            admaddbtn->Enable(true);
-            admdebtn->Enable(true);
-        }
-        else {
-           //
-        }
-    });
-   Listen(new trm::Sender({trm::rqs::CHECK_ACCESS, account.code,account.hashedPassword,trm::AccessBox{trm::acc::ADM_ADD_COUR}}), SD_CALLBACK{
-        if (reply[0] == trm::rpl::TIME_OUT) {
-            glabel->SetContent("服务端未响应，请检查后重试");
-            glabel->Show();
-        }
-        else if(reply[0] == trm::rpl::YES) {
-            addbtn->Show();
-            addbtn->Enable(true);
-        }
-        else {
-            //
-        }
-    });
-    Listen(new trm::Sender({trm::rqs::CHECK_ACCESS, account.code,account.hashedPassword,trm::AccessBox{trm::acc::ADM_DELETE_COUR}}), SD_CALLBACK{
-        if (reply[0] == trm::rpl::TIME_OUT) {
-            glabel->SetContent("服务端未响应，请检查后重试");
-            glabel->Show();
-        }
-        else if(reply[0] == trm::rpl::YES) {
-            debtn->Show();
-            debtn->Enable(true);
-        }
-        else {
-            //
-        }
-    });
-=======
     auto add=std::find(account.access.begin(),account.access.end(),trm::acc::ADM_ADD_COUR);
     auto del=std::find(account.access.begin(),account.access.end(),trm::acc::ADM_DELETE_COUR);
     auto adm = std::find(account.access.begin(), account.access.end(), trm::acc::ADM);
@@ -277,7 +214,6 @@ void lab::EnterCourse::Ready(ui::Screen *screen) noexcept
         admaddbtn->Enable(false);
         admdebtn->Enable(false);
     }
->>>>>>> 35922fd (course 的管理员界面好了，不过还没调试)
 }
 
 void lab::CourseList::Load(ui::Screen *screen) noexcept
@@ -644,10 +580,7 @@ void lab::DeleteCourse::Ready(ui::Screen *screen) noexcept
 
 void lab::AdmAddCourse::Load(ui::Screen *screen) noexcept
 {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 35922fd (course 的管理员界面好了，不过还没调试)
+
     auto mar = new ui::Margin; {
         mar->AddTo(screen);
         mar->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
@@ -675,130 +608,80 @@ void lab::AdmAddCourse::Load(ui::Screen *screen) noexcept
                     hbox1->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
                 }
                 {
-<<<<<<< HEAD
-=======
                     input1 = new ui::InputBox; {
                         input1->AddTo(hbox1);
                         input1->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
                     }
->>>>>>> 35922fd (course 的管理员界面好了，不过还没调试)
                     auto label1 = new ui::Label; {
                         label1->AddTo(hbox1);
                         label1->SetHPreset(ui::Control::Preset::WRAP_AT_FRONT);
                         label1->SetVPreset(ui::Control::Preset::FILL_FROM_CENTER);
                         label1->SetContent("课程代号");
                     }
-<<<<<<< HEAD
-                    input1 = new ui::InputBox; {
-                        input1->AddTo(hbox1);
-                        input1->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
-                    }
-=======
->>>>>>> 35922fd (course 的管理员界面好了，不过还没调试)
                 }    
                 auto hbox2 = new ui::HorizontalBox; {
                     hbox2->AddTo(vbox1);
                     hbox2->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
                 }
                 {
-<<<<<<< HEAD
-=======
                     input2 = new ui::InputBox; {
                         input2->AddTo(hbox2);
                         input2->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
                     }
->>>>>>> 35922fd (course 的管理员界面好了，不过还没调试)
                     auto label2 = new ui::Label; {
                         label2->AddTo(hbox2);
                         label2->SetHPreset(ui::Control::Preset::WRAP_AT_FRONT);
                         label2->SetVPreset(ui::Control::Preset::FILL_FROM_CENTER);
                         label2->SetContent("课程名称");
                     }
-<<<<<<< HEAD
-                    input2 = new ui::InputBox; {
-                        input2->AddTo(hbox2);
-                        input2->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
-                    }
-=======
->>>>>>> 35922fd (course 的管理员界面好了，不过还没调试)
                 }
                 auto hbox3 = new ui::HorizontalBox; {
                     hbox3->AddTo(vbox1);
                     hbox3->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
                 }
                 {
-<<<<<<< HEAD
-=======
                     input3 = new ui::InputBox; {
                         input3->AddTo(hbox3);
                         input3->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
                     }
->>>>>>> 35922fd (course 的管理员界面好了，不过还没调试)
                     auto label3 = new ui::Label; {
                         label3->AddTo(hbox3);
                         label3->SetHPreset(ui::Control::Preset::WRAP_AT_FRONT);
                         label3->SetVPreset(ui::Control::Preset::FILL_FROM_CENTER);
                         label3->SetContent("上课老师");
                     }
-<<<<<<< HEAD
-                    input3 = new ui::InputBox; {
-                        input3->AddTo(hbox3);
-                        input3->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
-                    }
-=======
->>>>>>> 35922fd (course 的管理员界面好了，不过还没调试)
                 }
                 auto hbox4 = new ui::HorizontalBox; {
                     hbox4->AddTo(vbox1);
                     hbox4->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
                 }
                 {
-<<<<<<< HEAD
-=======
                     input4 = new ui::InputBox; {
                         input4->AddTo(hbox4);
                         input4->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
                     }
->>>>>>> 35922fd (course 的管理员界面好了，不过还没调试)
                     auto label4 = new ui::Label; {
                         label4->AddTo(hbox4);
                         label4->SetHPreset(ui::Control::Preset::WRAP_AT_FRONT);
                         label4->SetVPreset(ui::Control::Preset::FILL_FROM_CENTER);
                         label4->SetContent("上课地点");
                     }
-<<<<<<< HEAD
-                    input4 = new ui::InputBox; {
-                        input4->AddTo(hbox4);
-                        input4->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
-                    }
-=======
->>>>>>> 35922fd (course 的管理员界面好了，不过还没调试)
                 }
                 auto hbox5 = new ui::HorizontalBox; {
                     hbox5->AddTo(vbox1);
                     hbox5->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
                 }
                 {
-<<<<<<< HEAD
-=======
                     input5 = new ui::InputBox; {
                         input5->AddTo(hbox5);
                         input5->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
                     }
->>>>>>> 35922fd (course 的管理员界面好了，不过还没调试)
                     auto label5 = new ui::Label; {
                         label5->AddTo(hbox5);
                         label5->SetHPreset(ui::Control::Preset::WRAP_AT_FRONT);
                         label5->SetVPreset(ui::Control::Preset::FILL_FROM_CENTER);
                         label5->SetContent("上课周数");
                     }//待修改
-<<<<<<< HEAD
-                    input5 = new ui::InputBox; {
-                        input5->AddTo(hbox5);
-                        input5->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
-                    }
-=======
->>>>>>> 35922fd (course 的管理员界面好了，不过还没调试)
                 }
                 cfbtn = new ui::Button; {
                     cfbtn->AddTo(vbox1);
@@ -807,20 +690,12 @@ void lab::AdmAddCourse::Load(ui::Screen *screen) noexcept
                 }
             }
     }
-<<<<<<< HEAD
-=======
-    
->>>>>>> e0c59df (准备写管理员界面了)
-=======
->>>>>>> 35922fd (course 的管理员界面好了，不过还没调试)
+
 }
 
 void lab::AdmAddCourse::Logic(ui::Screen *screen) noexcept
 {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 35922fd (course 的管理员界面好了，不过还没调试)
+
     backbtn->SetClickCallback(UI_CALLBACK{
         SwitchTo(new lab::EnterCourse);
     });
@@ -856,11 +731,7 @@ void lab::AdmAddCourse::Logic(ui::Screen *screen) noexcept
         }
         else {
             Listen(new trm::Sender({trm::rqs::ADM_ADD_COUR,account.code,account.hashedPassword,coursename,courseinfo}),SD_CALLBACK{
-<<<<<<< HEAD
-                if (reply[0] == trm::rpl::TIME_OUT) { // debug
-=======
                 if (reply[0] == trm::rpl::TIME_OUT) {
->>>>>>> 35922fd (course 的管理员界面好了，不过还没调试)
                     glabel->SetContent("服务端未响应，请检查后重试");
                     glabel->Show();
                 }
@@ -879,50 +750,15 @@ void lab::AdmAddCourse::Logic(ui::Screen *screen) noexcept
             });
         }
     });
-<<<<<<< HEAD
-=======
-
->>>>>>> e0c59df (准备写管理员界面了)
-=======
->>>>>>> 35922fd (course 的管理员界面好了，不过还没调试)
 }
 
 void lab::AdmAddCourse::Ready(ui::Screen *screen) noexcept
 {
-<<<<<<< HEAD
-<<<<<<< HEAD
-    ;    
-=======
-    
->>>>>>> e0c59df (准备写管理员界面了)
-=======
-    ;    
->>>>>>> 35922fd (course 的管理员界面好了，不过还没调试)
+    ;
 }
 
 void lab::AdmDeleteCourse::Load(ui::Screen *screen) noexcept
 {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-    
-}
-
-void lab::AdmDeleteCourse::Logic(ui::Screen *screen) noexcept
-{
-
-}
-
-void lab::AdmDeleteCourse::Ready(ui::Screen *screen) noexcept
-{
-
-}
-
-void lab::AdmCourse::Load(ui::Screen *screen) noexcept
-{
->>>>>>> e0c59df (准备写管理员界面了)
-=======
->>>>>>> 35922fd (course 的管理员界面好了，不过还没调试)
     auto mar = new ui::Margin; {
         mar->AddTo(screen);
         mar->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
@@ -934,10 +770,6 @@ void lab::AdmCourse::Load(ui::Screen *screen) noexcept
             flat->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
         }
         {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 35922fd (course 的管理员界面好了，不过还没调试)
             auto hbox1=new ui::HorizontalBox; {
                 hbox1->AddTo(flat);
                 hbox1->SetHPreset(ui::Control::Preset::FILL_FROM_CENTER);
@@ -964,20 +796,11 @@ void lab::AdmCourse::Load(ui::Screen *screen) noexcept
                 glabel->SetSizeWrap(ui::Control::Direction::HORIZONTAL, false);
                 glabel->SetHSize(700);//private
             }
-<<<<<<< HEAD
-=======
->>>>>>> e0c59df (准备写管理员界面了)
-=======
->>>>>>> 35922fd (course 的管理员界面好了，不过还没调试)
             backbtn = new ui::Button; {
                 backbtn->AddTo(flat);
                 backbtn->SetPreset(ui::Control::Preset::WRAP_AT_FRONT);
                 backbtn->SetCaption("返回");//private
             }
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 35922fd (course 的管理员界面好了，不过还没调试)
             hbox = new ui::HorizontalBox; {
                 hbox->AddTo(flat);
                 hbox->SetVPreset(ui::Control::Preset::WRAP_AT_CENTER);
@@ -991,8 +814,6 @@ void lab::AdmCourse::Load(ui::Screen *screen) noexcept
                         label0->AddTo(hbox);
                         label0->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
                     }
-<<<<<<< HEAD
-=======
                     label1 = new ui::Label; {
                         label1->AddTo(hbox);
                         label1->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
@@ -1010,14 +831,12 @@ void lab::AdmCourse::Load(ui::Screen *screen) noexcept
                         label4->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
                         label4->SetFontSize(20);
                     }
->>>>>>> 35922fd (course 的管理员界面好了，不过还没调试)
                     debtn = new ui::Button; {
                         debtn->AddTo(hbox);
                         debtn->SetHPreset(ui::Control::Preset::WRAP_AT_END);
                         debtn->SetVPreset(ui::Control::Preset::FILL_FROM_CENTER);
                         debtn->SetCaption("删除");//private
                     }
-<<<<<<< HEAD
                 }
             rpllabel = new ui::Label; {
                 rpllabel->AddTo(flat);
@@ -1080,96 +899,6 @@ void lab::AdmDeleteCourse::Ready(ui::Screen *screen) noexcept
 {
     hbox->HideAll();
     debtn->Enable(false);   
-=======
-            auto  glabel = new ui::Label; {
-                glabel->AddTo(flat);
-                glabel->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                glabel->SetContent("欢迎！");
-                glabel->SetVAnchor(5);
-            }
-            auto vbox1 = new ui::VerticalBox; {
-                vbox1->AddTo(flat);
-                vbox1->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-            }
-            {
-                addbtn = new ui::Button; {
-                    addbtn->AddTo(vbox1);
-                    addbtn->SetPreset(ui::Control::Preset::WRAP_AT_CENTER);
-                    addbtn->SetCaption("添加课程库中的课程");//private
-=======
->>>>>>> 35922fd (course 的管理员界面好了，不过还没调试)
-                }
-            rpllabel = new ui::Label; {
-                rpllabel->AddTo(flat);
-                rpllabel->SetPreset(ui::Control::Preset::PLACE_AT_END);//maybe
-                rpllabel->SetHSize(600);
-                rpllabel->SetVSize(100);
-                rpllabel->SetHAnchor(95);
-                rpllabel->SetVAnchor(95);
-            }//private
-        }
-    }
-}
-
-void lab::AdmDeleteCourse::Logic(ui::Screen *screen) noexcept
-{
-    backbtn->SetClickCallback(UI_CALLBACK{
-        SwitchTo(new lab::EnterCourse);
-    });
-    input->SetInputCallback(UI_CALLBACK{
-        coursename = input->GetText();
-        glabel->SetContent("请输入课程代号"); // inputting
-        glabel->Show();
-    });
-    btn1->SetClickCallback(UI_CALLBACK{
-        btn1->Enable(false);
-        if(coursename=="") 
-        {
-            glabel->SetContent("课程代号不能为空");
-            glabel->Show();
-        }
-        Listen(new trm::Sender({trm::rqs::ADM_DELETE_COUR,account.code,account.hashedPassword,coursename}),SD_CALLBACK{
-            if (reply[0] == trm::rpl::TIME_OUT) {
-                glabel->SetContent("服务端未响应，请检查后重试");
-                glabel->Show();
-            }
-            else if(reply[0] == trm::rpl::FAIL&&reply[1] == trm::rpl::NO_MATCH_COURSE) {
-                glabel->SetContent("待撤销的课程不存在,请重新输入");
-                glabel->Show();
-            }
-           else if(reply[0]==trm::rpl::ACCESS_DENIED) {
-                glabel->SetContent("权限不足");
-                glabel->Show();
-            }
-            else {
-                hbox->ShowAll();
-                label0->SetContent("课程编号："+reply[1]);
-                auto coursereply=trm::Split(reply[2]);
-                label1->SetContent("课程名称："+coursereply[0]);
-                label2->SetContent("上课老师："+coursereply[1]);
-                label3->SetContent("上课地点："+coursereply[2]);
-                label4->SetContent("上课周数："+coursereply[3]);
-                label4->SetFontSize(20);
-                debtn->Enable();
-            }
-        });
-        btn1->Enable();
-    }); // 这里的debtn其实是伪debtn
-    debtn->SetClickCallback(UI_CALLBACK{
-        rpllabel->SetContent("删除成功");
-        rpllabel->Show();
-    });
-}
-
-void lab::AdmDeleteCourse::Ready(ui::Screen *screen) noexcept
-{
-<<<<<<< HEAD
-   ; 
->>>>>>> e0c59df (准备写管理员界面了)
-=======
-    hbox->HideAll();
-    debtn->Enable(false);   
->>>>>>> 35922fd (course 的管理员界面好了，不过还没调试)
 }
 
 void lab::EnterReserve::Load(ui::Screen *screen) noexcept

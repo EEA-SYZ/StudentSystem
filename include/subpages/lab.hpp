@@ -226,7 +226,11 @@ private:
     ui::Button *debtn = nullptr;
     ui::Label *rpllabel = nullptr;
     ui::Button *modifybtn = nullptr;
-
+    ui::VerticalBox *vbox2 = nullptr;
+    ui::InputBox *input = nullptr;
+    ui::Button *cfbtn = nullptr;
+    ui::Label *nlabel = nullptr;
+    ui::Button *clbtn = nullptr;
 protected:
     void Load(ui::Screen *screen) noexcept;
     void Logic(ui::Screen *screen) noexcept;
@@ -234,7 +238,15 @@ protected:
 }; // 删除预约和修改数量
 class AdmModifyReserve:public PageBase {
 private:
-    ;
+    ui::InputBox *input1 = nullptr;
+    ui::InputBox *input2 = nullptr;
+    ui::InputBox *input3 = nullptr;
+    ui::InputBox *input4 = nullptr;
+    ui::InputBox *input5 = nullptr;
+    ui::Button *backbtn = nullptr;
+    ui::Label *glabel = nullptr;
+    ui::Button *cfbtn = nullptr;
+    ui::InputBox *input6 = nullptr;
 protected:
     void Load(ui::Screen *screen) noexcept;
     void Logic(ui::Screen *screen) noexcept;

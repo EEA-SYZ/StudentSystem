@@ -901,10 +901,10 @@ void lab::EnterReserve::Load(ui::Screen *screen) noexcept
             }
             auto hbox1 = new ui::HorizontalBox();{
                 hbox1->AddTo(flat);
-                hbox1->SetHPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                hbox1->SetVPreset(ui::Control::Preset::WRAP_AT_FRONT);
+                hbox1->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
                 hbox1->SetHSize(75);
-                hbox1->SetVAnchor(5);
+                hbox1->SetVSize(30);
+                hbox1->SetVAnchor(15);
 
             }
             {   
@@ -1310,72 +1310,118 @@ void lab::EnterReserve::Logic(ui::Screen *screen) noexcept
     });
     btn13->SetClickCallback(UI_CALLBACK{
         rdate.month="1";
+        vsbox1->HideAll();
+        dbtn1->SetCaption("月份：一月");
     });
     btn14->SetClickCallback(UI_CALLBACK{
         rdate.month="2";
+        vsbox1->HideAll();
+        dbtn1->SetCaption("月份：二月");
     });
     btn15->SetClickCallback(UI_CALLBACK{
         rdate.month="3";
+        vsbox1->HideAll();
+        dbtn1->SetCaption("月份：三月");
     });
     btn4->SetClickCallback(UI_CALLBACK{
         rdate.month="4";
+        vsbox1->HideAll();
+        dbtn1->SetCaption("月份：四月");
     });
     btn5->SetClickCallback(UI_CALLBACK{
         rdate.month="5";
+        vsbox1->HideAll();
+        dbtn1->SetCaption("月份：五月");
     });
     btn6->SetClickCallback(UI_CALLBACK{
         rdate.month="6";
+        vsbox1->HideAll();
+        dbtn1->SetCaption("月份：六月");
     });
     btn7->SetClickCallback(UI_CALLBACK{
         rdate.month="7";
+        vsbox1->HideAll();
+        dbtn1->SetCaption("月份：七月");
     });
     btn8->SetClickCallback(UI_CALLBACK{
         rdate.month="8";
+        vsbox1->HideAll();
+        dbtn1->SetCaption("月份：八月");
     });
     btn9->SetClickCallback(UI_CALLBACK{
         rdate.month="9";
+        vsbox1->HideAll();
+        dbtn1->SetCaption("月份：九月");
     });
     btn10->SetClickCallback(UI_CALLBACK{
         rdate.month="10";
+        vsbox1->HideAll();
+        dbtn1->SetCaption("月份：十月");
     });
     btn11->SetClickCallback(UI_CALLBACK{
         rdate.month="11";
+        vsbox1->HideAll();
+        dbtn1->SetCaption("月份：十一月");
     });
     btn12->SetClickCallback(UI_CALLBACK{
         rdate.month="12";
+        vsbox1->HideAll();
+        dbtn1->SetCaption("月份：十二月");
     });
     btn20->SetClickCallback(UI_CALLBACK{
         rdate.week="1";
+        vsbox2->HideAll();
+        dbtn2->SetCaption("周数：第一周");
     });
     btn21->SetClickCallback(UI_CALLBACK{
         rdate.week="2";
+        vsbox2->HideAll();
+        dbtn2->SetCaption("周数：第二周");
     });
     btn22->SetClickCallback(UI_CALLBACK{
         rdate.week="3";
+        vsbox2->HideAll();
+        dbtn2->SetCaption("周数：第三周");
     });
     btn23->SetClickCallback(UI_CALLBACK{
         rdate.week="4";
+        vsbox2->HideAll();
+        dbtn2->SetCaption("周数：第四周");
     });
     btn30->SetClickCallback(UI_CALLBACK{
         rdate.date="1";
+        vsbox3->HideAll();
+        dbtn3->SetCaption("星期：星期一");
     });
     btn31->SetClickCallback(UI_CALLBACK{
         rdate.date="2";
+        vsbox3->HideAll();
+        dbtn3->SetCaption("星期：星期二");
     });
     btn32->SetClickCallback(UI_CALLBACK{
         rdate.date="3";
+        vsbox3->HideAll();
+        dbtn3->SetCaption("星期：星期三");
     });
     btn33->SetClickCallback(UI_CALLBACK{
         rdate.date="4";
+        vsbox3->HideAll();
+        dbtn3->SetCaption("星期：星期四");
     });
     btn34->SetClickCallback(UI_CALLBACK{
         rdate.date="5";
+        vsbox3->HideAll();
+        dbtn3->SetCaption("星期：星期五");
     });
     btn35->SetClickCallback(UI_CALLBACK{
         rdate.date="6";
+        vsbox3->HideAll();
+        dbtn3->SetCaption("星期：星期六");
     });
     btn36->SetClickCallback(UI_CALLBACK{
         rdate.date="7";
+        vsbox3->HideAll();
+        dbtn3->SetCaption("星期：星期日");
     });
 }
 
@@ -1396,6 +1442,8 @@ void lab::EnterReserve::Ready(ui::Screen *screen) noexcept
     admdebtn->Enable(false);
     modifybtn1->Enable(false);
     modifybtn2->Enable(false);
+    if(account.code!=""&&account.hashedPassword!="")
+    {
     Listen(new trm::Sender({trm::rqs::CHECK_ACCESS,account.code,account.hashedPassword,trm::AccessBox{trm::acc::ADM_ADD_RESERVE_TIME}}),SD_CALLBACK{
         if (reply[0] == trm::rpl::TIME_OUT) {
             glabel->SetContent("服务端未响应，请检查后重试");
@@ -1448,6 +1496,7 @@ void lab::EnterReserve::Ready(ui::Screen *screen) noexcept
             //
         }
     });
+}
 }
 
 void lab::ReserveTimeList::Load(ui::Screen *screen) noexcept

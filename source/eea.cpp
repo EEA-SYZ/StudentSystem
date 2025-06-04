@@ -587,7 +587,6 @@ void eea::EnterMailSystem::Load(ui::Screen *screen) noexcept
     {
         auto hor = new ui::HorizontalBox; {
             hor->AddTo(mar);
-            hor->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
         }
         {
             auto ver = new ui::VerticalBox; {
@@ -604,7 +603,7 @@ void eea::EnterMailSystem::Load(ui::Screen *screen) noexcept
                 }
                 {
                     backBtn = new ui::Button("返回主页");
-                    writeMailBtn = new ui::Button("写  信");
+                    writeMailBtn = new ui::Button("更多功能");
                     refreshBtn = new ui::Button("刷新");
                     for (auto btn : {backBtn, writeMailBtn, refreshBtn}) {
                         btn->AddTo(btnBox);
@@ -696,6 +695,8 @@ void eea::EnterMailSystem::Load(ui::Screen *screen) noexcept
                 {
                     mailContent = new ui::Label; {
                         mailContent->AddTo(content);
+                        mailContent->SetHPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                        mailContent->SetHSize(80);
                         mailContent->SetMaxCount(32);
                     }
                 }
@@ -711,6 +712,11 @@ void eea::EnterMailSystem::Logic(ui::Screen *screen) noexcept
     });
 
     auto checkMail = [=, this](const std::string &name){
+        for (auto label : {subject, sender, receiver, dateTime, state, mailContent}) {
+            label->SetContent("");
+        }
+        mailContent->SetContent("加载中...");
+
         Listen(new trm::Sender({trm::rqs::GET_MESSAGE, username, password, name}), SD_CALLBACK{
             if (reply[0] == trm::rpl::TIME_OUT) {
                 ;
@@ -725,6 +731,7 @@ void eea::EnterMailSystem::Logic(ui::Screen *screen) noexcept
                 if (con.read) state->SetContent("已读");
                 else state->SetContent("未读");
                 mailContent->SetContent(con.content);
+                turner->CallTurnCallback("", {});
             }
         });
     };
@@ -814,7 +821,7 @@ void eea::EnterMailSystem::Logic(ui::Screen *screen) noexcept
                 loading->Hide();
                 list->Show();
                 turnable = true;
-                refreshMsgbox({}, {});
+                refreshMsgbox("", {});
             }
         });
     };
@@ -822,11 +829,187 @@ void eea::EnterMailSystem::Logic(ui::Screen *screen) noexcept
     refreshBtn->SetClickCallback(UI_CALLBACK{
         refreshList();
     });
+
+    writeMailBtn->SetClickCallback(UI_CALLBACK{
+        screen->HideAll();
+        auto cli = MessageBox(screen, "更多功能：", {"写信", "清空我的信件", "重置邮件系统", "返回上一级"});
+        if (cli == 0) {
+            SwitchTo(new WriteMail);
+        } else if (cli == 1) {
+            ; // TODO
+        } else if (cli == 2) {
+            ; // TODO
+        } else if (cli == 3) {
+            screen->FreeAllVisible();
+            screen->ShowAll();
+        } else {
+            assert(false); // Impossible case.
+        }
+    });
 }
 
 void eea::EnterMailSystem::Ready(ui::Screen *screen) noexcept
 {
     refreshList();
+}
+
+void eea::WriteMail::Load(ui::Screen *screen) noexcept
+{
+    auto mar = new ui::Margin; {
+        mar->AddTo(screen);
+        mar->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+        mar->SetMargin(80, 80, 200, 200);
+    }
+    {
+        auto hor = new ui::HorizontalBox; {
+            hor->AddTo(mar);
+            hor->SetGap(80);
+        }
+        {
+            backBtn = new ui::Button("返回上一级"); {
+                backBtn->AddTo(hor);
+                backBtn->SetVPreset(ui::Control::Preset::PLACE_AT_FRONT);
+            }
+            auto mainBox = new ui::VerticalBox; {
+                mainBox->AddTo(hor);
+                mainBox->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+            }
+            {
+                auto tarB = new ui::HorizontalBox;
+                {
+                    tarB->Add(new ui::Label("收件人：", ui::Control::Preset::WRAP_AT_CENTER));
+                    target = new ui::InputBox; {
+                        target->AddTo(tarB);
+                        target->SetHPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                    }
+                }
+                auto subB = new ui::HorizontalBox;
+                {
+                    subB->Add(new ui::Label("主  题：", ui::Control::Preset::WRAP_AT_CENTER));
+                    subject = new ui::InputBox; {
+                        subject->AddTo(subB);
+                        subject->SetHPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                    }
+                }
+                for (auto b : {tarB, subB}) {
+                    b->AddTo(mainBox);
+                    b->SetHPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                    b->SetHSize(80);
+                    b->SetVPreset(ui::Control::Preset::WRAP_AT_CENTER);
+                    b->SetGap(50);
+                }
+                inputB = new ui::InputBox; {
+                    inputB->AddTo(mainBox);
+                    inputB->SetHPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                    inputB->SetVPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                    inputB->SetMaxCount(32);
+                }
+            }
+            sendBtn = new ui::Button("确定发送"); {
+                sendBtn->AddTo(hor);
+                sendBtn->SetVPreset(ui::Control::Preset::PLACE_AT_END);
+            }
+        }
+    }
+}
+
+void eea::WriteMail::Logic(ui::Screen *screen) noexcept
+{
+    backBtn->SetClickCallback(UI_CALLBACK{
+        screen->HideAll();
+        auto cli = MessageBox(screen, "您将丢弃当前编辑的内容，继续返回吗？", {"确定", "取消"});
+        if (cli == 0) {
+            SwitchTo(new EnterMailSystem);
+        } else if (cli == 1) {
+            screen->FreeAllVisible();
+            screen->ShowAll();
+        } else {
+            assert(false); // Impossible case.
+        }
+    });
+
+    auto sendMail = [=, this](){
+        screen->HideAll();
+        auto [success, reply] = WaitServer(screen, {trm::rqs::SEND_MESSAGE, username, password, target->GetText(), subject->GetText(), inputB->GetText()}, "发送中");
+        screen->FreeAllVisible();
+        screen->ShowAll();
+        if (success == 1) {
+            if (reply[0] == trm::rpl::ACCESS_DENIED) {
+                screen->HideAll();
+                MessageBox(screen, "对不起，您没有权限发送邮件。\n您只有接收和查看您的信件的权限。");
+                screen->FreeAllVisible();
+                screen->ShowAll();
+            } else if (reply[0] == trm::rpl::SUCC) {
+                screen->HideAll();
+                auto cli = MessageBox(screen, "发送成功", {"返回私信系统主页", "再编辑一封"});
+                if (cli == 0) {
+                    SwitchTo(new EnterMailSystem);
+                } else if (cli == 1) {
+                    SwitchTo(new WriteMail);
+                } else {
+                    assert(false); // Impossible case.
+                }
+            } else if (reply[0] == trm::rpl::FAIL) {
+                screen->HideAll();
+                MessageBox(screen, "发送失败！\n可能收件人帐户不存在");
+                screen->FreeAllVisible();
+                screen->ShowAll();
+            } else {
+                assert(false); // Unexpected reply.
+            }
+        } else if (success == 0) {
+            screen->HideAll();
+            MessageBox(screen, "服务端未响应，请检查后重试。");
+            screen->FreeAllVisible();
+            screen->ShowAll();
+        }
+    };
+
+    sendBtn->SetClickCallback(UI_CALLBACK{
+        if (target->GetText() == "" || subject->GetText() == "" || inputB->GetText() == "") {
+            screen->HideAll();
+            MessageBox(screen, "请填写完整表单！");
+            screen->FreeAllVisible();
+            screen->ShowAll();
+            return;
+        }
+        screen->HideAll();
+        auto cli = MessageBox(screen, "请检查收件人：\n" + target->GetText() + "\n确定发送吗？", {"确定", "取消"});
+        if (cli == 0) {
+            screen->FreeAllVisible();
+            screen->ShowAll();
+            sendMail();
+        } else if (cli == 1) {
+            screen->FreeAllVisible();
+            screen->ShowAll();
+        } else {
+            assert(false); // Impossible case.
+        }
+    });
+}
+
+void eea::WriteMail::Ready(ui::Screen *screen) noexcept
+{
+    screen->HideAll();
+    auto [success, reply] = WaitServer(screen, {trm::rqs::CHECK_ACCESS, username, password, trm::AccessBox{trm::Access::SEND_MESSAGE}}, "正在检查权限");
+    screen->FreeAllVisible();
+    screen->ShowAll();
+    if (success == 1) {
+        if (reply[0] == trm::rpl::YES) {
+            ;
+        } else if (reply[0] == trm::rpl::NO) {
+            screen->HideAll();
+            MessageBox(screen, "对不起，您没有权限发送邮件。\n您只有接收和查看您的信件的权限。");
+            SwitchTo(new EnterMailSystem);
+        } else {
+            assert(false); // Unexpected reply.
+        }
+    } else if (success == 0) {
+        screen->HideAll();
+        MessageBox(screen, "服务端未响应，请检查后重试。");
+        screen->FreeAllVisible();
+        screen->ShowAll();
+    }
 }
 
 void eea::MainPage::Load(ui::Screen *screen) noexcept
@@ -839,7 +1022,6 @@ void eea::MainPage::Load(ui::Screen *screen) noexcept
     {
         auto ver = new ui::VerticalBox; {
             ver->AddTo(margin);
-            ver->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
         }
         {
             auto flat = new ui::Flat; {
@@ -928,6 +1110,49 @@ void eea::MainPage::Load(ui::Screen *screen) noexcept
                         btn->SetHPreset(ui::Control::Preset::FILL_FROM_CENTER);
                     }
                 }
+                verNolify = new ui::VerticalScrollingBox; {
+                    verNolify->AddTo(hor);
+                    verNolify->SetVPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                    verNolify->SetHPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                    verNolify->SetInsideBoxScrollable(true);
+                }
+                {
+                    headlineBox = new ui::HorizontalBox; {
+                        headlineBox->AddTo(verNolify);
+                        headlineBox->SetVSize(300);
+                        headlineBox->SetHPreset(ui::Control::Preset::WRAP_AT_CENTER);
+                    }
+                    {
+                        headlineBtn = new ui::Button; {
+                            headlineBtn->AddTo(headlineBox);
+                            headlineBtn->SetHSize(600);
+                            headlineBtn->SetVPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                        }
+                        headlineBtnBox = new ui::VerticalBox; {
+                            headlineBtnBox->AddTo(headlineBox);
+                            headlineBtnBox->SetVPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                            headlineBtnBox->SetHPreset(ui::Control::Preset::WRAP_AT_END);
+                        }
+                    }
+                    auto nolifyFoot = new ui::HorizontalBox; {
+                        nolifyFoot->AddTo(verNolify);
+                        nolifyFoot->SetVPreset(ui::Control::Preset::WRAP_AT_FRONT);
+                        nolifyFoot->SetHPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                        nolifyFoot->SetGap(300);
+                    }
+                    {
+                        newsBox = new ui::VerticalBox; {
+                            newsBox->AddTo(nolifyFoot);
+                            newsBox->SetVPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                            newsBox->SetHPreset(ui::Control::Preset::WRAP_AT_CENTER);
+                        }
+                        noticeBox = new ui::VerticalBox; {
+                            noticeBox->AddTo(nolifyFoot);
+                            noticeBox->SetVPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                            noticeBox->SetHPreset(ui::Control::Preset::WRAP_AT_CENTER);
+                        }
+                    }
+                }
             }
         }
     }
@@ -959,11 +1184,292 @@ void eea::MainPage::Logic(ui::Screen *screen) noexcept
     accBtn->SetClickCallback(UI_CALLBACK{
         SwitchTo(new EnterAccManage);
     });
+
+    auto printHeadline = [=, this]() -> void {
+        headlineBtn->SetVisible(true);
+        if (headlineList.empty()) {
+            auto label = new ui::Label("暂无通知"); {
+                label->AddTo(headlineBox);
+                label->SetPreset(ui::Control::Preset::WRAP_AT_CENTER);
+                label->SetFontSize(50);
+            }
+            headlineBtn->SetVisible(false);
+            return;
+        }
+
+        for (unsigned long long i = headlineList.size() - 1; i >= 0; --i) {
+            auto btn = new ui::Button; {
+                btn->AddTo(headlineBtnBox);
+                btn->SetSize(1, 1);
+                btn->SetHPreset(ui::Control::Preset::WRAP_AT_CENTER);
+                btn->SetVPreset(ui::Control::Preset::WRAP_AT_CENTER);
+                btn->SetClickCallback(UI_CALLBACK{
+                    headlineTurners[selected]->Enable();
+                    selected = headlineList.size() - 1 - i;
+                    headlineBtn->SetCaption(headlineList[headlineList.size() - 1 - selected].first.GetHeadlineTitle());
+                    headlineBtn->SetClickCallback(UI_CALLBACK{
+                        selectedNoticeNum = headlineList[headlineList.size() - 1 - selected].second;
+                        SwitchTo(new vio::ViewNolify(headlineNum, std::string("headline"), std::string("MainPage")));
+                    });
+                    headlineTurners[selected]->Disable();
+                });
+            }
+            headlineTurners.emplace_back(btn);
+            if (i == 0) break;
+        }
+        selected = 0;
+        headlineBtn->SetCaption(headlineList[headlineList.size() - 1 - selected].first.GetHeadlineTitle());
+        headlineBtn->SetClickCallback(UI_CALLBACK{
+        selectedNoticeNum = headlineList[headlineList.size() - 1 - selected].second;
+            SwitchTo(new vio::ViewNolify(headlineNum, std::string("headline"), std::string("MainPage")));
+        });
+        headlineTurners[0]->Disable();
+    };
+
+    auto printNews = [=, this]() -> void {
+        auto hor = new ui::HorizontalBox; {
+            hor->AddTo(newsBox);
+            hor->SetHPreset(ui::Control::Preset::FILL_FROM_CENTER);
+            hor->SetVPreset(ui::Control::Preset::WRAP_AT_FRONT);
+        }
+        {
+            auto label = new ui::Label; {
+                label->AddTo(hor);
+                label->SetContent("新闻");
+                label->SetHPreset(ui::Control::Preset::WRAP_AT_FRONT);
+                label->SetVPreset(ui::Control::Preset::WRAP_AT_FRONT);
+                label->SetFontSize(30);
+            }
+            auto button = new ui::Button; {
+                button->AddTo(hor);
+                button->SetCaption("更多");
+                button->SetHPreset(ui::Control::Preset::WRAP_AT_END);
+                button->SetVPreset(ui::Control::Preset::WRAP_AT_FRONT);
+                button->SetFontSize(30);
+                button->SetClickCallback(UI_CALLBACK{
+                    SwitchTo(new vio::ViewNolifyList(newsNum, std::string("news"), std::string("MainPage")));
+                });
+            }
+        }
+
+        if (newsList.empty()) {
+            auto label = new ui::Label("暂无新闻"); {
+                label->AddTo(newsBox);
+                label->SetPreset(ui::Control::Preset::WRAP_AT_CENTER);
+                label->SetFontSize(30);
+            }
+            return;
+        }
+        for (unsigned long long i = newsList.size() - 1; i >= 0; --i) {
+            auto flat = new ui::HorizontalBox; {
+                flat->AddTo(newsBox);
+                flat->SetHPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                flat->SetVPreset(ui::Control::Preset::WRAP_AT_FRONT);
+            }  
+            {
+                auto btn = new ui::Button; {
+                    btn->AddTo(flat);
+                    btn->SetCaption(newsList[i].first.GetTitle());
+                    btn->SetHPreset(ui::Control::Preset::WRAP_AT_FRONT);
+                    btn->SetVPreset(ui::Control::Preset::WRAP_AT_FRONT);
+                    btn->SetFontSize(25);
+                    btn->SetClickCallback(UI_CALLBACK{
+                        selectedNoticeNum = newsList[i].second;
+                        SwitchTo(new vio::ViewNolify(newsNum, std::string("news"), std::string("MainPage")));
+                    });
+                }
+                auto label = new ui::Label; {
+                    label->AddTo(flat);
+                    label->SetHPreset(ui::Control::Preset::PLACE_AT_END);
+                    label->SetVPreset(ui::Control::Preset::WRAP_AT_FRONT);
+                    label->SetFontSize(25);
+                    label->SetContent(newsList[i].first.date.GetDate());
+                }
+            }
+            if (i == 0) break;
+        }
+    };
+
+    auto printNotice = [=, this]() -> void {
+        auto hor = new ui::HorizontalBox; {
+            hor->AddTo(noticeBox);
+            hor->SetHPreset(ui::Control::Preset::FILL_FROM_CENTER);
+            hor->SetVPreset(ui::Control::Preset::WRAP_AT_FRONT);
+        }
+        {
+            auto label = new ui::Label; {
+                label->AddTo(hor);
+                label->SetContent("通知");
+                label->SetHPreset(ui::Control::Preset::WRAP_AT_FRONT);
+                label->SetVPreset(ui::Control::Preset::WRAP_AT_FRONT);
+                label->SetFontSize(30);
+            }
+            auto button = new ui::Button; {
+                button->AddTo(hor);
+                button->SetCaption("更多");
+                button->SetHPreset(ui::Control::Preset::WRAP_AT_END);
+                button->SetVPreset(ui::Control::Preset::WRAP_AT_FRONT);
+                button->SetFontSize(30);
+                button->SetClickCallback(UI_CALLBACK{
+                    SwitchTo(new vio::ViewNolifyList(noticeNum, std::string("notice"), std::string("MainPage")));
+                });
+            }
+        }
+
+        if (noticeList.empty()) {
+            auto label = new ui::Label("暂无通知"); {
+                label->AddTo(noticeBox);
+                label->SetPreset(ui::Control::Preset::WRAP_AT_CENTER);
+                label->SetFontSize(30);
+            }
+            return;
+        }
+        for (unsigned long long i = noticeList.size() - 1; i >= 0; --i) {
+            auto flat = new ui::HorizontalBox; {
+                flat->AddTo(noticeBox);
+                flat->SetHPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                flat->SetVPreset(ui::Control::Preset::WRAP_AT_FRONT);
+            }  
+            {
+                auto btn = new ui::Button; {
+                    btn->AddTo(flat);
+                    btn->SetCaption(noticeList[i].first.GetTitle());
+                    btn->SetHPreset(ui::Control::Preset::WRAP_AT_FRONT);
+                    btn->SetVPreset(ui::Control::Preset::WRAP_AT_FRONT);
+                    btn->SetFontSize(25);
+                    btn->SetClickCallback(UI_CALLBACK{
+                        selectedNoticeNum = noticeList[i].second;
+                        SwitchTo(new vio::ViewNolify(noticeNum, std::string("notice"), std::string("MainPage")));
+                    });
+                }
+                auto label = new ui::Label; {
+                    label->AddTo(flat);
+                    label->SetHPreset(ui::Control::Preset::PLACE_AT_END);
+                    label->SetVPreset(ui::Control::Preset::WRAP_AT_FRONT);
+                    label->SetFontSize(25);
+                    label->SetContent(noticeList[i].first.date.GetDate());
+                }
+            }
+            if (i == 0) break;
+        }
+    };
+
+    initialize = [=, this]() -> void {
+        for (std::string type : {"headline", "news", "notice"}) {
+            unsigned long long low, high;
+            if (type == "headline") {
+                if (headlineNum < 5) {
+                    low = 0;
+                    high = headlineNum;
+                }
+                else {
+                    low = headlineNum - 5;
+                    high = headlineNum;
+                }
+            }
+            else if (type == "news") {
+                if (newsNum < 5) {
+                    low = 0;
+                    high = newsNum;
+                }
+                else {
+                    low = newsNum - 5;
+                    high = newsNum;
+                }
+            }
+            else if (type == "notice") {
+                if (noticeNum < 5) {
+                    low = 0;
+                    high = noticeNum;
+                }
+                else {
+                    low = noticeNum - 5;
+                    high = noticeNum;
+                }
+            }
+            Listen(new trm::Sender({trm::rqs::GET_NOLIFY_LIST, ToStr(low), ToStr(high), type}), SD_CALLBACK{
+                if (!reply.empty() && reply[0] == trm::rpl::TIME_OUT) {
+                    ui::Label *label = new ui::Label("加载失败，请重试"); {
+                        label->AddTo(verNolify);
+                        label->SetPreset(ui::Control::Preset::WRAP_AT_CENTER);
+                    }
+                }
+                else {
+                    if (type == "headline") {
+                        for (unsigned long long p = 0; p < reply.size(); ++p) {
+                            headlineList.push_back({trm::Notice(reply[p]), low + p});
+                        }
+                        printHeadline();
+                    }
+                    else if (type == "news") {
+                        for (unsigned long long p = 0; p < reply.size(); ++p) {
+                            newsList.push_back({trm::Notice(reply[p]), low + p});
+                        }    
+                        printNews();
+                    }
+                    else if (type == "notice") {
+                        for (unsigned long long p = 0; p < reply.size(); ++p) {
+                            noticeList.push_back({trm::Notice(reply[p]), low + p});
+                        }
+                        printNotice();
+                    }
+                    else assert(false);
+                } 
+            });
+        }
+    };
+
+    getListLenth = [=, this]() -> void {
+        headlineList.clear();
+        newsList.clear();
+        noticeList.clear();
+
+        Listen(new trm::Sender({trm::rqs::GET_NOLIFY_NUMBER, trm::Notice::patition[0], trm::Notice::patition[1], trm::Notice::patition[2]}), SD_CALLBACK{
+            if (reply[0] == trm::rpl::TIME_OUT) {
+                ui::Label *label = new ui::Label("加载失败，请重试"); {
+                    label->AddTo(verNolify);
+                    label->SetPreset(ui::Control::Preset::PLACE_AT_CENTER);
+                }
+            }
+            else {
+                headlineNum = ToNum(reply[0]);
+                newsNum = ToNum(reply[1]);
+                noticeNum = ToNum(reply[2]);
+                initialize();
+            }
+        });
+    };
 }
 
+
 void eea::MainPage::Ready(ui::Screen *screen) noexcept
+{   
+    getListLenth();
+}
+
+void eea::MainPage::Tick(ui::Screen *screen) noexcept
 {
-    ;
+    interval = clock.getElapsedTime();
+    if (interval.asSeconds() >= 1) {
+        elapsed += interval;
+        clock.restart();
+    }
+
+    if (elapsed.asSeconds() > 5) {
+        elapsed = sf::Time::Zero;
+        if (headlineTurners.empty()) {
+            return;
+        }
+        headlineTurners[selected]->Enable();
+        ++selected;
+        selected %= headlineNum;
+        headlineBtn->SetCaption(headlineList[headlineList.size() - 1 - selected].first.GetHeadlineTitle());
+        headlineBtn->SetClickCallback(UI_CALLBACK{
+            selectedNoticeNum = headlineList[headlineList.size() - 1 - selected].second;
+            SwitchTo(new vio::ViewNolify(headlineNum, std::string("headline"), std::string("MainPage")));
+        });
+        headlineTurners[selected]->Disable();
+    }
 }
 
 void eea::EnterAccManage::Load(ui::Screen *screen) noexcept

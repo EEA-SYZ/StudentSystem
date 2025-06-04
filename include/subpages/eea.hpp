@@ -37,10 +37,32 @@ private:
     ui::Button *mailBtn = nullptr;
     ui::Button *nolifyBtn = nullptr;
     ui::Button *accBtn = nullptr;
+
+    ui::Button *headlineBtn = nullptr;
+    ui::HorizontalBox *headlineBox = nullptr;
+    ui::VerticalBox *headlineBtnBox = nullptr;
+    ui::VerticalBox *newsBox = nullptr;
+    ui::VerticalBox *noticeBox = nullptr;
+    ui::VerticalScrollingBox *verNolify = nullptr;
+    
+    int selected = 0;
+    sf::Clock clock;
+    sf::Time elapsed;
+    sf::Time interval;
+    unsigned long long newsNum = 0;
+    unsigned long long noticeNum = 0;
+    unsigned long long headlineNum = 0;
+    std::vector<std::pair<trm::Notice, unsigned long long>> noticeList;
+    std::vector<std::pair<trm::Notice, unsigned long long>> newsList;
+    std::vector<std::pair<trm::Notice, unsigned long long>> headlineList;
+    std::vector<ui::Button*> headlineTurners;
+    std::function<void ()> initialize = [](){};
+    std::function<void ()> getListLenth = [](){};
 protected:
     void Load(ui::Screen *screen) noexcept;
     void Logic(ui::Screen *screen) noexcept;
     void Ready(ui::Screen *screen) noexcept;
+    void Tick(ui::Screen *screen) noexcept;
 };
 
 class EnterAccManage : public PageBase {
@@ -128,6 +150,19 @@ private:
     ui::Label *mailContent = nullptr;
 
     const int eachPageNum = 10;
+protected:
+    void Load(ui::Screen *screen) noexcept;
+    void Logic(ui::Screen *screen) noexcept;
+    void Ready(ui::Screen *screen) noexcept;
+};
+
+class WriteMail : public PageBase {
+private:
+    ui::Button *backBtn = nullptr;
+    ui::InputBox *target = nullptr;
+    ui::InputBox *subject = nullptr;
+    ui::InputBox *inputB = nullptr;
+    ui::Button *sendBtn = nullptr;
 protected:
     void Load(ui::Screen *screen) noexcept;
     void Logic(ui::Screen *screen) noexcept;

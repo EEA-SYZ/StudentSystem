@@ -580,7 +580,6 @@ void lab::DeleteCourse::Ready(ui::Screen *screen) noexcept
 
 void lab::AdmAddCourse::Load(ui::Screen *screen) noexcept
 {
-
     auto mar = new ui::Margin; {
         mar->AddTo(screen);
         mar->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
@@ -608,15 +607,15 @@ void lab::AdmAddCourse::Load(ui::Screen *screen) noexcept
                     hbox1->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
                 }
                 {
-                    input1 = new ui::InputBox; {
-                        input1->AddTo(hbox1);
-                        input1->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
-                    }
                     auto label1 = new ui::Label; {
                         label1->AddTo(hbox1);
                         label1->SetHPreset(ui::Control::Preset::WRAP_AT_FRONT);
                         label1->SetVPreset(ui::Control::Preset::FILL_FROM_CENTER);
                         label1->SetContent("课程代号");
+                    }
+                    input1 = new ui::InputBox; {
+                        input1->AddTo(hbox1);
+                        input1->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
                     }
                 }    
                 auto hbox2 = new ui::HorizontalBox; {
@@ -624,15 +623,15 @@ void lab::AdmAddCourse::Load(ui::Screen *screen) noexcept
                     hbox2->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
                 }
                 {
-                    input2 = new ui::InputBox; {
-                        input2->AddTo(hbox2);
-                        input2->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
-                    }
                     auto label2 = new ui::Label; {
                         label2->AddTo(hbox2);
                         label2->SetHPreset(ui::Control::Preset::WRAP_AT_FRONT);
                         label2->SetVPreset(ui::Control::Preset::FILL_FROM_CENTER);
                         label2->SetContent("课程名称");
+                    }
+                    input2 = new ui::InputBox; {
+                        input2->AddTo(hbox2);
+                        input2->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
                     }
                 }
                 auto hbox3 = new ui::HorizontalBox; {
@@ -640,15 +639,15 @@ void lab::AdmAddCourse::Load(ui::Screen *screen) noexcept
                     hbox3->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
                 }
                 {
-                    input3 = new ui::InputBox; {
-                        input3->AddTo(hbox3);
-                        input3->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
-                    }
                     auto label3 = new ui::Label; {
                         label3->AddTo(hbox3);
                         label3->SetHPreset(ui::Control::Preset::WRAP_AT_FRONT);
                         label3->SetVPreset(ui::Control::Preset::FILL_FROM_CENTER);
                         label3->SetContent("上课老师");
+                    }
+                    input3 = new ui::InputBox; {
+                        input3->AddTo(hbox3);
+                        input3->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
                     }
                 }
                 auto hbox4 = new ui::HorizontalBox; {
@@ -656,15 +655,15 @@ void lab::AdmAddCourse::Load(ui::Screen *screen) noexcept
                     hbox4->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
                 }
                 {
-                    input4 = new ui::InputBox; {
-                        input4->AddTo(hbox4);
-                        input4->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
-                    }
                     auto label4 = new ui::Label; {
                         label4->AddTo(hbox4);
                         label4->SetHPreset(ui::Control::Preset::WRAP_AT_FRONT);
                         label4->SetVPreset(ui::Control::Preset::FILL_FROM_CENTER);
                         label4->SetContent("上课地点");
+                    }
+                    input4 = new ui::InputBox; {
+                        input4->AddTo(hbox4);
+                        input4->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
                     }
                 }
                 auto hbox5 = new ui::HorizontalBox; {
@@ -672,16 +671,16 @@ void lab::AdmAddCourse::Load(ui::Screen *screen) noexcept
                     hbox5->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
                 }
                 {
-                    input5 = new ui::InputBox; {
-                        input5->AddTo(hbox5);
-                        input5->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
-                    }
                     auto label5 = new ui::Label; {
                         label5->AddTo(hbox5);
                         label5->SetHPreset(ui::Control::Preset::WRAP_AT_FRONT);
                         label5->SetVPreset(ui::Control::Preset::FILL_FROM_CENTER);
                         label5->SetContent("上课周数");
                     }//待修改
+                    input5 = new ui::InputBox; {
+                        input5->AddTo(hbox5);
+                        input5->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                    }
                 }
                 cfbtn = new ui::Button; {
                     cfbtn->AddTo(vbox1);
@@ -690,12 +689,10 @@ void lab::AdmAddCourse::Load(ui::Screen *screen) noexcept
                 }
             }
     }
-
 }
 
 void lab::AdmAddCourse::Logic(ui::Screen *screen) noexcept
 {
-
     backbtn->SetClickCallback(UI_CALLBACK{
         SwitchTo(new lab::EnterCourse);
     });
@@ -731,7 +728,7 @@ void lab::AdmAddCourse::Logic(ui::Screen *screen) noexcept
         }
         else {
             Listen(new trm::Sender({trm::rqs::ADM_ADD_COUR,account.code,account.hashedPassword,coursename,courseinfo}),SD_CALLBACK{
-                if (reply[0] == trm::rpl::TIME_OUT) {
+                if (reply[0] == trm::rpl::TIME_OUT) { // debug
                     glabel->SetContent("服务端未响应，请检查后重试");
                     glabel->Show();
                 }
@@ -754,7 +751,7 @@ void lab::AdmAddCourse::Logic(ui::Screen *screen) noexcept
 
 void lab::AdmAddCourse::Ready(ui::Screen *screen) noexcept
 {
-    ;
+    ;    
 }
 
 void lab::AdmDeleteCourse::Load(ui::Screen *screen) noexcept
@@ -814,23 +811,6 @@ void lab::AdmDeleteCourse::Load(ui::Screen *screen) noexcept
                         label0->AddTo(hbox);
                         label0->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
                     }
-                    label1 = new ui::Label; {
-                        label1->AddTo(hbox);
-                        label1->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
-                    }
-                    label2 = new ui::Label; {
-                        label2->AddTo(hbox);
-                        label2->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
-                    }
-                    label3 = new ui::Label; {
-                        label3->AddTo(hbox);
-                        label3->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
-                    }
-                    label4 = new ui::Label; {
-                        label4->AddTo(hbox);
-                        label4->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
-                        label4->SetFontSize(20);
-                    }
                     debtn = new ui::Button; {
                         debtn->AddTo(hbox);
                         debtn->SetHPreset(ui::Control::Preset::WRAP_AT_END);
@@ -884,7 +864,6 @@ void lab::AdmDeleteCourse::Logic(ui::Screen *screen) noexcept
             else {
                 hbox->ShowAll();
                 label0->SetContent("课程编号："+reply[1]);
-                label1->SetContent("课程名称："+reply[2]);
                 debtn->Enable();
             }
         });

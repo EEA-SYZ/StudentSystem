@@ -95,9 +95,6 @@ private:
     ui::Label *glabel = nullptr;
     ui::Label *label0 = nullptr;
     ui::Label *label1 = nullptr;
-    ui::Label *label2 = nullptr;
-    ui::Label *label3 = nullptr;
-    ui::Label *label4 = nullptr;    
     ui::HorizontalBox *hbox = nullptr;
     ui::Button *debtn = nullptr;
     ui::Label *rpllabel = nullptr;

@@ -207,7 +207,7 @@ trm::Information ssys::ReserveSystem::AdmSearchReserve(const trm::Information& i
     }
     auto dateInformation=trm::ReserveDate(information[3]);
     auto reserveList=reserveBase[dateInformation.month][dateInformation.week][dateInformation.date];//找到指定日期的预约信息
-    if(ToStr(reserveList[information[4]])!="")//检查是否存在预约信息
+    if(ToStr(reserveList[information[4]])=="")//检查是否存在预约信息
     {
         return {trm::rpl::FAIL,trm::rpl::NO_MATCH_TIME};
     }

@@ -129,7 +129,7 @@ void lab::EnterCourse::Logic(ui::Screen *screen) noexcept
     });
     input->SetInputCallback(UI_CALLBACK{
         coursename = input->GetText();
-        glabel->SetContent("请输入课程名称");//inputing 
+        glabel->SetContent("请输入课程代号");//inputing 
         glabel->Show();
     });
     btn1->SetClickCallback(UI_CALLBACK{

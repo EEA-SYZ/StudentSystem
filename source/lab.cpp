@@ -929,14 +929,76 @@ void lab::EnterReserve::Load(ui::Screen *screen) noexcept
                             vdbox1->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
                         } // 待修改成可选择的时间
                         {
-                            auto dlabel1 =new ui::Label;{
-                                dlabel1->AddTo(vdbox1);
-                                dlabel1->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                                dlabel1->SetContent("月份");
+                            dbtn1 =new ui::Button;{
+                                dbtn1->AddTo(vdbox1);
+                                dbtn1->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                                dbtn1->SetCaption("月份");
                             }
-                            dinput1 = new ui::InputBox;{
-                            dinput1->AddTo(vdbox1);
-                            dinput1->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                            vsbox1 = new ui::VerticalScrollingBox;{
+                                vsbox1->AddTo(vdbox1);
+                                vsbox1->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                            }
+                            {
+                                btn13 = new ui::Button;{
+                                    btn13->AddTo(vsbox1);
+                                    btn13->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                                    btn13->SetCaption("一月");
+                                }
+                                btn14 = new ui::Button;{
+                                    btn14->AddTo(vsbox1);
+                                    btn14->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                                    btn14->SetCaption("二月");
+                                }
+                                btn15 = new ui::Button;{
+                                    btn15->AddTo(vsbox1);
+                                    btn15->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                                    btn15->SetCaption("三月");
+                                }
+                                btn4 = new ui::Button;{
+                                    btn4->AddTo(vsbox1);
+                                    btn4->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                                    btn4->SetCaption("四月");
+                                }
+                                btn5 = new ui::Button;{
+                                    btn5->AddTo(vsbox1);
+                                    btn5->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                                    btn5->SetCaption("五月");
+                                }
+                                btn6 = new ui::Button;{
+                                    btn6->AddTo(vsbox1);
+                                    btn6->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                                    btn6->SetCaption("六月");
+                                }
+                                btn7 = new ui::Button;{
+                                    btn7->AddTo(vsbox1);
+                                    btn7->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                                    btn7->SetCaption("七月");
+                                }
+                                btn8 = new ui::Button;{
+                                    btn8->AddTo(vsbox1);
+                                    btn8->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                                    btn8->SetCaption("八月");
+                                }
+                                btn9 = new ui::Button;{
+                                    btn9->AddTo(vsbox1);
+                                    btn9->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                                    btn9->SetCaption("九月");
+                                }
+                                btn10 = new ui::Button;{
+                                    btn10->AddTo(vsbox1);
+                                    btn10->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                                    btn10->SetCaption("十月");
+                                }
+                                btn11 = new ui::Button;{
+                                    btn11->AddTo(vsbox1);
+                                    btn11->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                                    btn11->SetCaption("十一月");
+                                }
+                                btn12 = new ui::Button;{
+                                    btn12->AddTo(vsbox1);
+                                    btn12->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                                    btn12->SetCaption("十二月");
+                                }
                             }
                         }
                         auto vdbox2 =new ui::VerticalBox;{
@@ -944,14 +1006,36 @@ void lab::EnterReserve::Load(ui::Screen *screen) noexcept
                             vdbox2->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
                         }
                         {
-                            auto dlabel2 =new ui::Label;{
-                                dlabel2->AddTo(vdbox2);
-                                dlabel2->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                                dlabel2->SetContent("星期");
+                            dbtn2 =new ui::Button;{
+                                dbtn2->AddTo(vdbox2);
+                                dbtn2->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                                dbtn2->SetCaption("周数");
                             }
-                            dinput2 = new ui::InputBox;{
-                            dinput2->AddTo(vdbox2);
-                            dinput2->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                            vsbox2 = new ui::VerticalScrollingBox;{
+                                vsbox2->AddTo(vdbox2);
+                                vsbox2->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                            }
+                            {
+                               btn20=new ui::Button;{
+                                btn20->AddTo(vsbox2);
+                                btn20->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                                btn20->SetCaption("第一周");
+                               } 
+                               btn21=new ui::Button;{
+                                btn21->AddTo(vsbox2);
+                                btn21->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                                btn21->SetCaption("第二周");
+                               }
+                               btn22=new ui::Button;{
+                                btn22->AddTo(vsbox2);
+                                btn22->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                                btn22->SetCaption("第三周");
+                               }
+                               btn23=new ui::Button;{
+                                btn23->AddTo(vsbox2);
+                                btn23->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                                btn23->SetCaption("第四周");
+                               }
                             }
                         }
                         auto vdbox3 =new ui::VerticalBox;{
@@ -959,14 +1043,51 @@ void lab::EnterReserve::Load(ui::Screen *screen) noexcept
                             vdbox3->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
                         }
                         {
-                            auto dlabel3 =new ui::Label;{
-                                dlabel3->AddTo(vdbox3);
-                                dlabel3->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                                dlabel3->SetContent("日期");
+                            dbtn3 =new ui::Button;{
+                                dbtn3->AddTo(vdbox3);
+                                dbtn3->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                                dbtn3->SetCaption("星期");
                             }
-                            dinput3 = new ui::InputBox;{
-                            dinput3->AddTo(vdbox3);
-                            dinput3->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                            vsbox3 = new ui::VerticalScrollingBox;{
+                                vsbox3->AddTo(vdbox3);
+                                vsbox3->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                            }
+                            {
+                                btn30=new ui::Button;{
+                                    btn30->AddTo(vsbox3);
+                                    btn30->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                                    btn30->SetCaption("星期一");
+                                }
+                                btn31=new ui::Button;{
+                                    btn31->AddTo(vsbox3);
+                                    btn31->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                                    btn31->SetCaption("星期二");
+                                }
+                                btn32=new ui::Button;{
+                                    btn32->AddTo(vsbox3);
+                                    btn32->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                                    btn32->SetCaption("星期三");
+                                }
+                                btn33=new ui::Button;{
+                                    btn33->AddTo(vsbox3);
+                                    btn33->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                                    btn33->SetCaption("星期四");
+                                }
+                                btn34=new ui::Button;{
+                                    btn34->AddTo(vsbox3);
+                                    btn34->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                                    btn34->SetCaption("星期五");
+                                }
+                                btn35=new ui::Button;{
+                                    btn35->AddTo(vsbox3);
+                                    btn35->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                                    btn35->SetCaption("星期六");
+                                }
+                                btn36=new ui::Button;{
+                                    btn36->AddTo(vsbox3);
+                                    btn36->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                                    btn36->SetCaption("星期日");
+                                }
                             }
                         }
                     }
@@ -1122,14 +1243,14 @@ void lab::EnterReserve::Logic(ui::Screen *screen) noexcept
         modifybtn1->Hide();
         modifybtn2->Hide();
     });
-    dinput1->SetInputCallback(UI_CALLBACK{
-        rdate.month=dinput1->GetText();
+    dbtn1->SetClickCallback(UI_CALLBACK{
+        vsbox1->ShowAll();
     });
-    dinput2->SetInputCallback(UI_CALLBACK{
-        rdate.week=dinput2->GetText();
+    dbtn2->SetClickCallback(UI_CALLBACK{
+        vsbox2->ShowAll();
     });
-    dinput3->SetInputCallback(UI_CALLBACK{
-        rdate.date=dinput3->GetText();
+    dbtn3->SetClickCallback(UI_CALLBACK{
+        vsbox3->ShowAll();
     });
     input2->SetInputCallback(UI_CALLBACK{
        std::string tmp=input2->GetText();
@@ -1187,10 +1308,82 @@ void lab::EnterReserve::Logic(ui::Screen *screen) noexcept
     modifybtn2->SetClickCallback(UI_CALLBACK{
         SwitchTo(new lab::AdmModifyReserve);
     });
+    btn13->SetClickCallback(UI_CALLBACK{
+        rdate.month="1";
+    });
+    btn14->SetClickCallback(UI_CALLBACK{
+        rdate.month="2";
+    });
+    btn15->SetClickCallback(UI_CALLBACK{
+        rdate.month="3";
+    });
+    btn4->SetClickCallback(UI_CALLBACK{
+        rdate.month="4";
+    });
+    btn5->SetClickCallback(UI_CALLBACK{
+        rdate.month="5";
+    });
+    btn6->SetClickCallback(UI_CALLBACK{
+        rdate.month="6";
+    });
+    btn7->SetClickCallback(UI_CALLBACK{
+        rdate.month="7";
+    });
+    btn8->SetClickCallback(UI_CALLBACK{
+        rdate.month="8";
+    });
+    btn9->SetClickCallback(UI_CALLBACK{
+        rdate.month="9";
+    });
+    btn10->SetClickCallback(UI_CALLBACK{
+        rdate.month="10";
+    });
+    btn11->SetClickCallback(UI_CALLBACK{
+        rdate.month="11";
+    });
+    btn12->SetClickCallback(UI_CALLBACK{
+        rdate.month="12";
+    });
+    btn20->SetClickCallback(UI_CALLBACK{
+        rdate.week="1";
+    });
+    btn21->SetClickCallback(UI_CALLBACK{
+        rdate.week="2";
+    });
+    btn22->SetClickCallback(UI_CALLBACK{
+        rdate.week="3";
+    });
+    btn23->SetClickCallback(UI_CALLBACK{
+        rdate.week="4";
+    });
+    btn30->SetClickCallback(UI_CALLBACK{
+        rdate.date="1";
+    });
+    btn31->SetClickCallback(UI_CALLBACK{
+        rdate.date="2";
+    });
+    btn32->SetClickCallback(UI_CALLBACK{
+        rdate.date="3";
+    });
+    btn33->SetClickCallback(UI_CALLBACK{
+        rdate.date="4";
+    });
+    btn34->SetClickCallback(UI_CALLBACK{
+        rdate.date="5";
+    });
+    btn35->SetClickCallback(UI_CALLBACK{
+        rdate.date="6";
+    });
+    btn36->SetClickCallback(UI_CALLBACK{
+        rdate.date="7";
+    });
 }
 
 void lab::EnterReserve::Ready(ui::Screen *screen) noexcept
 {
+    vsbox1->HideAll();
+    vsbox2->HideAll();
+    vsbox3->HideAll();
     vinput->HideAll();
     cfbtn1->Enable(false);
     cfbtn2->Enable(false);

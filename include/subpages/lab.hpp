@@ -117,7 +117,6 @@ protected:
 
 class EnterReserve : public PageBase {
 private:
-    ui::InputBox *input2 = nullptr;
     ui::InputBox *idinput = nullptr;
     ui::InputBox *phinput = nullptr;
     ui::Button *backbtn = nullptr;
@@ -167,10 +166,14 @@ private:
     ui::Button *clbtn3 = nullptr;
     ui::Label *limit1 = nullptr;
     ui::Label *limit2 = nullptr;
+    ui::Button *tbtn = nullptr;
+    ui::HorizontalScrollingBox *hsbox = nullptr;
     bool isadmadd = false;
     bool isadmde = false;
     bool isadmmodifyn = false;
     bool isadmmodifys = false;
+    std::vector<ui::Button *> times;
+    static const int MAX_TIMES = 14;
 protected:
     void Load(ui::Screen *screen) noexcept;
     void Logic(ui::Screen *screen) noexcept;

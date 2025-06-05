@@ -230,7 +230,9 @@ unsigned long long trm::GetTimeStamp() noexcept
 
 std::string trm::Hash(const std::string &str) noexcept
 {
-    return str; // TODO: implement hash function
+    std::hash<std::string> hashstr;
+    auto hashValue = hashstr(str);
+    return ToStr(hashValue); // TODO: implement hash function
 }
 
 trm::Account::operator std::string() const noexcept

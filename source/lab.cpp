@@ -18,6 +18,12 @@ void lab::EnterCourse::Load(ui::Screen *screen) noexcept
                 backbtn->SetPreset(ui::Control::Preset::WRAP_AT_FRONT);
                 backbtn->SetCaption("返回");//private
             }
+            limit = new ui::Label; {
+                limit->AddTo(flat);
+                limit->SetVPreset(ui::Control::Preset::WRAP_AT_FRONT);
+                limit->SetHPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                limit->SetHSize(70);//private
+            }
             auto hbox1 = new ui::HorizontalBox();{
                 hbox1->AddTo(flat);
                 hbox1->SetHPreset(ui::Control::Preset::FILL_FROM_CENTER);
@@ -62,7 +68,7 @@ void lab::EnterCourse::Load(ui::Screen *screen) noexcept
                 debtn->AddTo(flat);
                 debtn->SetPreset(ui::Control::Preset::WRAP_AT_CENTER);
                 debtn->SetVAnchor(35);
-                debtn->SetCaption("我要退课课程");//private
+                debtn->SetCaption("我要退课");//private
             }
             btn2 = new ui::Button;{
                     btn2->AddTo(flat);
@@ -129,8 +135,14 @@ void lab::EnterCourse::Logic(ui::Screen *screen) noexcept
     });
     input->SetInputCallback(UI_CALLBACK{
         coursename = input->GetText();
-        glabel->SetContent("请输入课程代号");//inputing 
+    });
+    input->SetBeginCallback(UI_CALLBACK{
+        glabel->SetContent("请输入课程代号");
         glabel->Show();
+    });
+    input->SetExceedLimitCallback(UI_CALLBACK{
+        limit->SetContent("课程代号只能是由字母和数字组成的六个字符");
+        limit->Show();
     });
     btn1->SetClickCallback(UI_CALLBACK{
         btn1->Enable(false);
@@ -153,7 +165,10 @@ void lab::EnterCourse::Logic(ui::Screen *screen) noexcept
         else {
             btn2->Hide();
             addbtn->Hide();
+            debtn->Hide();
             hbox->ShowAll();
+            admaddbtn->Hide();
+            admdebtn->Hide();
             tempbackbtn->Enable();
             auto coursereply=trm::Split(reply[2]);
             label0->SetContent("课程编号:"+reply[1]);
@@ -161,7 +176,7 @@ void lab::EnterCourse::Logic(ui::Screen *screen) noexcept
             label2->SetContent("上课老师:"+coursereply[1]);
             label3->SetContent("上课地点:"+coursereply[2]);
             label4->SetContent("上课周数:"+coursereply[3]);
-            label4->SetFontSize(20);//待改善
+            label4->SetMaxCount(10);//待改善
         }});
         }
             btn1->Enable();
@@ -178,6 +193,14 @@ void lab::EnterCourse::Logic(ui::Screen *screen) noexcept
         addbtn->Show();
         debtn->Show();
         hbox->HideAll();
+        if(admadd)
+        {
+            admaddbtn->Show();
+        }
+        if(admde)
+        {
+            admdebtn->Show();
+        }
     });
     admaddbtn->SetClickCallback(UI_CALLBACK{
         SwitchTo(new lab::AdmAddCourse);
@@ -197,16 +220,20 @@ void lab::EnterCourse::Ready(ui::Screen *screen) noexcept
     if(adm!=account.access.end()) {
         admaddbtn->Show();
         admdebtn->Show();
+        admadd=true;
+        admde=true;
     }
     else if(add!=account.access.end() ) {
         admaddbtn->Show();
         admdebtn->Hide();
         admdebtn->Enable(false);
+        admadd=true;
     }
     else if(del!=account.access.end()) {
         admaddbtn->Hide();
         admdebtn->Show();
         admaddbtn->Enable(false);
+        admde=true;
     }
     else {
         admaddbtn->Hide();
@@ -304,7 +331,7 @@ void lab::CourseList::Ready(ui::Screen *screen) noexcept
                         label4->AddTo(hbox);
                         label4->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
                         label4->SetContent("上课周数:"+inforeply[3]);
-                        label4->SetFontSize(20);
+                        label4->SetMaxCount(20);//private
                     }
                 }
             } 
@@ -325,6 +352,12 @@ void lab::AddCourse::Load(ui::Screen *screen) noexcept
             flat->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
         }
         {
+            limit = new ui::Label; {
+                limit->AddTo(flat);
+                limit->SetVPreset(ui::Control::Preset::WRAP_AT_FRONT);
+                limit->SetHPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                limit->SetHSize(70);//private
+            }
             auto hbox1=new ui::HorizontalBox; {
                 hbox1->AddTo(flat);
                 hbox1->SetHPreset(ui::Control::Preset::FILL_FROM_CENTER);
@@ -399,8 +432,14 @@ void lab::AddCourse::Logic(ui::Screen *screen) noexcept
     });
     input->SetInputCallback(UI_CALLBACK{
         coursename = input->GetText();
+    });
+    input->SetBeginCallback(UI_CALLBACK{
         glabel->SetContent("请输入课程代号");
         glabel->Show();
+    });
+    input->SetExceedLimitCallback(UI_CALLBACK{
+        limit->SetContent("课程代号只能是由字母和数字组成的五个字符");
+        limit->Show();
     });
     btn1->SetClickCallback(UI_CALLBACK{
         btn1->Enable(false);
@@ -460,6 +499,12 @@ void lab::DeleteCourse::Load(ui::Screen *screen) noexcept
             flat->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
         }
         {
+            limit = new ui::Label; {
+                limit->AddTo(flat);
+                limit->SetVPreset(ui::Control::Preset::WRAP_AT_FRONT);
+                limit->SetHPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                limit->SetHSize(70);//private
+            }
             auto hbox1=new ui::HorizontalBox; {
                 hbox1->AddTo(flat);
                 hbox1->SetHPreset(ui::Control::Preset::FILL_FROM_CENTER);
@@ -534,8 +579,14 @@ void lab::DeleteCourse::Logic(ui::Screen *screen) noexcept
     });
     input->SetInputCallback(UI_CALLBACK{
         coursename = input->GetText();
-        glabel->SetContent("请输入课程代号"); // inputting
+    });
+    input->SetBeginCallback(UI_CALLBACK{
+        glabel->SetContent("请输入课程代号");
         glabel->Show();
+    });
+    input->SetExceedLimitCallback(UI_CALLBACK{
+        limit->SetContent("课程代号只能是由字母和数字组成的五个字符");
+        limit->Show();
     });
     btn1->SetClickCallback(UI_CALLBACK{
         btn1->Enable(false);
@@ -677,10 +728,32 @@ void lab::AdmAddCourse::Load(ui::Screen *screen) noexcept
                         label5->SetVPreset(ui::Control::Preset::FILL_FROM_CENTER);
                         label5->SetContent("上课周数");
                     }//待修改
-                    input5 = new ui::InputBox; {
-                        input5->AddTo(hbox5);
-                        input5->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                    wbtn =new ui::Button; {
+                        wbtn->AddTo(hbox5);
+                        wbtn->SetHPreset(ui::Control::Preset::WRAP_AT_FRONT);
+                        wbtn->SetVPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                        wbtn->SetCaption("请选择周数");//private
                     }
+                    hsbox= new ui::HorizontalScrollingBox; {
+                        hsbox->AddTo(hbox5);
+                        hsbox->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                    }
+                    {
+                       for(int i=1;i<=MAX_WEEK;i++) {
+                            auto wbtn = new ui::ToggleButton; {
+                                wbtn->AddTo(hsbox);
+                                wbtn->SetPreset(ui::Control::Preset::WRAP_AT_CENTER);
+                                wbtn->SetCaption("第"+ToStr(i)+"周");
+                            }
+                            weeklist.push_back(wbtn); 
+                        }
+                    }
+                }
+                limit =new ui::Label; {
+                    limit->AddTo(vbox1);
+                    limit->SetVPreset(ui::Control::Preset::WRAP_AT_END);
+                    limit->SetHPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                    limit->SetHSize(70);//private
                 }
                 cfbtn = new ui::Button; {
                     cfbtn->AddTo(vbox1);
@@ -698,28 +771,44 @@ void lab::AdmAddCourse::Logic(ui::Screen *screen) noexcept
     });
     input1->SetInputCallback(UI_CALLBACK{
         coursename = input1->GetText();
+    });
+    input1->SetBeginCallback(UI_CALLBACK{
         glabel->SetContent("请输入课程代号");
         glabel->Show();
     });
+    input1->SetExceedLimitCallback(UI_CALLBACK{
+        limit->SetContent("课程代号只能是由字母和数字组成的五个字符");
+        limit->Show();
+    });
     input2->SetInputCallback(UI_CALLBACK{
         courseinfo.courseName = input2->GetText();
+    });
+    input2->SetBeginCallback(UI_CALLBACK{
         glabel->SetContent("请输入课程名称");
         glabel->Show();
     });
     input3->SetInputCallback(UI_CALLBACK{
         courseinfo.teacher = input3->GetText();
+    });
+    input3->SetBeginCallback(UI_CALLBACK{
         glabel->SetContent("请输入上课老师");
         glabel->Show();
     });
     input4->SetInputCallback(UI_CALLBACK{
         courseinfo.location = input4->GetText();
+    });
+    input4->SetBeginCallback(UI_CALLBACK{
         glabel->SetContent("请输入上课地点");
         glabel->Show();
     });
-    input5->SetInputCallback(UI_CALLBACK{
-        courseinfo.weeks = trm::Split(input5->GetText(),' ');
-        glabel->SetContent("请输入上课周数");
-        glabel->Show();
+    for(auto i:weeklist)
+    {
+        i->SetToggleCallback(UI_CALLBACK{
+            courseinfo.weeks.push_back(i->GetCaption());
+        });
+    }
+    wbtn->SetClickCallback(UI_CALLBACK{
+        hsbox->ShowAll();
     });
     cfbtn->SetClickCallback(UI_CALLBACK{
         if(coursename==""||courseinfo.courseName==""||courseinfo.teacher==""||courseinfo.location==""||courseinfo.weeks.empty()) {
@@ -751,7 +840,7 @@ void lab::AdmAddCourse::Logic(ui::Screen *screen) noexcept
 
 void lab::AdmAddCourse::Ready(ui::Screen *screen) noexcept
 {
-    ;    
+    hsbox->HideAll();    
 }
 
 void lab::AdmDeleteCourse::Load(ui::Screen *screen) noexcept
@@ -767,6 +856,12 @@ void lab::AdmDeleteCourse::Load(ui::Screen *screen) noexcept
             flat->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
         }
         {
+            limit = new ui::Label; {
+                limit->AddTo(flat);
+                limit->SetVPreset(ui::Control::Preset::WRAP_AT_FRONT);
+                limit->SetHPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                limit->SetHSize(70);//private
+            }
             auto hbox1=new ui::HorizontalBox; {
                 hbox1->AddTo(flat);
                 hbox1->SetHPreset(ui::Control::Preset::FILL_FROM_CENTER);
@@ -811,6 +906,10 @@ void lab::AdmDeleteCourse::Load(ui::Screen *screen) noexcept
                         label0->AddTo(hbox);
                         label0->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
                     }
+                    label1 = new ui::Label; {
+                        label1->AddTo(hbox);
+                        label1->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                    }
                     debtn = new ui::Button; {
                         debtn->AddTo(hbox);
                         debtn->SetHPreset(ui::Control::Preset::WRAP_AT_END);
@@ -837,8 +936,14 @@ void lab::AdmDeleteCourse::Logic(ui::Screen *screen) noexcept
     });
     input->SetInputCallback(UI_CALLBACK{
         coursename = input->GetText();
-        glabel->SetContent("请输入课程代号"); // inputting
+    });
+    input->SetBeginCallback(UI_CALLBACK{
+        glabel->SetContent("请输入课程代号");
         glabel->Show();
+    });
+    input->SetExceedLimitCallback(UI_CALLBACK{
+        limit->SetContent("课程代号只能是由字母和数字组成的五个字符");
+        limit->Show();
     });
     btn1->SetClickCallback(UI_CALLBACK{
         btn1->Enable(false);
@@ -864,6 +969,7 @@ void lab::AdmDeleteCourse::Logic(ui::Screen *screen) noexcept
             else {
                 hbox->ShowAll();
                 label0->SetContent("课程编号："+reply[1]);
+                label1->SetContent("课程名称："+reply[2]);
                 debtn->Enable();
             }
         });
@@ -999,6 +1105,11 @@ void lab::EnterReserve::Load(ui::Screen *screen) noexcept
                                     btn12->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
                                     btn12->SetCaption("十二月");
                                 }
+                                clbtn1 =new ui::Button;{
+                                    clbtn1->AddTo(vsbox1);
+                                    clbtn1->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                                    clbtn1->SetCaption("清除");
+                                }
                             }
                         }
                         auto vdbox2 =new ui::VerticalBox;{
@@ -1035,6 +1146,11 @@ void lab::EnterReserve::Load(ui::Screen *screen) noexcept
                                 btn23->AddTo(vsbox2);
                                 btn23->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
                                 btn23->SetCaption("第四周");
+                               }
+                               clbtn2 =new ui::Button;{
+                                clbtn2->AddTo(vsbox2);
+                                clbtn2->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                                clbtn2->SetCaption("清除");
                                }
                             }
                         }
@@ -1088,6 +1204,11 @@ void lab::EnterReserve::Load(ui::Screen *screen) noexcept
                                     btn36->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
                                     btn36->SetCaption("星期日");
                                 }
+                                clbtn3 =new ui::Button;{
+                                    clbtn3->AddTo(vsbox3);
+                                    clbtn3->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                                    clbtn3->SetCaption("清除");
+                                }
                             }
                         }
                     }
@@ -1107,7 +1228,6 @@ void lab::EnterReserve::Load(ui::Screen *screen) noexcept
                             input2->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
                         }
                     }
-                    
                 }
                 auto vbox1 = new ui::VerticalBox();{
                     vbox1->AddTo(hbox1);
@@ -1206,6 +1326,12 @@ void lab::EnterReserve::Load(ui::Screen *screen) noexcept
                         phinput->SetPreset(ui::Control::Preset::FILL_FROM_CENTER); // private
                     }
                 } // idandphoneglabel
+                limit2 = new ui::Label;{
+                    limit2->AddTo(vinput);
+                    limit2->SetVPreset(ui::Control::Preset::WRAP_AT_END);
+                    limit2->SetHPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                    limit2->SetHSize(70);//private
+                }
                 cfbtn1=new ui::Button;{
                     cfbtn1->AddTo(vinput);
                     cfbtn1->SetPreset(ui::Control::Preset::WRAP_AT_END);
@@ -1233,6 +1359,7 @@ void lab::EnterReserve::Logic(ui::Screen *screen) noexcept
         SwitchTo(new eea::MainPage);
     });
     btn2->SetClickCallback(UI_CALLBACK{
+        btn2->Hide();
         vinput->ShowAll();
         cfbtn1->Hide();
         cfbtn1->Enable(false);
@@ -1257,11 +1384,30 @@ void lab::EnterReserve::Logic(ui::Screen *screen) noexcept
        std::replace(tmp.begin(),tmp.end(),':','-'); 
        rtime=tmp;//不确定
     });
+    input2->SetBeginCallback(UI_CALLBACK{
+        glabel->SetContent("请输入预约时间");
+    }); // 改
     idinput->SetInputCallback(UI_CALLBACK{
         idandphone.id=idinput->GetText();
     });
+    idinput->SetBeginCallback(UI_CALLBACK{
+        glabel->SetContent("请输入身份证号");
+        glabel->Show();
+    });
+    idinput->SetExceedLimitCallback(UI_CALLBACK{
+        limit2->SetContent("身份证号只能是18位数字或17位数字加字母X");
+        limit2->Show();
+    });
     phinput->SetInputCallback(UI_CALLBACK{
         idandphone.phone=phinput->GetText();
+    });
+    phinput->SetBeginCallback(UI_CALLBACK{
+        glabel->SetContent("请输入手机号");
+        glabel->Show();
+    });
+    phinput->SetExceedLimitCallback(UI_CALLBACK{
+        limit2->SetContent("手机号只能是11位数字");
+        limit2->Show();
     });
     btn1->SetClickCallback(UI_CALLBACK{
         if(ToStr(rdate)=="")
@@ -1295,6 +1441,23 @@ void lab::EnterReserve::Logic(ui::Screen *screen) noexcept
     relbtn->SetClickCallback(UI_CALLBACK{
         vinput->HideAll();
         btn2->Show();
+        glabel->SetContent("");
+        if(isadmadd)
+        {
+            admaddbtn->Show();
+        }
+        if(isadmde)
+        {
+            admdebtn->Show();
+        }
+        if(isadmmodifyn)
+        {
+            modifybtn1->Show();
+        }
+        if(isadmmodifys)
+        {
+            modifybtn2->Show();
+        }
     });
     admaddbtn->SetClickCallback(UI_CALLBACK{
         SwitchTo(new lab::AdmAddReserve);
@@ -1423,6 +1586,21 @@ void lab::EnterReserve::Logic(ui::Screen *screen) noexcept
         vsbox3->HideAll();
         dbtn3->SetCaption("星期：星期日");
     });
+    clbtn1->SetClickCallback(UI_CALLBACK{
+        rdate.month="";
+        vsbox1->HideAll();
+        dbtn1->SetCaption("月份");
+    });
+    clbtn2->SetClickCallback(UI_CALLBACK{
+        rdate.week="";
+        vsbox2->HideAll();
+        dbtn2->SetCaption("周数");
+    });
+    clbtn3->SetClickCallback(UI_CALLBACK{
+        rdate.date="";
+        vsbox3->HideAll();
+        dbtn3->SetCaption("星期");
+    });
 }
 
 void lab::EnterReserve::Ready(ui::Screen *screen) noexcept
@@ -1452,6 +1630,7 @@ void lab::EnterReserve::Ready(ui::Screen *screen) noexcept
         else if(reply[0]==trm::rpl::YES){
             admaddbtn->Enable();
             admaddbtn->Show();
+            isadmadd=true;
         }
         else{
             //
@@ -1465,6 +1644,7 @@ void lab::EnterReserve::Ready(ui::Screen *screen) noexcept
         else if(reply[0]==trm::rpl::YES){
             admdebtn->Enable();
             admdebtn->Show();
+            isadmde=true;
         }
         else{
             //
@@ -1478,6 +1658,7 @@ void lab::EnterReserve::Ready(ui::Screen *screen) noexcept
         else if(reply[0]==trm::rpl::YES){
             modifybtn1->Enable();
             modifybtn1->Show();
+            isadmmodifyn=true;
         }
         else{
             //
@@ -1491,12 +1672,13 @@ void lab::EnterReserve::Ready(ui::Screen *screen) noexcept
         else if(reply[0]==trm::rpl::YES){
             modifybtn2->Enable();
             modifybtn2->Show();
+            isadmmodifys=true;
         }
         else{
             //
         }
     });
-}
+    }
 }
 
 void lab::ReserveTimeList::Load(ui::Screen *screen) noexcept
@@ -1658,7 +1840,7 @@ void lab::ReserveStatusList::Ready(ui::Screen *screen)noexcept
                         label2->AddTo(hbox);
                         label2->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
                         label2->SetContent("预约状态:"+reservereply[2]);
-                        label2->SetFontSize(20);
+                        label2->SetMaxCount(20);
                     }
                 }
             }
@@ -1712,6 +1894,12 @@ void lab::Request::Load(ui::Screen *screen) noexcept
                 vbox->SetVAnchor(50);
             }
             {
+                label = new ui::Label;{
+                    label->AddTo(vbox);
+                    label->SetHPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                    label->SetVPreset(ui::Control::Preset::WRAP_AT_FRONT);
+                    label->SetHSize(70);
+                }
                 hinput3 =new ui::HorizontalBox();{
                     hinput3->AddTo(vbox);
                     hinput3->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
@@ -1749,6 +1937,18 @@ void lab::Request::Load(ui::Screen *screen) noexcept
                     cfbtn->SetPreset(ui::Control::Preset::WRAP_AT_END);
                     cfbtn->SetCaption("确认");
                 }
+                clbtn=new ui::Button;{
+                    clbtn->AddTo(vbox);
+                    clbtn->SetVPreset(ui::Control::Preset::WRAP_AT_END);
+                    clbtn->SetHPreset(ui::Control::Preset::WRAP_AT_FRONT);
+                    clbtn->SetCaption("取消");
+                }
+                limit = new ui::Label; {
+                    limit->AddTo(vbox);
+                    limit->SetVPreset(ui::Control::Preset::WRAP_AT_END);
+                    limit->SetHPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                    limit->SetHSize(70);//private
+                }
             }
             rpllabel = new ui::Label; {
                 rpllabel->AddTo(flat);
@@ -1771,7 +1971,6 @@ void lab::Request::Load(ui::Screen *screen) noexcept
                 glabel->SetSizeWrap(ui::Control::Direction::HORIZONTAL, false);
                 glabel->SetHSize(700);//private
             }
-
         }
     }
 }
@@ -1784,12 +1983,29 @@ void lab::Request::Logic(ui::Screen *screen) noexcept
     idinput->SetInputCallback(UI_CALLBACK{
         idandphone.id = idinput->GetText();
     });
+    idinput->SetBeginCallback(UI_CALLBACK{
+        label->SetContent("请输入身份证号");
+        label->Show();
+    });
+    idinput->SetExceedLimitCallback(UI_CALLBACK{
+        limit->SetContent("身份证号只能是18位数字或17位数字加字母X");
+        limit->Show();
+    });
     phinput->SetInputCallback(UI_CALLBACK{
         idandphone.phone = phinput->GetText();
+    });
+    phinput->SetBeginCallback(UI_CALLBACK{
+        label->SetContent("请输入手机号");
+        label->Show();
+    });
+    phinput->SetExceedLimitCallback(UI_CALLBACK{
+        limit->SetContent("手机号只能是11位数字");
+        limit->Show();
     });
     addbtn->SetClickCallback(UI_CALLBACK{
         vbox->ShowAll();
         cfbtn->Enable();
+        clbtn->Enable();
         hbox->HideAll();
     });
     cfbtn->SetClickCallback(UI_CALLBACK{
@@ -1821,12 +2037,19 @@ void lab::Request::Logic(ui::Screen *screen) noexcept
             }
         });
     });
+    clbtn->SetClickCallback(UI_CALLBACK{
+        vbox->HideAll();
+        hbox->ShowAll();
+        cfbtn->Enable(false);
+        clbtn->Enable(false);
+    });
 }
 // 还是push不上
 void lab::Request::Ready(ui::Screen *screen) noexcept
 {
     vbox->HideAll();
     cfbtn->Enable(false);
+    clbtn->Enable(false);
     Listen(new trm::Sender({trm::rqs::CHECK_RESERVE_TIME,rdate,rtime}),SD_CALLBACK{
             if(reply[0] == trm::rpl::TIME_OUT) {
                 glabel->SetContent("服务端未响应，请检查后重试");
@@ -1900,6 +2123,12 @@ void lab::Cancel::Load(ui::Screen *screen) noexcept
                 vbox->SetVAnchor(50);
             }
             {
+                label = new ui::Label();{
+                    label->AddTo(vbox);
+                    label->SetHPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                    label->SetVPreset(ui::Control::Preset::WRAP_AT_FRONT);
+                    label->SetHSize(70);
+                }
                 hinput3 =new ui::HorizontalBox();{
                     hinput3->AddTo(vbox);
                     hinput3->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
@@ -1937,6 +2166,18 @@ void lab::Cancel::Load(ui::Screen *screen) noexcept
                     cfbtn->SetPreset(ui::Control::Preset::WRAP_AT_END);
                     cfbtn->SetCaption("确认");
                 }
+                clbtn=new ui::Button;{
+                    clbtn->AddTo(vbox);
+                    clbtn->SetVPreset(ui::Control::Preset::WRAP_AT_END);
+                    clbtn->SetHPreset(ui::Control::Preset::WRAP_AT_FRONT);
+                    clbtn->SetCaption("取消");
+                }
+                limit = new ui::Label; {
+                    limit->AddTo(vbox);
+                    limit->SetVPreset(ui::Control::Preset::WRAP_AT_END);
+                    limit->SetHPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                    limit->SetHSize(70);//private
+                }
             }
             rpllabel = new ui::Label; {
                 rpllabel->AddTo(flat);
@@ -1972,12 +2213,29 @@ void lab::Cancel::Logic(ui::Screen *screen) noexcept
     idinput->SetInputCallback(UI_CALLBACK{
         idandphone.id = idinput->GetText();
     });
+    idinput->SetBeginCallback(UI_CALLBACK{
+        label->SetContent("请输入身份证号");
+        label->Show();
+    });
+    idinput->SetExceedLimitCallback(UI_CALLBACK{
+        limit->SetContent("身份证号只能是18位数字或17位数字加字母X");
+        limit->Show();
+    });
     phinput->SetInputCallback(UI_CALLBACK{
         idandphone.phone = phinput->GetText();
+    });
+    phinput->SetBeginCallback(UI_CALLBACK{
+        label->SetContent("请输入手机号");
+        label->Show();
+    });
+    phinput->SetExceedLimitCallback(UI_CALLBACK{
+        limit->SetContent("手机号只能是11位数字");
+        limit->Show();
     });
     debtn->SetClickCallback(UI_CALLBACK{
         vbox->ShowAll();
         cfbtn->Enable();
+        clbtn->Enable();
         hbox->HideAll();
     });
     cfbtn->SetClickCallback(UI_CALLBACK{
@@ -2011,6 +2269,7 @@ void lab::Cancel::Ready(ui::Screen *screen) noexcept
 {
     vbox->HideAll();
     cfbtn->Enable(false);
+    clbtn->Enable(false);
     Listen(new trm::Sender({trm::rqs::CHECK_RESERVE_STATUS,rdate,rtime,idandphone.id,idandphone.phone}),SD_CALLBACK{
         if(reply[0] == trm::rpl::TIME_OUT) {
             glabel->SetContent("服务端未响应，请检查后重试");
@@ -2025,7 +2284,7 @@ void lab::Cancel::Ready(ui::Screen *screen) noexcept
             label0->SetContent("日期:"+reply[1]);
             label1->SetContent("时间:"+reply[2]);
             label2->SetContent("预约状态:"+reply[3]);
-            label2->SetFontSize(20);//这几个label要清空,能清空吗
+            label2->SetMaxCount(20);//这几个label要清空,能清空吗
         }
     });
 }
@@ -2079,7 +2338,7 @@ void lab::AdmAddReserve::Load(ui::Screen *screen) noexcept
                         label2->AddTo(hbox2);
                         label2->SetHPreset(ui::Control::Preset::WRAP_AT_FRONT);
                         label2->SetVPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                        label2->SetContent("星期");
+                        label2->SetContent("周数");
                     }
                     input2 = new ui::InputBox; {
                         input2->AddTo(hbox2);
@@ -2095,7 +2354,7 @@ void lab::AdmAddReserve::Load(ui::Screen *screen) noexcept
                         label3->AddTo(hbox3);
                         label3->SetHPreset(ui::Control::Preset::WRAP_AT_FRONT);
                         label3->SetVPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                        label3->SetContent("日期");
+                        label3->SetContent("星期几");
                     }
                     input3 = new ui::InputBox; {
                         input3->AddTo(hbox3);
@@ -2150,26 +2409,38 @@ void lab::AdmAddReserve::Logic(ui::Screen *screen) noexcept
     });
     input1->SetInputCallback(UI_CALLBACK{
         rdate.month = input1->GetText();
+    });
+    input1->SetBeginCallback(UI_CALLBACK{
         glabel->SetContent("请输入月份");
         glabel->Show();
     });
     input2->SetInputCallback(UI_CALLBACK{
         rdate.week = input2->GetText();
-        glabel->SetContent("请输入星期");
+    });
+    input2->SetBeginCallback(UI_CALLBACK{
+        glabel->SetContent("请输入周数");
         glabel->Show();
     });
     input3->SetInputCallback(UI_CALLBACK{
         rdate.date = input3->GetText();
-        glabel->SetContent("请输入日期");
+    });
+    input3->SetBeginCallback(UI_CALLBACK{
+        glabel->SetContent("请输入星期几");
         glabel->Show();
     });
     input4->SetInputCallback(UI_CALLBACK{
-        rtime = input4->GetText();
+        auto temp = input4->GetText();
+        std::replace(temp.begin(), temp.end(), ':', '-');
+        rtime = temp;
+    });
+    input4->SetBeginCallback(UI_CALLBACK{
         glabel->SetContent("请输入时间");
         glabel->Show();
     });
     input5->SetInputCallback(UI_CALLBACK{
         rnum = input5->GetText();
+    });
+    input5->SetBeginCallback(UI_CALLBACK{
         glabel->SetContent("请输入可预约人数");
         glabel->Show();
     });
@@ -2347,7 +2618,7 @@ void lab::AdmCancelReserve::Load(ui::Screen *screen) noexcept
                    modifybtn->AddTo(hbox2);
                    modifybtn->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
                    modifybtn->SetCaption("修改可预约人数");//private
-               }//todo
+               }
                debtn =new ui::Button; { 
                    debtn->AddTo(hbox2);
                    debtn->SetHPreset(ui::Control::Preset::WRAP_AT_END);
@@ -2411,23 +2682,31 @@ void lab::AdmCancelReserve::Logic(ui::Screen *screen) noexcept
     });
     dinput1->SetInputCallback(UI_CALLBACK{
         rdate.month = dinput1->GetText();
+    });
+    dinput1->SetBeginCallback(UI_CALLBACK{
         glabel->SetContent("请输入月份");
         glabel->Show();
     });
     dinput2->SetInputCallback(UI_CALLBACK{
         rdate.week = dinput2->GetText();
-        glabel->SetContent("请输入星期");
+    });
+    dinput2->SetBeginCallback(UI_CALLBACK{
+        glabel->SetContent("请输入周数");
         glabel->Show();
     });
     dinput3->SetInputCallback(UI_CALLBACK{
         rdate.date = dinput3->GetText();
-        glabel->SetContent("请输入日期");
+    });
+    dinput3->SetBeginCallback(UI_CALLBACK{
+        glabel->SetContent("请输入星期几");
         glabel->Show();
     });
     input2->SetInputCallback(UI_CALLBACK{
         auto temp = input2->GetText();
         std::replace(temp.begin(), temp.end(), ':', '-');
         rtime= temp;
+    });
+    input2->SetBeginCallback(UI_CALLBACK{
         glabel->SetContent("请输入时间");
         glabel->Show();
     });
@@ -2658,33 +2937,45 @@ void lab::AdmModifyReserve::Logic(ui::Screen *screen) noexcept
 {
     input1->SetInputCallback(UI_CALLBACK{
         rdate.month = input1->GetText();
+    });
+    input1->SetBeginCallback(UI_CALLBACK{
         glabel->SetContent("请输入月份");
         glabel->Show();
     });
     input2->SetInputCallback(UI_CALLBACK{
         rdate.week = input2->GetText();
-        glabel->SetContent("请输入星期");
+    });
+    input2->SetBeginCallback(UI_CALLBACK{
+        glabel->SetContent("请输入周数");
         glabel->Show();
     });
     input3->SetInputCallback(UI_CALLBACK{
         rdate.date = input3->GetText();
-        glabel->SetContent("请输入日期");
+    });
+    input3->SetBeginCallback(UI_CALLBACK{
+        glabel->SetContent("请输入星期几");
         glabel->Show();
     });
     input4->SetInputCallback(UI_CALLBACK{
         auto temp = input4->GetText();
         std::replace(temp.begin(), temp.end(), ':', '-');
         rtime = temp;
+    });
+    input4->SetBeginCallback(UI_CALLBACK{
         glabel->SetContent("请输入时间");
         glabel->Show();
     });
     input5->SetInputCallback(UI_CALLBACK{
         idandphone.id = input5->GetText();
+    });
+    input5->SetBeginCallback(UI_CALLBACK{
         glabel->SetContent("请输入身份证号");
         glabel->Show();
     });
     input6->SetInputCallback(UI_CALLBACK{
         idandphone.phone = input6->GetText();
+    });
+    input6->SetBeginCallback(UI_CALLBACK{
         glabel->SetContent("请输入手机号");
         glabel->Show();
     });

@@ -1681,7 +1681,7 @@ void lab::ReserveTimeList::Load(ui::Screen *screen) noexcept
             backbtn = new ui::Button; {
                 backbtn->AddTo(flat);
                 backbtn->SetPreset(ui::Control::Preset::WRAP_AT_FRONT);
-                backbtn->SetCaption("返回");//private
+                backbtn->SetCaption("返回"); // private
             }
             vsbox = new ui::VerticalScrollingBox;{
                 vsbox->AddTo(flat);
@@ -1915,7 +1915,7 @@ void lab::Request::Load(ui::Screen *screen) noexcept
                     }
                     phinput =new ui::InputBox;{
                         phinput->AddTo(hinput4);
-                        phinput->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                        phinput->SetPreset(ui::Control::Preset::FILL_FROM_CENTER); // private
                     }
                 }
                 cfbtn=new ui::Button;{
@@ -1933,12 +1933,12 @@ void lab::Request::Load(ui::Screen *screen) noexcept
                     limit->AddTo(vbox);
                     limit->SetVPreset(ui::Control::Preset::WRAP_AT_END);
                     limit->SetHPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                    limit->SetHSize(70);//private
+                    limit->SetHSize(70); // private
                 }
             }
             rpllabel = new ui::Label; {
                 rpllabel->AddTo(flat);
-                rpllabel->SetPreset(ui::Control::Preset::PLACE_AT_END);//maybe
+                rpllabel->SetPreset(ui::Control::Preset::PLACE_AT_END); // maybe
                 rpllabel->SetHSize(600);
                 rpllabel->SetVSize(100);
                 rpllabel->SetHAnchor(95);
@@ -1947,7 +1947,7 @@ void lab::Request::Load(ui::Screen *screen) noexcept
             backbtn = new ui::Button; {
                 backbtn->AddTo(flat);
                 backbtn->SetPreset(ui::Control::Preset::WRAP_AT_FRONT);
-                backbtn->SetCaption("返回");//private
+                backbtn->SetCaption("返回"); // private
             }
             glabel = new ui::Label; {
                 glabel->AddTo(flat);
@@ -1955,7 +1955,7 @@ void lab::Request::Load(ui::Screen *screen) noexcept
                 glabel->SetVPreset(ui::Control::Preset::WRAP_AT_FRONT);
                 glabel->SetVAnchor(25);
                 glabel->SetSizeWrap(ui::Control::Direction::HORIZONTAL, false);
-                glabel->SetHSize(700);//private
+                glabel->SetHSize(700); // private
             }
         }
     }

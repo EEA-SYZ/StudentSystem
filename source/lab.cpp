@@ -214,32 +214,31 @@ void lab::EnterCourse::Ready(ui::Screen *screen) noexcept
 {
     hbox->HideAll();
     tempbackbtn->Enable(false);
-    auto add=std::find(account.access.begin(),account.access.end(),trm::acc::ADM_ADD_COUR);
-    auto del=std::find(account.access.begin(),account.access.end(),trm::acc::ADM_DELETE_COUR);
-    auto adm = std::find(account.access.begin(), account.access.end(), trm::acc::ADM);
-    if(adm!=account.access.end()) {
-        admaddbtn->Show();
-        admdebtn->Show();
-        admadd=true;
-        admde=true;
-    }
-    else if(add!=account.access.end() ) {
-        admaddbtn->Show();
-        admdebtn->Hide();
-        admdebtn->Enable(false);
-        admadd=true;
-    }
-    else if(del!=account.access.end()) {
-        admaddbtn->Hide();
-        admdebtn->Show();
-        admaddbtn->Enable(false);
-        admde=true;
-    }
-    else {
-        admaddbtn->Hide();
-        admdebtn->Hide();
-        admaddbtn->Enable(false);
-        admdebtn->Enable(false);
+    admaddbtn->Hide();
+    admdebtn->Hide();
+    admadd=false;
+    admde=false;
+    if(username!=""&&password!="") {
+        Listen(new trm::Sender({trm::rqs::CHECK_ACCESS,username,password,trm::AccessBox{trm::acc::ADM_ADD_COUR}}),SD_CALLBACK{
+            if(reply[0] == trm::rpl::YES) {
+                admaddbtn->Show();
+                admaddbtn->Enable();
+                admadd=true;
+            }
+            else {
+                ;
+            }
+        });
+        Listen(new trm::Sender({trm::rqs::CHECK_ACCESS,username,password,trm::AccessBox{trm::acc::ADM_DELETE_COUR}}),SD_CALLBACK{
+            if(reply[0] == trm::rpl::YES) {
+                admdebtn->Show();
+                admdebtn->Enable();
+                admde=true;
+            }
+            else {
+                ;
+            }
+        });
     }
 }
 
@@ -2100,9 +2099,9 @@ void lab::Cancel::Load(ui::Screen *screen) noexcept
                     debtn->AddTo(hbox);
                     debtn->SetHPreset(ui::Control::Preset::WRAP_AT_END);
                     debtn->SetVPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                    debtn->SetCaption("取消预约");//private
+                    debtn->SetCaption("取消预约"); // private
                 }
-            }//private
+            } // private
             vbox = new ui::VerticalBox; {
                 vbox->AddTo(flat);
                 vbox->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
@@ -2130,7 +2129,7 @@ void lab::Cancel::Load(ui::Screen *screen) noexcept
                     }
                     idinput = new ui::InputBox;{
                         idinput->AddTo(hinput3);
-                        idinput->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                        idinput->SetPreset(ui::Control::Preset::FILL_FROM_CENTER); // private
                     }
                 }
                 hinput4 =new ui::HorizontalBox();{
@@ -2146,7 +2145,7 @@ void lab::Cancel::Load(ui::Screen *screen) noexcept
                     }
                     phinput =new ui::InputBox;{
                         phinput->AddTo(hinput4);
-                        phinput->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                        phinput->SetPreset(ui::Control::Preset::FILL_FROM_CENTER); // private
                     }
                 }
                 cfbtn=new ui::Button;{
@@ -2164,12 +2163,12 @@ void lab::Cancel::Load(ui::Screen *screen) noexcept
                     limit->AddTo(vbox);
                     limit->SetVPreset(ui::Control::Preset::WRAP_AT_END);
                     limit->SetHPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                    limit->SetHSize(70);//private
+                    limit->SetHSize(70); // private
                 }
             }
             rpllabel = new ui::Label; {
                 rpllabel->AddTo(flat);
-                rpllabel->SetPreset(ui::Control::Preset::PLACE_AT_END);//maybe
+                rpllabel->SetPreset(ui::Control::Preset::PLACE_AT_END); // maybe
                 rpllabel->SetHSize(600);
                 rpllabel->SetVSize(100);
                 rpllabel->SetHAnchor(95);

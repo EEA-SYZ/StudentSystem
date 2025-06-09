@@ -27,6 +27,8 @@ private:
     ui::Label *limit= nullptr;
     bool admadd=false;
     bool admde=false;
+    bool add=false;
+    bool del=false;
 protected:
     void Load(ui::Screen *screen) noexcept override; // # 在这里写页面的布局（根据基类静态成员的值，写页面组件的父子关系，设置组件的属性）。
     void Logic(ui::Screen *screen) noexcept override; // # 在这里写回调逻辑（设置组件回调函数、监听回调函数，进而动态设置组件属性、动态增减组件、跳转页面等）。

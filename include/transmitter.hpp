@@ -364,15 +364,15 @@ namespace rqs{
 #pragma region 预约入校系统
     /**
      * @brief 查询可预约时间
-     * @param date 日期 @see @struct Date
+     * @param date 日期 @see @struct ReserveDate
      * @return SUCC or FAIL
      * @return FAIL NO_RESERVE_EXITS
-     * @return SUCC 可预约时间列表 @see @struct ReserveTime
+     * @return SUCC 可预约时间列表 
     */
     const std::string CHECK_TIME = _AS_"CHECK_TIME";
     /**
      * @brief 查询特定的预约时间
-     * @param date 日期 @see @struct Date
+     * @param date 日期 @see @struct ReserveDate
      * @param time 时间
      * @return YES or NO 第一项为 YES时无第二项,第一项为 NO 时第二项为 NO_MATCH_TIME or NO_LEFT_RESERVE
      * @retval NO_MATCH_TIME 预约时间不合法
@@ -381,7 +381,7 @@ namespace rqs{
     const std::string CHECK_RESERVE_TIME = _AS_"CHECK_RESERVE_TIME"; 
    /** 
      * @brief 预约入校
-     * @param date 日期 @see @struct Date
+     * @param date 日期 @see @struct ReserveDate
      * @param time 时间
      * @param id 身份证号
      * @param phone 手机号
@@ -392,7 +392,7 @@ namespace rqs{
     const std::string REQUEST_RESERVE = _AS_"REQUEST_RESERVE";
     /**
      * @brief 取消预约
-     * @param date 日期 @see @struct Date
+     * @param date 日期 @see @struct ReserveDate
      * @param time 时间
      * @param id 身份证号
      * @param phone 手机号
@@ -403,7 +403,7 @@ namespace rqs{
     const std::string CANCEL_RESERVE = _AS_"CANCEL_RESERVE";
      /**
      * @brief 查询特定预约状态
-     * @param date 日期 @see @struct Date
+     * @param date 日期 @see @struct ReserveDate
      * @param time 时间
      * @param id 身份证号
      * @param phone 手机号

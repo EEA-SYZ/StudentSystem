@@ -148,8 +148,7 @@ void lab::EnterCourse::Logic(ui::Screen *screen) noexcept
         btn1->Enable(false);
        if(coursename=="") 
        {
-        glabel->SetContent("课程名称不能为空");
-        glabel->Show();
+        SwitchTo(new lab::CourseList);
        }
        else
        {
@@ -214,12 +213,39 @@ void lab::EnterCourse::Ready(ui::Screen *screen) noexcept
 {
     hbox->HideAll();
     tempbackbtn->Enable(false);
+    addbtn->Hide();
+    debtn->Hide();
     admaddbtn->Hide();
     admdebtn->Hide();
     admadd=false;
     admde=false;
-    if(username!=""&&password!="") {
-        Listen(new trm::Sender({trm::rqs::CHECK_ACCESS,username,password,trm::AccessBox{trm::acc::ADM_ADD_COUR}}),_SD_CALLBACK{
+    add=false;
+    del=false;
+    if(username!=""&&password!=""){
+        Listen(new trm::Sender({trm::rqs::CHECK_ACCESS,username,password,trm::AccessBox{trm::acc::ADD_COURSE}}),_SD_CALLBACK_{
+            if(reply[0]==trm::rpl::YES){
+                addbtn->Show();
+                addbtn->Enable();
+                add=true;
+            }
+            else
+            {
+                ;
+            }
+        });
+        Listen(new trm::Sender({trm::rqs::CHECK_ACCESS,username,password,trm::AccessBox{trm::acc::DELETE_COURSE}}),_SD_CALLBACK_{
+            if(reply[0]==trm::rpl::YES)
+            {
+                debtn->Show();
+                debtn->Enable();
+                del=true;
+            }
+            else
+            {
+                ;
+            }
+        });
+        Listen(new trm::Sender({trm::rqs::CHECK_ACCESS,username,password,trm::AccessBox{trm::acc::ADM_ADD_COUR}}),_SD_CALLBACK_{
             if(reply[0] == trm::rpl::YES) {
                 admaddbtn->Show();
                 admaddbtn->Enable();
@@ -229,7 +255,7 @@ void lab::EnterCourse::Ready(ui::Screen *screen) noexcept
                 ;
             }
         });
-        Listen(new trm::Sender({trm::rqs::CHECK_ACCESS,username,password,trm::AccessBox{trm::acc::ADM_DELETE_COUR}}),_SD_CALLBACK{
+        Listen(new trm::Sender({trm::rqs::CHECK_ACCESS,username,password,trm::AccessBox{trm::acc::ADM_DELETE_COUR}}),_SD_CALLBACK_{
             if(reply[0] == trm::rpl::YES) {
                 admdebtn->Show();
                 admdebtn->Enable();
@@ -474,8 +500,8 @@ void lab::AddCourse::Logic(ui::Screen *screen) noexcept
         btn1->Enable();
     });
     addbtn->SetClickCallback(_UI_CALLBACK_{
-                rpllabel->SetContent("添加成功");
-                rpllabel->Show();
+            rpllabel->SetContent("选课成功");
+            rpllabel->Show();
     });
 }
 
@@ -617,7 +643,7 @@ void lab::DeleteCourse::Logic(ui::Screen *screen) noexcept
         btn1->Enable();
     }); // 这里的debtn其实是伪debtn
     debtn->SetClickCallback(_UI_CALLBACK_{
-                rpllabel->SetContent("删除成功");
+                rpllabel->SetContent("退课成功");
                 rpllabel->Show();
     });
 }
@@ -829,7 +855,7 @@ void lab::AdmAddCourse::Logic(ui::Screen *screen) noexcept
                     glabel->Show();
                 }
                 else {
-                    glabel->SetContent("添加成功");
+                    glabel->SetContent("开课成功");
                     glabel->Show();
                 }
             });
@@ -1322,13 +1348,13 @@ void lab::EnterReserve::Load(ui::Screen *screen) noexcept
                 modifybtn1->AddTo(flat);
                 modifybtn1->SetPreset(ui::Control::Preset::WRAP_AT_CENTER);
                 modifybtn1->SetVAnchor(75);
-                modifybtn1->SetCaption("修改可预约数量"); // private
+                modifybtn1->SetCaption("修改预约信息"); // private
             }
             modifybtn2 = new ui::Button;{
                 modifybtn2->AddTo(flat);
                 modifybtn2->SetPreset(ui::Control::Preset::WRAP_AT_CENTER);
                 modifybtn2->SetVAnchor(85);
-                modifybtn2->SetCaption("修改预约状态"); // private
+                modifybtn2->SetCaption("修改用户预约"); // private
             }
             vinput =new ui::VerticalBox();{
                 vinput->AddTo(flat);
@@ -1533,7 +1559,7 @@ void lab::EnterReserve::Logic(ui::Screen *screen) noexcept
     });
     for(auto i:months)
     {
-        i->SetClickCallback(_UI_CALLBACK{
+        i->SetClickCallback(_UI_CALLBACK_{
             if(i->GetName()=="cancel")
             {
                 rdate.month="";
@@ -1550,7 +1576,7 @@ void lab::EnterReserve::Logic(ui::Screen *screen) noexcept
     }
     for(auto i:weeks)
     {
-        i->SetClickCallback(_UI_CALLBACK{
+        i->SetClickCallback(_UI_CALLBACK_{
             if(i->GetName()=="cancel")
             {
                 rdate.week="";
@@ -1567,7 +1593,7 @@ void lab::EnterReserve::Logic(ui::Screen *screen) noexcept
     }
     for(auto i:days)
     {
-        i->SetClickCallback(_UI_CALLBACK{
+        i->SetClickCallback(_UI_CALLBACK_{
             if(i->GetName()=="cancel")
             {
                 rdate.date="";
@@ -1712,7 +1738,7 @@ void lab::ReserveTimeList::Ready(ui::Screen *screen) noexcept
             auto glabel = new ui::Label;{
                 glabel->AddTo(vsbox);
                 glabel->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                glabel->SetContent("没有预约存在");
+                glabel->SetContent("没有可预约的时间存在");
             }
         }
         else{
@@ -2058,7 +2084,7 @@ void lab::Request::Ready(ui::Screen *screen) noexcept
             std::string temp = reply[2];
             std::replace(temp.begin(), temp.end(), '_', ':');
             label1->SetContent("时间:"+temp);
-            label2->SetContent("剩余名额:"+reply[3]);
+            label2->SetContent("剩余名额:"+reply[3]);//?
            }
         });
 }
@@ -2242,7 +2268,7 @@ void lab::Cancel::Logic(ui::Screen *screen) noexcept
             }
             else if(reply[0] == trm::rpl::NO_DERESERVE_ACCESS)
             {
-                rpllabel->SetContent("无取消预约权限");
+                rpllabel->SetContent("身份证或者手机号不匹配，无取消预约权限");
             }
             else
             {
@@ -2453,7 +2479,7 @@ void lab::AdmAddReserve::Logic(ui::Screen *screen) noexcept
                     glabel->Show();
                 }
                 else {
-                    glabel->SetContent("添加成功");
+                    glabel->SetContent("开设成功");
                     glabel->Show();
                 }
             });
@@ -2709,11 +2735,11 @@ void lab::AdmCancelReserve::Logic(ui::Screen *screen) noexcept
             if(reply[0] == trm::rpl::TIME_OUT) {
                 glabel->SetContent("服务端未响应，请检查后重试");
             }
-            else if(reply[0] == trm::rpl::FAIL ) {
-                glabel->SetContent("待撤销的预约不存在");
+            else if(reply[0] == trm::rpl::NO ) {
+                glabel->SetContent("待撤销和修改的预约不存在");
             }
             else if(reply[0] == trm::rpl::ACCESS_DENIED) {
-                glabel->SetContent("无撤消预约权限");
+                glabel->SetContent("无撤消预约权限"); // 不对
             }
             else {
                 label0->SetContent("日期:"+reply[1]);

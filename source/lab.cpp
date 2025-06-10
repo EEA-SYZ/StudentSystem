@@ -175,7 +175,7 @@ void lab::EnterCourse::Logic(ui::Screen *screen) noexcept
             label2->SetContent("上课老师:"+coursereply[1]);
             label3->SetContent("上课地点:"+coursereply[2]);
             label4->SetContent("上课周数:"+coursereply[3]);
-            label4->SetMaxCount(10);//待改善
+            label4->SetMaxCount(5);//待改善
         }});
         }
             btn1->Enable();
@@ -762,6 +762,7 @@ void lab::AdmAddCourse::Load(ui::Screen *screen) noexcept
                     hsbox= new ui::HorizontalScrollingBox; {
                         hsbox->AddTo(hbox5);
                         hsbox->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                        hsbox->SetInsideBoxScrollable(true);
                     }
                     {
                        for(int i=1;i<=MAX_WEEK;i++) {
@@ -1810,7 +1811,7 @@ void lab::ReserveStatusList::Logic(ui::Screen *screen)noexcept
 
 void lab::ReserveStatusList::Ready(ui::Screen *screen)noexcept
 {
-    Listen(new trm::Sender({trm::rqs::CHECK_RESERVE_STATUS_LIST,idandphone.id,idandphone.phone}),_SD_CALLBACK_{
+    Listen(new trm::Sender({trm::rqs::CHECK_RESERVE_STATUS_LIST,idandphone}),_SD_CALLBACK_{
         if (reply[0] == trm::rpl::TIME_OUT) {
             auto glabel = new ui::Label;{
                 glabel->AddTo(vsbox);
@@ -2025,7 +2026,7 @@ void lab::Request::Logic(ui::Screen *screen) noexcept
         hbox->ShowAll();
         glabel->Show();
         rpllabel->Show(); 
-        Listen(new trm::Sender({trm::rqs::REQUEST_RESERVE, rdate, rtime,idandphone.id,idandphone.phone}), _SD_CALLBACK_{
+        Listen(new trm::Sender({trm::rqs::REQUEST_RESERVE, rdate, rtime,idandphone}), _SD_CALLBACK_{
             if(reply[0] == trm::rpl::TIME_OUT)
             {
                 glabel->SetContent("服务端未响应，请检查后重试");
@@ -2257,7 +2258,7 @@ void lab::Cancel::Logic(ui::Screen *screen) noexcept
         hbox->ShowAll();
         glabel->Show();
         rpllabel->Show(); 
-        Listen(new trm::Sender({trm::rqs::CANCEL_RESERVE, rdate, rtime,idandphone.id,idandphone.phone}), _SD_CALLBACK_{
+        Listen(new trm::Sender({trm::rqs::CANCEL_RESERVE, rdate, rtime,idandphone}), _SD_CALLBACK_{
             if(reply[0] == trm::rpl::TIME_OUT)
             {
                 glabel->SetContent("服务端未响应，请检查后重试");
@@ -2283,7 +2284,7 @@ void lab::Cancel::Ready(ui::Screen *screen) noexcept
     vbox->HideAll();
     cfbtn->Enable(false);
     clbtn->Enable(false);
-    Listen(new trm::Sender({trm::rqs::CHECK_RESERVE_STATUS,rdate,rtime,idandphone.id,idandphone.phone}),_SD_CALLBACK_{
+    Listen(new trm::Sender({trm::rqs::CHECK_RESERVE_STATUS,rdate,rtime,idandphone}),_SD_CALLBACK_{
         if(reply[0] == trm::rpl::TIME_OUT) {
             glabel->SetContent("服务端未响应，请检查后重试");
             glabel->Show();
@@ -3005,7 +3006,7 @@ void lab::AdmModifyReserve::Logic(ui::Screen *screen) noexcept
             glabel->Show();
         }
         else {
-            Listen(new trm::Sender({trm::rqs::ADM_MODIFY_RESERVE_STATUS,username,password,idandphone.id,idandphone.phone,rdate,rtime}), _SD_CALLBACK_{
+            Listen(new trm::Sender({trm::rqs::ADM_MODIFY_RESERVE_STATUS,username,password,idandphone,rdate,rtime}), _SD_CALLBACK_{
                 if(reply[0] == trm::rpl::TIME_OUT) {
                     glabel->SetContent("服务端未响应，请检查后重试");
                 }

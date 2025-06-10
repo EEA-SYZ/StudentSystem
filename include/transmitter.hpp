@@ -383,8 +383,7 @@ namespace rqs{
      * @brief 预约入校
      * @param date 日期 @see @struct ReserveDate
      * @param time 时间
-     * @param id 身份证号
-     * @param phone 手机号
+     * @param idandphone @see @struct IdAndPhone 身份证号和手机号
      * @return SUCC or FAIL
      * @retval FAIL NO_MATCH_RESERVE 预约时间不合法或者预约名额已满
      * @retval FAIL RESERVE_EXISTS 预约已存在
@@ -394,8 +393,7 @@ namespace rqs{
      * @brief 取消预约
      * @param date 日期 @see @struct ReserveDate
      * @param time 时间
-     * @param id 身份证号
-     * @param phone 手机号
+     * @param idandphone @see @struct IdAndPhone 身份证号和手机号
      * @return SUCC or FAIL 或者 RESERVE_ACCESS_DENIED
      * @retval FAIL NO_MATCH_RESERVE 待取消的预约不存在
      * @note ACCESS REQUIRED CANCEL_RESERVE 但不在Acess名称空间里
@@ -405,8 +403,7 @@ namespace rqs{
      * @brief 查询特定预约状态
      * @param date 日期 @see @struct ReserveDate
      * @param time 时间
-     * @param id 身份证号
-     * @param phone 手机号
+     * @param idandphone @see @struct IdAndPhone 身份证号和手机号
      * @return SUCC or FAIL 
      * @retval FAIL NO_MATCH_RESERVE 待查询的预约不存在
      * @retval SUCC 预约状态 
@@ -414,8 +411,7 @@ namespace rqs{
     const std::string CHECK_RESERVE_STATUS = _AS_"CHECK_RESERVE_STATUS"; 
     /**
      * @brief 查询预约状态列表
-     * @param id
-     * @param phone
+     * @param idandphone @see @struct IdAndPhone 身份证号和手机号
      * @return SUCC or FAIL
      * @retval FAIL NO_RESERVE_EXISTS 没有预约记录
      * @retval SUCC 预约状态列表
@@ -461,8 +457,7 @@ namespace rqs{
      * @brief 管理员修改可预约状态
      * @param code 学工号
      * @param password 密码 
-     * @param id 身份证号
-     * @param phone 手机号
+     * @param idandphone @see @struct IdAndPhone 身份证号和手机号
      * @param date 日期 @see @struct Date
      * @param time 时间
      * @return SUCC or FAIL 或者 ACCESS_DENIED

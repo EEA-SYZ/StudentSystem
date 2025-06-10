@@ -58,14 +58,14 @@ trm::Information ssys::ReserveSystem::RequestReserve(const trm::Information& inf
     {
        return {trm::rpl::FAIL,timeReply[1]};
     }
-    if(ToStr(clientBase[trm::IdAndPhone{information[3],information[4]}][information[1]][information[2]])!="") // 检查是否已经预约
+    if(ToStr(clientBase[information[3]][information[1]][information[2]])!="") // 检查是否已经预约
     {
         return {trm::rpl::FAIL,trm::rpl::RESERVE_EXISTS};
     }
     auto dateInformation=trm::ReserveDate(information[1]);
     std::string number=reserveBase[dateInformation.month][dateInformation.week][dateInformation.date][information[2]];
     reserveBase[dateInformation.month][dateInformation.week][dateInformation.date][information[2]] = ToStr(ToNum(number) - 1); // 将可预约数量减一
-    clientBase[trm::IdAndPhone{information[3],information[4]}][information[1]].Push(information[2], "HAVE RESERVED, READY TO USE"); // 将预约信息加入数据库//断点
+    clientBase[information[3]][information[1]].Push(information[2], "HAVE RESERVED, READY TO USE"); // 将预约信息加入数据库//断点
     return {trm::rpl::SUCC}; // 返回成功预约的时间和状态
     //也许会返回成功预约的时间和状态，就类似自动跳转
 }
@@ -73,18 +73,18 @@ trm::Information ssys::ReserveSystem::RequestReserve(const trm::Information& inf
 trm::Information ssys::ReserveSystem::CancelReserve(const trm::Information& information) noexcept
 {
     assert(information[0] == trm::rqs::CANCEL_RESERVE); // Procession not matched.
-    if(!clientBase[trm::IdAndPhone{information[3],information[4]}].Exists())//这个权限检查会不会太草率了
+    if(!clientBase[information[3]].Exists())//这个权限检查会不会太草率了
     {
        return{trm::rpl::NO_DERESERVE_ACCESS};
     }
-    if(ToStr(clientBase[trm::IdAndPhone{information[3],information[4]}][information[1]][information[2]])!="")//检查是否存在预约信息 //debug
+    if(ToStr(clientBase[information[3]][information[1]][information[2]])!="")//检查是否存在预约信息 //debug
     {
-        clientBase[trm::IdAndPhone{information[3],information[4]}][information[1]][information[2]].Clear();//清除预约信息
+        clientBase[information[3]][information[1]][information[2]].Clear();//清除预约信息
         auto date=trm::ReserveDate(information[1]);
         reserveBase[date.month][date.week][date.date][information[2]] = ToStr(ToNum(reserveBase[date.month][date.week][date.date][information[2]]) + 1);//将可预约数量加一
-        if(!clientBase[trm::IdAndPhone{information[3],information[4]}][information[1]].Size())
+        if(!clientBase[information[3]][information[1]].Size())
         {
-            clientBase[trm::IdAndPhone{information[3],information[4]}][information[1]].Remove();//清除用户预约信息
+            clientBase[information[3]][information[1]].Remove();//清除用户预约信息
         }
         return {trm::rpl::SUCC};
     }
@@ -97,7 +97,7 @@ trm::Information ssys::ReserveSystem::CancelReserve(const trm::Information& info
 trm::Information ssys::ReserveSystem::CheckReserveStatus(const trm::Information& information) noexcept
 {
     assert(information[0] == trm::rqs::CHECK_RESERVE_STATUS); // Procession not matched.
-    auto reserve=clientBase[trm::IdAndPhone{information[3],information[4]}][information[1]][information[2]];
+    auto reserve=clientBase[information[3]][information[1]][information[2]];
     if(reserve.Exists())//检查是否存在预约信息
     {
         return {trm::rpl::SUCC,information[1],information[2],reserve};
@@ -113,11 +113,11 @@ trm::Information ssys::ReserveSystem::CheckReserveStatusList(const trm::Informat
     assert(information[0] == trm::rqs::CHECK_RESERVE_STATUS_LIST); // Procession not matched.
     trm::Information reserveList;
     reserveList.push_back(trm::rpl::SUCC);
-    if(!clientBase[trm::IdAndPhone{information[1],information[2]}].Size())//检查是否存在预约信息
+    if(!clientBase[information[1]].Size())//检查是否存在预约信息
     {
         return {trm::rpl::FAIL,trm::rpl::NO_RESERVE_EXISTS};
     }
-    for(auto [date,reserve]:clientBase[trm::IdAndPhone{information[1],information[2]}])
+    for(auto [date,reserve]:clientBase[information[1]])
     {
         for(auto [time,status]:reserve)
         {
@@ -189,11 +189,11 @@ trm::Information ssys::ReserveSystem::AdmModifyReserveStatus(const trm::Informat
     if (accessReply[0] != trm::rpl::YES) {
         return {trm::rpl::ACCESS_DENIED};
     }
-    if(ToStr(clientBase[trm::IdAndPhone{information[3],information[4]}][information[5]][information[6]])=="")//检查是否存在预约信息
+    if(ToStr(clientBase[information[3]][information[4]][information[5]])=="")//检查是否存在预约信息
     {
         return {trm::rpl::FAIL,trm::rpl::NO_MATCH_RESERVE};
     }
-    clientBase[trm::IdAndPhone{information[3],information[4]}][information[5]][information[6]] = "This Reserve Have Used";// 修改预约状态
+    clientBase[information[3]][information[4]][information[5]] = "This Reserve Have Used";// 修改预约状态
     return {trm::rpl::SUCC};
 }
 

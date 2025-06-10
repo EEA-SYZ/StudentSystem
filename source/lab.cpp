@@ -1520,7 +1520,14 @@ void lab::EnterReserve::Logic(ui::Screen *screen) noexcept
         relbtn->Enable();
     });
     cfbtn1->SetClickCallback(_UI_CALLBACK_{
-        SwitchTo(new lab::Cancel);
+        if(rtime=="")
+        {
+            SwitchTo(new lab::ReserveStatusList);
+        }
+        else
+        {
+            SwitchTo(new lab::Cancel);
+        }
     });
     cfbtn2->SetClickCallback(_UI_CALLBACK_{
         SwitchTo(new lab::ReserveStatusList);
@@ -1553,7 +1560,7 @@ void lab::EnterReserve::Logic(ui::Screen *screen) noexcept
         SwitchTo(new lab::AdmCancelReserve);
     });
     modifybtn1->SetClickCallback(_UI_CALLBACK_{
-        SwitchTo(new lab::AdmCancelReserve);
+        SwitchTo(new lab::AdmCancelReserve());
     });
     modifybtn2->SetClickCallback(_UI_CALLBACK_{
         SwitchTo(new lab::AdmModifyReserve);
@@ -2567,7 +2574,7 @@ void lab::AdmCancelReserve::Load(ui::Screen *screen) noexcept
                             auto dlabel2 =new ui::Label;{
                                 dlabel2->AddTo(vdbox2);
                                 dlabel2->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                                dlabel2->SetContent("星期");
+                                dlabel2->SetContent("周数");
                             }
                             dinput2 = new ui::InputBox;{
                             dinput2->AddTo(vdbox2);
@@ -2582,7 +2589,7 @@ void lab::AdmCancelReserve::Load(ui::Screen *screen) noexcept
                             auto dlabel3 =new ui::Label;{
                                 dlabel3->AddTo(vdbox3);
                                 dlabel3->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
-                                dlabel3->SetContent("日期");
+                                dlabel3->SetContent("星期几");
                             }
                             dinput3 = new ui::InputBox;{
                             dinput3->AddTo(vdbox3);
@@ -2737,10 +2744,24 @@ void lab::AdmCancelReserve::Logic(ui::Screen *screen) noexcept
                 glabel->SetContent("服务端未响应，请检查后重试");
             }
             else if(reply[0] == trm::rpl::NO ) {
-                glabel->SetContent("待撤销和修改的预约不存在");
+                if(fromModify)
+                {
+                    glabel->SetContent("待修改的预约不存在");
+                }
+                else
+                {
+                    glabel->SetContent("待撤销的预约不存在");
+                }
             }
             else if(reply[0] == trm::rpl::ACCESS_DENIED) {
-                glabel->SetContent("无撤消预约权限"); // 不对
+                if(fromModify)
+                {
+                    glabel->SetContent("无修改预约权限");
+                }
+                else
+                {
+                    glabel->SetContent("无撤消预约权限"); 
+                }
             }
             else {
                 label0->SetContent("日期:"+reply[1]);

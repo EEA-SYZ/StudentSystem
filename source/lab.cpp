@@ -35,6 +35,9 @@ void lab::EnterCourse::Load(ui::Screen *screen) noexcept
                 input = new ui::InputBox;{
                     input->AddTo(hbox1);
                     input->SetPreset(ui::Control::Preset::FILL_FROM_END);//private
+                    input->SetLengthLimit(6);
+                    input->SetContentLimit(ui::InputBox::ContentLimit::ALLOW_SPECIAL_CHARACTERS_ONLY);
+                    input->SetSpecialCharacters(ui::InputBox::NUMBER+ui::InputBox::LOWER_LETTER+ui::InputBox::UPPER_LETTER);
                 }
                 auto hbtnbox1 = new ui::HorizontalBox();{
                     hbtnbox1->AddTo(hbox1);
@@ -62,31 +65,36 @@ void lab::EnterCourse::Load(ui::Screen *screen) noexcept
                 addbtn->AddTo(flat);
                 addbtn->SetPreset(ui::Control::Preset::WRAP_AT_CENTER);
                 addbtn->SetVAnchor(25);
+                addbtn->SetHAnchor(10);
                 addbtn->SetCaption("我要选课");//private
             }
             debtn = new ui::Button;{
                 debtn->AddTo(flat);
                 debtn->SetPreset(ui::Control::Preset::WRAP_AT_CENTER);
                 debtn->SetVAnchor(35);
+                debtn->SetHAnchor(10);
                 debtn->SetCaption("我要退课");//private
             }
             btn2 = new ui::Button;{
-                    btn2->AddTo(flat);
-                    btn2->SetPreset(ui::Control::Preset::WRAP_AT_CENTER);
-                    btn2->SetCaption("查看全部课程");//private
-                    btn2->SetVAnchor(70);
+                btn2->AddTo(flat);
+                btn2->SetPreset(ui::Control::Preset::WRAP_AT_CENTER);
+                btn2->SetCaption("查看全部课程");//private
+                btn2->SetVAnchor(70);
+                btn2->SetHAnchor(10);
             }
             admaddbtn = new ui::Button; {
                 admaddbtn->AddTo(flat);
                 admaddbtn->SetPreset(ui::Control::Preset::WRAP_AT_CENTER);
                 admaddbtn->SetCaption("我要开课");//private
                 admaddbtn->SetVAnchor(45);
+                admaddbtn->SetHAnchor(10);
             }
             admdebtn = new ui::Button; {
                 admdebtn->AddTo(flat);
                 admdebtn->SetPreset(ui::Control::Preset::WRAP_AT_CENTER);
                 admdebtn->SetCaption("我要撤课");//private
                 admdebtn->SetVAnchor(55);
+                admdebtn->SetHAnchor(10);
             }
             hbox = new ui::HorizontalBox; {
                 hbox->AddTo(flat);
@@ -135,6 +143,10 @@ void lab::EnterCourse::Logic(ui::Screen *screen) noexcept
     });
     input->SetInputCallback(_UI_CALLBACK_{
         coursename = input->GetText();
+        if(coursename.length()!=6) {
+            limit->SetContent("课程代号只能是由字母和数字组成的六个字符");
+            limit->Show();
+        }
     });
     input->SetBeginCallback(_UI_CALLBACK_{
         glabel->SetContent("请输入课程代号");
@@ -394,6 +406,9 @@ void lab::AddCourse::Load(ui::Screen *screen) noexcept
                 input = new ui::InputBox; {
                     input->AddTo(hbox1);
                     input->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                    input->SetLengthLimit(6);
+                    input->SetContentLimit(ui::InputBox::ContentLimit::ALLOW_SPECIAL_CHARACTERS_ONLY);
+                    input->SetSpecialCharacters(ui::InputBox::NUMBER+ui::InputBox::LOWER_LETTER+ui::InputBox::UPPER_LETTER);
                 }
                 btn1 = new ui::Button; {
                     btn1->AddTo(hbox1);
@@ -457,13 +472,17 @@ void lab::AddCourse::Logic(ui::Screen *screen) noexcept
     });
     input->SetInputCallback(_UI_CALLBACK_{
         coursename = input->GetText();
+        if(coursename.length()!=6) {
+            limit->SetContent("课程代号只能是由字母和数字组成的六个字符");
+            limit->Show();
+        }
     });
     input->SetBeginCallback(_UI_CALLBACK_{
         glabel->SetContent("请输入课程代号");
         glabel->Show();
     });
     input->SetExceedLimitCallback(_UI_CALLBACK_{
-        limit->SetContent("课程代号只能是由字母和数字组成的五个字符");
+        limit->SetContent("课程代号只能是由字母和数字组成的六个字符");
         limit->Show();
     });
     btn1->SetClickCallback(_UI_CALLBACK_{
@@ -541,6 +560,10 @@ void lab::DeleteCourse::Load(ui::Screen *screen) noexcept
                 input = new ui::InputBox; {
                     input->AddTo(hbox1);//inputting
                     input->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                    input->SetLengthLimit(6);
+                    input->SetContentLimit(ui::InputBox::ContentLimit::ALLOW_SPECIAL_CHARACTERS_ONLY);
+                    input->SetSpecialCharacters(ui::InputBox::NUMBER+ui::InputBox::LOWER_LETTER+ui::InputBox::UPPER_LETTER);
+
                 }
                 btn1 = new ui::Button; {
                     btn1->AddTo(hbox1);
@@ -604,13 +627,17 @@ void lab::DeleteCourse::Logic(ui::Screen *screen) noexcept
     });
     input->SetInputCallback(_UI_CALLBACK_{
         coursename = input->GetText();
+        if(coursename.length()!=6) {
+            limit->SetContent("课程代号只能是由字母和数字组成的六个字符");
+            limit->Show();
+        }
     });
     input->SetBeginCallback(_UI_CALLBACK_{
         glabel->SetContent("请输入课程代号");
         glabel->Show();
     });
     input->SetExceedLimitCallback(_UI_CALLBACK_{
-        limit->SetContent("课程代号只能是由字母和数字组成的五个字符");
+        limit->SetContent("课程代号只能是由字母和数字组成的六个字符");
         limit->Show();
     });
     btn1->SetClickCallback(_UI_CALLBACK_{
@@ -692,6 +719,10 @@ void lab::AdmAddCourse::Load(ui::Screen *screen) noexcept
                     input1 = new ui::InputBox; {
                         input1->AddTo(hbox1);
                         input1->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                        input1->SetLengthLimit(6);
+                        input1->SetContentLimit(ui::InputBox::ContentLimit::ALLOW_SPECIAL_CHARACTERS_ONLY);
+                        input1->SetSpecialCharacters(ui::InputBox::NUMBER+ui::InputBox::LOWER_LETTER+ui::InputBox::UPPER_LETTER);
+
                     }
                 }    
                 auto hbox2 = new ui::HorizontalBox; {
@@ -797,13 +828,17 @@ void lab::AdmAddCourse::Logic(ui::Screen *screen) noexcept
     });
     input1->SetInputCallback(_UI_CALLBACK_{
         coursename = input1->GetText();
+        if(coursename.length()!=6) {
+            limit->SetContent("课程代号只能是由字母和数字组成的六个字符");
+            limit->Show();
+        }
     });
     input1->SetBeginCallback(_UI_CALLBACK_{
         glabel->SetContent("请输入课程代号");
         glabel->Show();
     });
     input1->SetExceedLimitCallback(_UI_CALLBACK_{
-        limit->SetContent("课程代号只能是由字母和数字组成的五个字符");
+        limit->SetContent("课程代号只能是由字母和数字组成的六个字符");
         limit->Show();
     });
     input2->SetInputCallback(_UI_CALLBACK_{
@@ -899,6 +934,10 @@ void lab::AdmDeleteCourse::Load(ui::Screen *screen) noexcept
                 input = new ui::InputBox; {
                     input->AddTo(hbox1);//inputting
                     input->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                    input->SetLengthLimit(6);
+                    input->SetContentLimit(ui::InputBox::ContentLimit::ALLOW_SPECIAL_CHARACTERS_ONLY);
+                    input->SetSpecialCharacters(ui::InputBox::NUMBER+ui::InputBox::LOWER_LETTER+ui::InputBox::UPPER_LETTER);
+
                 }
                 btn1 = new ui::Button; {
                     btn1->AddTo(hbox1);
@@ -962,13 +1001,17 @@ void lab::AdmDeleteCourse::Logic(ui::Screen *screen) noexcept
     });
     input->SetInputCallback(_UI_CALLBACK_{
         coursename = input->GetText();
+        if(coursename.length()!=6) {
+            limit->SetContent("课程代号只能是由字母和数字组成的六个字符");
+            limit->Show();
+        }
     });
     input->SetBeginCallback(_UI_CALLBACK_{
         glabel->SetContent("请输入课程代号");
         glabel->Show();
     });
     input->SetExceedLimitCallback(_UI_CALLBACK_{
-        limit->SetContent("课程代号只能是由字母和数字组成的五个字符");
+        limit->SetContent("课程代号只能是由字母和数字组成的六个字符");
         limit->Show();
     });
     btn1->SetClickCallback(_UI_CALLBACK_{
@@ -1379,6 +1422,9 @@ void lab::EnterReserve::Load(ui::Screen *screen) noexcept
                     idinput = new ui::InputBox;{
                         idinput->AddTo(hinput3);
                         idinput->SetPreset(ui::Control::Preset::FILL_FROM_CENTER); // private
+                        idinput->SetLengthLimit(18);
+                        idinput->SetContentLimit(ui::InputBox::ContentLimit::ALLOW_SPECIAL_CHARACTERS_ONLY);
+                        idinput->SetSpecialCharacters(ui::InputBox::NUMBER+'X');
                     }
                 }
                 auto hinput4 =new ui::HorizontalBox();{
@@ -1395,6 +1441,9 @@ void lab::EnterReserve::Load(ui::Screen *screen) noexcept
                     phinput =new ui::InputBox;{
                         phinput->AddTo(hinput4);
                         phinput->SetPreset(ui::Control::Preset::FILL_FROM_CENTER); // private
+                        phinput->SetLengthLimit(11);
+                        phinput->SetContentLimit(ui::InputBox::ContentLimit::ALLOW_SPECIAL_CHARACTERS_ONLY);
+                        phinput->SetSpecialCharacters(ui::InputBox::NUMBER);
                     }
                 } // idandphoneglabel
                 limit2 = new ui::Label;{
@@ -1473,6 +1522,11 @@ void lab::EnterReserve::Logic(ui::Screen *screen) noexcept
     }
     idinput->SetInputCallback(_UI_CALLBACK_{
         idandphone.id=idinput->GetText();
+        if(idandphone.id.length() !=18)
+        {
+            limit2->SetContent("身份证号只能是18位数字或17位数字加字母X");
+            limit2->Show();
+        }
     });
     idinput->SetBeginCallback(_UI_CALLBACK_{
         glabel->SetContent("请输入身份证号");
@@ -1484,6 +1538,11 @@ void lab::EnterReserve::Logic(ui::Screen *screen) noexcept
     });
     phinput->SetInputCallback(_UI_CALLBACK_{
         idandphone.phone=phinput->GetText();
+        if(idandphone.phone.length() !=11)
+        {
+            limit2->SetContent("手机号只能是11位数字");
+            limit2->Show();
+        }
     });
     phinput->SetBeginCallback(_UI_CALLBACK_{
         glabel->SetContent("请输入手机号");
@@ -1933,6 +1992,9 @@ void lab::Request::Load(ui::Screen *screen) noexcept
                     idinput = new ui::InputBox;{
                         idinput->AddTo(hinput3);
                         idinput->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                        idinput->SetLengthLimit(18);
+                        idinput->SetContentLimit(ui::InputBox::ContentLimit::ALLOW_SPECIAL_CHARACTERS_ONLY);
+                        idinput->SetSpecialCharacters(ui::InputBox::NUMBER+'X');
                     }
                 }
                 hinput4 =new ui::HorizontalBox();{
@@ -1949,6 +2011,9 @@ void lab::Request::Load(ui::Screen *screen) noexcept
                     phinput =new ui::InputBox;{
                         phinput->AddTo(hinput4);
                         phinput->SetPreset(ui::Control::Preset::FILL_FROM_CENTER); // private
+                        phinput->SetLengthLimit(11);
+                        phinput->SetContentLimit(ui::InputBox::ContentLimit::ALLOW_SPECIAL_CHARACTERS_ONLY);
+                        phinput->SetSpecialCharacters(ui::InputBox::NUMBER);
                     }
                 }
                 cfbtn=new ui::Button;{
@@ -2001,6 +2066,11 @@ void lab::Request::Logic(ui::Screen *screen) noexcept
     });
     idinput->SetInputCallback(_UI_CALLBACK_{
         idandphone.id = idinput->GetText();
+        if(idandphone.id.length() !=18)
+        {
+            limit->SetContent("身份证号只能是18位数字或17位数字加字母X");
+            limit->Show();
+        }
     });
     idinput->SetBeginCallback(_UI_CALLBACK_{
         label->SetContent("请输入身份证号");
@@ -2012,6 +2082,11 @@ void lab::Request::Logic(ui::Screen *screen) noexcept
     });
     phinput->SetInputCallback(_UI_CALLBACK_{
         idandphone.phone = phinput->GetText();
+        if(idandphone.phone.length() !=11)
+        {
+            limit->SetContent("手机号只能是11位数字");
+            limit->Show();
+        }
     });
     phinput->SetBeginCallback(_UI_CALLBACK_{
         label->SetContent("请输入手机号");
@@ -2164,6 +2239,9 @@ void lab::Cancel::Load(ui::Screen *screen) noexcept
                     idinput = new ui::InputBox;{
                         idinput->AddTo(hinput3);
                         idinput->SetPreset(ui::Control::Preset::FILL_FROM_CENTER); // private
+                        idinput->SetLengthLimit(18);
+                        idinput->SetContentLimit(ui::InputBox::ContentLimit::ALLOW_SPECIAL_CHARACTERS_ONLY);
+                        idinput->SetSpecialCharacters(ui::InputBox::NUMBER+'X');
                     }
                 }
                 hinput4 =new ui::HorizontalBox();{
@@ -2180,6 +2258,9 @@ void lab::Cancel::Load(ui::Screen *screen) noexcept
                     phinput =new ui::InputBox;{
                         phinput->AddTo(hinput4);
                         phinput->SetPreset(ui::Control::Preset::FILL_FROM_CENTER); // private
+                        phinput->SetLengthLimit(11);
+                        phinput->SetContentLimit(ui::InputBox::ContentLimit::ALLOW_SPECIAL_CHARACTERS_ONLY);
+                        phinput->SetSpecialCharacters(ui::InputBox::NUMBER);
                     }
                 }
                 cfbtn=new ui::Button;{
@@ -2233,6 +2314,10 @@ void lab::Cancel::Logic(ui::Screen *screen) noexcept
     });
     idinput->SetInputCallback(_UI_CALLBACK_{
         idandphone.id = idinput->GetText();
+        if(idandphone.id.length() != 18) {
+            limit->SetContent("身份证号只能是18位数字或17位数字加字母X");
+            limit->Show();
+        }
     });
     idinput->SetBeginCallback(_UI_CALLBACK_{
         label->SetContent("请输入身份证号");
@@ -2244,6 +2329,10 @@ void lab::Cancel::Logic(ui::Screen *screen) noexcept
     });
     phinput->SetInputCallback(_UI_CALLBACK_{
         idandphone.phone = phinput->GetText();
+        if(idandphone.phone.length() != 11) {
+            limit->SetContent("手机号只能是11位数字");
+            limit->Show();
+        }
     });
     phinput->SetBeginCallback(_UI_CALLBACK_{
         label->SetContent("请输入手机号");
@@ -2350,6 +2439,9 @@ void lab::AdmAddReserve::Load(ui::Screen *screen) noexcept
                     input1 = new ui::InputBox; {
                         input1->AddTo(hbox1);
                         input1->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                        input1->SetContentLimit(ui::InputBox::ContentLimit::ALLOW_SPECIAL_CHARACTERS_ONLY);
+                        input1->SetSpecialCharacters("1234567890");
+                        input1->SetLengthLimit(2); // 只允许输入一个或两个字符
                     }
                 }    
                 auto hbox2 = new ui::HorizontalBox; {
@@ -2366,6 +2458,9 @@ void lab::AdmAddReserve::Load(ui::Screen *screen) noexcept
                     input2 = new ui::InputBox; {
                         input2->AddTo(hbox2);
                         input2->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                        input2->SetContentLimit(ui::InputBox::ContentLimit::ALLOW_SPECIAL_CHARACTERS_ONLY);
+                        input2->SetSpecialCharacters("1234");
+                        input2->SetLengthLimit(1); // 只允许输入一个字符
                     }
                 }
                 auto hbox3 = new ui::HorizontalBox; {
@@ -2382,6 +2477,9 @@ void lab::AdmAddReserve::Load(ui::Screen *screen) noexcept
                     input3 = new ui::InputBox; {
                         input3->AddTo(hbox3);
                         input3->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                        input3->SetContentLimit(ui::InputBox::ContentLimit::ALLOW_SPECIAL_CHARACTERS_ONLY);
+                        input3->SetSpecialCharacters("1234567");
+                        input3->SetLengthLimit(1); // 只允许输入一个字符
                     }
                 }
                 auto hbox4 = new ui::HorizontalBox; {
@@ -2398,6 +2496,9 @@ void lab::AdmAddReserve::Load(ui::Screen *screen) noexcept
                     input4 = new ui::InputBox; {
                         input4->AddTo(hbox4);
                         input4->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                        input4->SetContentLimit(ui::InputBox::ContentLimit::ALLOW_SPECIAL_CHARACTERS_ONLY);
+                        input4->SetSpecialCharacters(ui::InputBox::NUMBER+ui::InputBox::LOWER_LETTER+ui::InputBox::UPPER_LETTER+':');
+                        input4->SetLengthLimit(5); 
                     }
                 }
                 auto hbox5 = new ui::HorizontalBox; {
@@ -2414,6 +2515,8 @@ void lab::AdmAddReserve::Load(ui::Screen *screen) noexcept
                     input5 = new ui::InputBox; {
                         input5->AddTo(hbox5);
                         input5->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                        input5->SetContentLimit(ui::InputBox::ContentLimit::ALLOW_SPECIAL_CHARACTERS_ONLY);
+                        input5->SetSpecialCharacters(ui::InputBox::NUMBER);
                     }
                 }
                 cfbtn = new ui::Button; {
@@ -2437,6 +2540,10 @@ void lab::AdmAddReserve::Logic(ui::Screen *screen) noexcept
         glabel->SetContent("请输入月份");
         glabel->Show();
     });
+    input1->SetExceedLimitCallback(_UI_CALLBACK_{
+        glabel->SetContent("月份只能是1-12");
+        glabel->Show();
+    });
     input2->SetInputCallback(_UI_CALLBACK_{
         rdate.week = input2->GetText();
     });
@@ -2444,11 +2551,19 @@ void lab::AdmAddReserve::Logic(ui::Screen *screen) noexcept
         glabel->SetContent("请输入周数");
         glabel->Show();
     });
+    input2->SetExceedLimitCallback(_UI_CALLBACK_{
+        glabel->SetContent("周数只能是1-4");
+        glabel->Show();
+    });
     input3->SetInputCallback(_UI_CALLBACK_{
         rdate.date = input3->GetText();
     });
     input3->SetBeginCallback(_UI_CALLBACK_{
         glabel->SetContent("请输入星期几");
+        glabel->Show();
+    });
+    input3->SetExceedLimitCallback(_UI_CALLBACK_{
+        glabel->SetContent("星期只能是1-7");
         glabel->Show();
     });
     input4->SetInputCallback(_UI_CALLBACK_{
@@ -2460,11 +2575,19 @@ void lab::AdmAddReserve::Logic(ui::Screen *screen) noexcept
         glabel->SetContent("请输入时间");
         glabel->Show();
     });
+    input4->SetExceedLimitCallback(_UI_CALLBACK_{
+        glabel->SetContent("时间格式错误");
+        glabel->Show();
+    });
     input5->SetInputCallback(_UI_CALLBACK_{
         rnum = input5->GetText();
     });
     input5->SetBeginCallback(_UI_CALLBACK_{
         glabel->SetContent("请输入可预约人数");
+        glabel->Show();
+    });
+    input5->SetExceedLimitCallback(_UI_CALLBACK_{
+        glabel->SetContent("可预约人数只能是数字");
         glabel->Show();
     });
     cfbtn->SetClickCallback(_UI_CALLBACK_{
@@ -2518,6 +2641,13 @@ void lab::AdmCancelReserve::Load(ui::Screen *screen) noexcept
                 backbtn->SetPreset(ui::Control::Preset::WRAP_AT_FRONT);
                 backbtn->SetCaption("返回");//private
             }
+            limit=new ui::Label;{
+                limit->AddTo(flat);
+                limit->SetHPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                limit->SetVPreset(ui::Control::Preset::WRAP_AT_FRONT);
+                limit->SetVAnchor(5);
+                limit->SetHSize(70);//private
+            }//private
             glabel =new ui::Label;{
                 glabel->AddTo(flat);
                 glabel->SetHPreset(ui::Control::Preset::WRAP_AT_CENTER);
@@ -2562,8 +2692,11 @@ void lab::AdmCancelReserve::Load(ui::Screen *screen) noexcept
                                 dlabel1->SetContent("月份");
                             }
                             dinput1 = new ui::InputBox;{
-                            dinput1->AddTo(vdbox1);
-                            dinput1->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                                dinput1->AddTo(vdbox1);
+                                dinput1->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                                dinput1->SetContentLimit(ui::InputBox::ContentLimit::ALLOW_SPECIAL_CHARACTERS_ONLY);
+                                dinput1->SetSpecialCharacters("1234567890");
+                                dinput1->SetLengthLimit(2); // 只允许输入一个或两个字符
                             }
                         }
                         auto vdbox2 =new ui::VerticalBox;{
@@ -2577,8 +2710,11 @@ void lab::AdmCancelReserve::Load(ui::Screen *screen) noexcept
                                 dlabel2->SetContent("周数");
                             }
                             dinput2 = new ui::InputBox;{
-                            dinput2->AddTo(vdbox2);
-                            dinput2->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                                dinput2->AddTo(vdbox2);
+                                dinput2->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                                dinput2->SetContentLimit(ui::InputBox::ContentLimit::ALLOW_SPECIAL_CHARACTERS_ONLY);
+                                dinput2->SetSpecialCharacters("1234");
+                                dinput2->SetLengthLimit(1); // 只允许输入一个字符
                             }
                         }
                         auto vdbox3 =new ui::VerticalBox;{
@@ -2592,8 +2728,11 @@ void lab::AdmCancelReserve::Load(ui::Screen *screen) noexcept
                                 dlabel3->SetContent("星期几");
                             }
                             dinput3 = new ui::InputBox;{
-                            dinput3->AddTo(vdbox3);
-                            dinput3->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                                dinput3->AddTo(vdbox3);
+                                dinput3->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                                dinput3->SetContentLimit(ui::InputBox::ContentLimit::ALLOW_SPECIAL_CHARACTERS_ONLY);
+                                dinput3->SetSpecialCharacters("1234567");
+                                dinput3->SetLengthLimit(1); // 只允许输入一个字符
                             }
                         }
                     }
@@ -2611,6 +2750,9 @@ void lab::AdmCancelReserve::Load(ui::Screen *screen) noexcept
                         input2 =new ui::InputBox;{
                             input2->AddTo(hinput2);
                             input2->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                            input2->SetContentLimit(ui::InputBox::ContentLimit::ALLOW_SPECIAL_CHARACTERS_ONLY);
+                            input2->SetSpecialCharacters(ui::InputBox::NUMBER+ui::InputBox::LOWER_LETTER+ui::InputBox::UPPER_LETTER+':');
+                            input2->SetLengthLimit(5); // 
                         }
                     }
                 }
@@ -2710,6 +2852,10 @@ void lab::AdmCancelReserve::Logic(ui::Screen *screen) noexcept
         glabel->SetContent("请输入月份");
         glabel->Show();
     });
+    dinput1->SetExceedLimitCallback(_UI_CALLBACK_{
+        limit->SetContent("月份只能是1-12");
+        limit->Show();
+    });
     dinput2->SetInputCallback(_UI_CALLBACK_{
         rdate.week = dinput2->GetText();
     });
@@ -2717,12 +2863,20 @@ void lab::AdmCancelReserve::Logic(ui::Screen *screen) noexcept
         glabel->SetContent("请输入周数");
         glabel->Show();
     });
+    dinput2->SetExceedLimitCallback(_UI_CALLBACK_{
+        limit->SetContent("周数只能是1-4");
+        limit->Show();
+    });
     dinput3->SetInputCallback(_UI_CALLBACK_{
         rdate.date = dinput3->GetText();
     });
     dinput3->SetBeginCallback(_UI_CALLBACK_{
         glabel->SetContent("请输入星期几");
         glabel->Show();
+    });
+    dinput3->SetExceedLimitCallback(_UI_CALLBACK_{
+        limit->SetContent("星期只能是1-7");
+        limit->Show();
     });
     input2->SetInputCallback(_UI_CALLBACK_{
         auto temp = input2->GetText();
@@ -2732,6 +2886,10 @@ void lab::AdmCancelReserve::Logic(ui::Screen *screen) noexcept
     input2->SetBeginCallback(_UI_CALLBACK_{
         glabel->SetContent("请输入时间");
         glabel->Show();
+    });
+    input2->SetExceedLimitCallback(_UI_CALLBACK_{
+        limit->SetContent("时间格式错误");
+        limit->Show();
     });
     btn1->SetClickCallback(_UI_CALLBACK_{
         if(ToStr(rdate)==""||rtime=="") {
@@ -2861,6 +3019,13 @@ void lab::AdmModifyReserve::Load(ui::Screen *screen) noexcept
                     backbtn->SetPreset(ui::Control::Preset::WRAP_AT_FRONT);
                     backbtn->SetCaption("返回");//private
                 }
+                limit = new ui::Label; {
+                    limit->AddTo(vbox1);
+                    limit->SetHPreset(ui::Control::Preset::FILL_FROM_CENTER);
+                    limit->SetVPreset(ui::Control::Preset::WRAP_AT_FRONT);
+                    limit->SetVAnchor(5);
+                    limit->SetHSize(70);//private
+                }//private
                 glabel = new ui::Label; {
                     glabel->AddTo(vbox1);
                     glabel->SetHPreset(ui::Control::Preset::FILL_FROM_CENTER);
@@ -2881,6 +3046,9 @@ void lab::AdmModifyReserve::Load(ui::Screen *screen) noexcept
                     input1 = new ui::InputBox; {
                         input1->AddTo(hbox1);
                         input1->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                        input1->SetContentLimit(ui::InputBox::ContentLimit::ALLOW_SPECIAL_CHARACTERS_ONLY);
+                        input1->SetSpecialCharacters("1234567890");
+                        input1->SetLengthLimit(2); // 只允许输入一个或两个字符
                     }
                 }    
                 auto hbox2 = new ui::HorizontalBox; {
@@ -2897,6 +3065,9 @@ void lab::AdmModifyReserve::Load(ui::Screen *screen) noexcept
                     input2 = new ui::InputBox; {
                         input2->AddTo(hbox2);
                         input2->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                        input2->SetContentLimit(ui::InputBox::ContentLimit::ALLOW_SPECIAL_CHARACTERS_ONLY);
+                        input2->SetSpecialCharacters("1234");
+                        input2->SetLengthLimit(1); // 只允许输入一个字符
                     }
                 }
                 auto hbox3 = new ui::HorizontalBox; {
@@ -2913,6 +3084,9 @@ void lab::AdmModifyReserve::Load(ui::Screen *screen) noexcept
                     input3 = new ui::InputBox; {
                         input3->AddTo(hbox3);
                         input3->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                        input3->SetContentLimit(ui::InputBox::ContentLimit::ALLOW_SPECIAL_CHARACTERS_ONLY);
+                        input3->SetSpecialCharacters("1234567");
+                        input3->SetLengthLimit(1); // 只允许输入一个字符
                     }
                 }
                 auto hbox4 = new ui::HorizontalBox; {
@@ -2929,6 +3103,9 @@ void lab::AdmModifyReserve::Load(ui::Screen *screen) noexcept
                     input4 = new ui::InputBox; {
                         input4->AddTo(hbox4);
                         input4->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                        input4->SetContentLimit(ui::InputBox::ContentLimit::ALLOW_SPECIAL_CHARACTERS_ONLY);
+                        input4->SetSpecialCharacters(ui::InputBox::NUMBER+ui::InputBox::LOWER_LETTER+ui::InputBox::UPPER_LETTER+':');
+                        input4->SetLengthLimit(5); // 只允许输入一个或两个字符
                     }
                 }
                 auto hbox5 = new ui::HorizontalBox; {
@@ -2945,6 +3122,9 @@ void lab::AdmModifyReserve::Load(ui::Screen *screen) noexcept
                     input5 = new ui::InputBox; {
                         input5->AddTo(hbox5);
                         input5->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                        input5->SetContentLimit(ui::InputBox::ContentLimit::ALLOW_SPECIAL_CHARACTERS_ONLY);
+                        input5->SetSpecialCharacters(ui::InputBox::NUMBER+'X');
+                        input5->SetLengthLimit(18); // 只允许输入一个或两个字符
                     }
                 }
                 auto hbox6 = new ui::HorizontalBox; {
@@ -2961,6 +3141,9 @@ void lab::AdmModifyReserve::Load(ui::Screen *screen) noexcept
                     input6 = new ui::InputBox; {
                         input6->AddTo(hbox6);
                         input6->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);//private
+                        input6->SetContentLimit(ui::InputBox::ContentLimit::ALLOW_SPECIAL_CHARACTERS_ONLY);
+                        input6->SetSpecialCharacters(ui::InputBox::NUMBER);
+                        input6->SetLengthLimit(11); // 只允许输入一个或两个字符
                     }
                 }
                 cfbtn = new ui::Button; {
@@ -3006,17 +3189,35 @@ void lab::AdmModifyReserve::Logic(ui::Screen *screen) noexcept
     });
     input5->SetInputCallback(_UI_CALLBACK_{
         idandphone.id = input5->GetText();
+        if(idandphone.id.length()!=18)
+        {
+            limit->SetContent("身份证号必须为18位的数字或者17位的数字加X");
+            limit->Show();
+        }
     });
     input5->SetBeginCallback(_UI_CALLBACK_{
         glabel->SetContent("请输入身份证号");
         glabel->Show();
     });
+    input5->SetExceedLimitCallback(_UI_CALLBACK_{
+        limit->SetContent("身份证号必须为18位数字或17位的数字加X");
+        limit->Show();
+    });
     input6->SetInputCallback(_UI_CALLBACK_{
         idandphone.phone = input6->GetText();
+        if(idandphone.phone.length()!=11)
+        {
+            limit->SetContent("手机号长度必须为11位");
+            limit->Show();
+        }
     });
     input6->SetBeginCallback(_UI_CALLBACK_{
         glabel->SetContent("请输入手机号");
         glabel->Show();
+    });
+    input6->SetExceedLimitCallback(_UI_CALLBACK_{
+        limit->SetContent("手机号只能是11位数字");
+        limit->Show();
     });
     backbtn->SetClickCallback(_UI_CALLBACK_{
         SwitchTo(new lab::EnterReserve);

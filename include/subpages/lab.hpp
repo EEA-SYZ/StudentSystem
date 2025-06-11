@@ -252,6 +252,7 @@ protected:
 };
 class AdmCancelReserve : public PageBase {
 private:
+    ui::Label *limit = nullptr;
     ui::InputBox *dinput1 = nullptr;
     ui::InputBox *dinput2 = nullptr;
     ui::InputBox *dinput3 = nullptr;
@@ -293,11 +294,12 @@ private:
     ui::Label *glabel = nullptr;
     ui::Button *cfbtn = nullptr;
     ui::InputBox *input6 = nullptr;
+    ui::Label *limit = nullptr;
 protected:
     void Load(ui::Screen *screen) noexcept override;
     void Logic(ui::Screen *screen) noexcept override;
     void Ready(ui::Screen *screen) noexcept override;
 }; // 修改状态
-} 
+}
 
 #endif // __LAB_HPP__

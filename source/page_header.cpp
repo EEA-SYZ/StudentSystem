@@ -81,7 +81,7 @@ clpg::PageBase *clpg::PageBase::RunOn(ui::Screen *screen) noexcept
             if (reply[0] == trm::rpl::YES) {
                 SwitchTo(new eea::Login);
             } else {
-                assert(false); // Unexpected reply.
+                assert(false); // Deny.
             }
         } else if (success == 0) {
             SwitchTo(new eea::Retry);

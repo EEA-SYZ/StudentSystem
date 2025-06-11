@@ -432,7 +432,7 @@ void eea::AccountDelail::Logic(ui::Screen *screen) noexcept
                 screen->FreeAllVisible();
                 screen->ShowAll();
             } else {
-                assert(false); // Unexpected reply.
+                assert(false); // Deny.
             }
         } else if (success == 0) {
             MessageBox(screen, "服务端未响应，请检查后重试");
@@ -460,7 +460,7 @@ void eea::EnterCanteen::Logic(ui::Screen *screen) noexcept
 void eea::EnterCanteen::Ready(ui::Screen *screen) noexcept
 {
     screen->HideAll();
-    MessageBox(screen, "尽情期待");
+    MessageBox(screen, "敬请期待");
     screen->FreeAllVisible();
     SwitchTo(new MainPage);
 }
@@ -601,7 +601,7 @@ void eea::Login::Logic(ui::Screen *screen) noexcept
                     tips->SetContent("帐号或密码错误。");
                     tips->Show();
                 } else {
-                    assert(false); // Unexpected reply.
+                    assert(false); // Deny.
                 }    
             } else if (success == 0) {
                 screen->HideAll();
@@ -964,7 +964,7 @@ void eea::EnterMailSystem::Logic(ui::Screen *screen) noexcept
                     screen->FreeAllVisible();
                     screen->ShowAll();
                 } else {
-                    assert(false); // Unexpected reply.
+                    assert(false); // Deny.
                 }
             } else if (success == 0) {
                 MessageBox(screen, "服务端未响应，请检查后重试");
@@ -1001,7 +1001,7 @@ void eea::EnterMailSystem::Logic(ui::Screen *screen) noexcept
                     screen->FreeAllVisible();
                     screen->ShowAll();
                 } else {
-                    assert(false); // Unexpected reply.
+                    assert(false); // Deny.
                 }
             } else if (success == 0) {
                 MessageBox(screen, "服务端未响应，请检查后重试");
@@ -1050,7 +1050,7 @@ void eea::EnterMailSystem::Logic(ui::Screen *screen) noexcept
             screen->FreeAllVisible();
             screen->ShowAll();
         } else {
-            assert(false); // Unexpected reply.
+            assert(false); // Deny.
         }
     };
 
@@ -1176,7 +1176,7 @@ void eea::WriteMail::Logic(ui::Screen *screen) noexcept
                 screen->FreeAllVisible();
                 screen->ShowAll();
             } else {
-                assert(false); // Unexpected reply.
+                assert(false); // Deny.
             }
         } else if (success == 0) {
             screen->HideAll();
@@ -1223,7 +1223,7 @@ void eea::WriteMail::Ready(ui::Screen *screen) noexcept
             screen->FreeAllVisible();
             SwitchTo(new EnterMailSystem);
         } else {
-            assert(false); // Unexpected reply.
+            assert(false); // Deny.
         }
     } else if (success == 0) {
         screen->HideAll();
@@ -1743,6 +1743,7 @@ void eea::EnterAccManage::Load(ui::Screen *screen) noexcept
                         refreshBtn->SetVPreset(ui::Control::Preset::FILL_FROM_CENTER);
                     }
                 }
+                verBox->Add(new ui::Spacer(0, 100));
                 labelCenter = new ui::Center; {
                     labelCenter->AddTo(verBox);
                     labelCenter->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
@@ -1774,6 +1775,7 @@ void eea::EnterAccManage::Load(ui::Screen *screen) noexcept
                 {
                     ;
                 }
+                verBox->Add(new ui::Spacer(0, 100));
                 btnBox = new ui::HorizontalBox; {
                     btnBox->AddTo(verBox);
                     btnBox->SetHPreset(ui::Control::Preset::FILL_FROM_CENTER);

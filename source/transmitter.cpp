@@ -121,7 +121,7 @@ std::pair<bool, std::vector<trm::Request>> trm::GetRequests(const std::string &s
     }
     for (const auto &fileName : files) {
         if (!file::DeleteFile(file::GetFilePath(self, fileName))) {
-            assert(false); // Unexcepted error
+            return {false, {}};
         }
     }
     return {true, std::move(result)};
@@ -147,7 +147,7 @@ std::pair<bool, trm::Information> trm::PollReply(const std::string &self, int id
         return {false, {}};
     }
     if (!file::DeleteFile(filePath)) {
-        assert(false); // Unexcepted error
+        return {false, {}};
     }
     return {true, Decode(Decrypt(read))};
 }

@@ -34,7 +34,6 @@ int main() noexcept
 {
     freopen("log.txt", "at", stdout);
     if (!trm::Initialize(_SELF_)) {
-        assert(false); // Unexpected failure.
         std::cout << "Init failed." << std::endl;
     }
     std::cout << "Server started." << std::endl;
@@ -55,7 +54,7 @@ int main() noexcept
                 continue;
             }
             for (const auto &request : ok_requests.second) {
-                assert(request.content.size() > 0); // Unexpected information size.
+                assert(request.content.size() > 0); // Deny.
                 if (request.content[0] == trm::rqs::CHECK_ONLINE) {
                     std::cout << trm::TimestampToString(ToStr(trm::GetTimestamp())) << " GET:\n\t";
                     for (auto each : request.content) {

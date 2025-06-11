@@ -9,15 +9,15 @@
 #define _LAB_
 #define _VIO_VV_
 
-#ifdef D__EEA_
+#ifdef D_EEA
     #undef _LAB_
     #undef _VIO_VV_
 #endif
-#ifdef D__LAB_
+#ifdef D_LAB
     #undef _EEA_
     #undef _VIO_VV_
 #endif
-#ifdef D__VIO_VV_
+#ifdef D_VIO_VV
     #undef _EEA_
     #undef _LAB_
 #endif
@@ -204,7 +204,7 @@ int main()
     f(ssys.RestoreNewBook({trm::rqs::RESTORE_BOOK, "adm", "123", "189-9-39-998899-2", "5", Book{"189-9-39-998899-2", "ccad45", "1925-12", "科学技术", "图书馆208", {"李某"}}}));
     f(ssys.RemoveBook({trm::rqs::REMOVE_BOOK, "adm", "123", "999-9-99-999999-1", "10"}));
     f(ssys.ModifyBookInfo({trm::rqs::MODIFY_BOOK_INFO, "adm", "123", "999-9-99-999999-1", Book{"123-4-56-789101-1", "++--", "2025-04", "科学技术", "图书馆208", {"张某某"}}}));
-    auto reply = ssys.SearchBook({trm::rqs::SEARCH_BOOK, "abc", "", "true", "true"});
+    reply = ssys.SearchBook({trm::rqs::SEARCH_BOOK, "abc", "", "true", "true"});
     for (trm::Book book : reply) {
         std::cout << book.bookIsbn << " " << book.bookName << " ";
         for (auto &author : book.bookAuthor) {

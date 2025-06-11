@@ -51,7 +51,6 @@ const trm::AccessInfo &trm::GetAccessInfo(Access access) noexcept
         accessInfo[Access::ADM_MODIFTY_RESERVE_NUMBER] = {"修改预约数量", "管理员账户可以修改预约数量。"};
         accessInfo[Access::ADM_MODIFY_RESERVE_STATUS] = {"修改预约状态", "管理员账户可以修改预约状态。"};
         accessInfo[Access::ADM_SEARCH_RESERVE] = {"查找预约", "管理员账户可以查找预约。"};
-
         /**********************************
          * @attention VIO_VV 请在此处添加。*
          * ********************************
@@ -123,7 +122,7 @@ std::pair<bool, std::vector<trm::Request>> trm::GetRequests(const std::string &s
     }
     for (const auto &fileName : files) {
         if (!file::DeleteFile(file::GetFilePath(self, fileName))) {
-            assert(false); // Unexcepted error
+            return {false, {}};
         }
     }
     return {true, std::move(result)};
@@ -149,7 +148,7 @@ std::pair<bool, trm::Information> trm::PollReply(const std::string &self, int id
         return {false, {}};
     }
     if (!file::DeleteFile(filePath)) {
-        assert(false); // Unexcepted error
+        return {false, {}};
     }
     return {true, Decode(Decrypt(read))};
 }

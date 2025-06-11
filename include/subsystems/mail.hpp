@@ -27,8 +27,8 @@ public:
     trm::Information GetUnreadMessageNumber(const trm::Information &information) noexcept;
     trm::Information DeleteMessage(const trm::Information &information) noexcept;
     trm::Information ClearMessage(const trm::Information &information) noexcept;
-    trm::Information DeleteMessageOfOthers(const trm::Information &information) noexcept; // TODO
-    trm::Information ClearMessageOfOthers(const trm::Information &information) noexcept; // TODO
+    trm::Information DeleteMessageOfOthers(const trm::Information &information) noexcept;
+    trm::Information ClearMessageOfOthers(const trm::Information &information) noexcept;
     trm::Information ResetMailSystem(const trm::Information &information) noexcept;
 protected:
     MailSystem() noexcept;

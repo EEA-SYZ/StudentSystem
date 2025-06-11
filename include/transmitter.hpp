@@ -352,13 +352,7 @@ namespace rqs{
 #pragma endregion
 
 #pragma region 在线饭堂系统
-    /**
-     * @brief 开设店铺。
-     * @param code 学工号
-     * @param password 密码
-     *  // TODO
-     */
-    const std::string SET_A_RESTAURANT = _AS_"SET_A_RESTAURANT";
+    ;
 #pragma endregion
 
 #pragma region 预约入校系统

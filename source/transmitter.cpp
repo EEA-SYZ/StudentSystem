@@ -49,7 +49,9 @@ const trm::AccessInfo &trm::GetAccessInfo(Access access) noexcept
         accessInfo[Access::ADM_DELETE_RESERVE_TIME] = {"删除预约时间", "管理员账户可以删除预约时间。"};
         accessInfo[Access::ADM_ADD_RESERVE_TIME] = {"增加预约时间", "管理员账户可以增加预约时间。"};
         accessInfo[Access::ADM_MODIFTY_RESERVE_NUMBER] = {"修改预约数量", "管理员账户可以修改预约数量。"};
-
+        accessInfo[Access::ADM_MODIFY_RESERVE_STATUS] = {"修改预约状态", "管理员账户可以修改预约状态。"};
+        accessInfo[Access::ADM_SEARCH_RESERVE] = {"查找预约", "管理员账户可以查找预约。"};
+        
         /**********************************
          * @attention VIO_VV 请在此处添加。*
          * ********************************

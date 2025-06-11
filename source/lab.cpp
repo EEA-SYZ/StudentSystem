@@ -143,10 +143,7 @@ void lab::EnterCourse::Logic(ui::Screen *screen) noexcept
     });
     input->SetInputCallback(_UI_CALLBACK_{
         coursename = input->GetText();
-        if(coursename.length()!=6) {
-            limit->SetContent("课程代号只能是由字母和数字组成的六个字符");
-            limit->Show();
-        }
+        
     });
     input->SetBeginCallback(_UI_CALLBACK_{
         glabel->SetContent("请输入课程代号");
@@ -161,6 +158,10 @@ void lab::EnterCourse::Logic(ui::Screen *screen) noexcept
        if(coursename=="") 
        {
         SwitchTo(new lab::CourseList);
+       }
+       else if(coursename.length()!=6) {
+           limit->SetContent("课程代号只能是由字母和数字组成的六个字符");
+           limit->Show();
        }
        else
        {
@@ -187,10 +188,11 @@ void lab::EnterCourse::Logic(ui::Screen *screen) noexcept
             label2->SetContent("上课老师:"+coursereply[1]);
             label3->SetContent("上课地点:"+coursereply[2]);
             label4->SetContent("上课周数:"+coursereply[3]);
-            label4->SetMaxCount(5);//待改善
+            label4->SetMaxCount(15);//待改善
+            label4->SetFontSize(30);
         }});
         }
-            btn1->Enable();
+        btn1->Enable();
         }
     );
     addbtn->SetClickCallback(_UI_CALLBACK_{
@@ -368,7 +370,8 @@ void lab::CourseList::Ready(ui::Screen *screen) noexcept
                         label4->AddTo(hbox);
                         label4->SetPreset(ui::Control::Preset::FILL_FROM_CENTER);
                         label4->SetContent("上课周数:"+inforeply[3]);
-                        label4->SetMaxCount(20);//private
+                        label4->SetMaxCount(10);//private
+                        label4->SetFontSize(30);
                     }
                 }
             } 
@@ -472,10 +475,7 @@ void lab::AddCourse::Logic(ui::Screen *screen) noexcept
     });
     input->SetInputCallback(_UI_CALLBACK_{
         coursename = input->GetText();
-        if(coursename.length()!=6) {
-            limit->SetContent("课程代号只能是由字母和数字组成的六个字符");
-            limit->Show();
-        }
+        
     });
     input->SetBeginCallback(_UI_CALLBACK_{
         glabel->SetContent("请输入课程代号");
@@ -492,6 +492,12 @@ void lab::AddCourse::Logic(ui::Screen *screen) noexcept
             glabel->SetContent("课程代号不能为空");
             glabel->Show();
         }
+        else if(coursename.length()!=6) {
+            limit->SetContent("课程代号只能是由字母和数字组成的六个字符");
+            limit->Show();
+        }
+        else
+        {
         Listen(new trm::Sender({trm::rqs::ADD_COURSE,username,password,coursename}),_SD_CALLBACK_{
         if (reply[0] == trm::rpl::TIME_OUT) {
             glabel->SetContent("服务端未响应，请检查后重试");
@@ -516,6 +522,7 @@ void lab::AddCourse::Logic(ui::Screen *screen) noexcept
                 addbtn->Enable();
             }
         });
+        }
         btn1->Enable();
     });
     addbtn->SetClickCallback(_UI_CALLBACK_{
@@ -627,10 +634,7 @@ void lab::DeleteCourse::Logic(ui::Screen *screen) noexcept
     });
     input->SetInputCallback(_UI_CALLBACK_{
         coursename = input->GetText();
-        if(coursename.length()!=6) {
-            limit->SetContent("课程代号只能是由字母和数字组成的六个字符");
-            limit->Show();
-        }
+        
     });
     input->SetBeginCallback(_UI_CALLBACK_{
         glabel->SetContent("请输入课程代号");
@@ -647,6 +651,12 @@ void lab::DeleteCourse::Logic(ui::Screen *screen) noexcept
             glabel->SetContent("课程代号不能为空");
             glabel->Show();
         }
+        else if(coursename.length()!=6) {
+            limit->SetContent("课程代号只能是由字母和数字组成的六个字符");
+            limit->Show();
+        }
+        else
+        {
         Listen(new trm::Sender({trm::rqs::DELETE_COURSE,username,password,coursename}),_SD_CALLBACK_{
             if (reply[0] == trm::rpl::TIME_OUT) {
                 glabel->SetContent("服务端未响应，请检查后重试");
@@ -667,6 +677,7 @@ void lab::DeleteCourse::Logic(ui::Screen *screen) noexcept
                 debtn->Enable();
             }
         });
+        }
         btn1->Enable();
     }); // 这里的debtn其实是伪debtn
     debtn->SetClickCallback(_UI_CALLBACK_{
@@ -828,10 +839,7 @@ void lab::AdmAddCourse::Logic(ui::Screen *screen) noexcept
     });
     input1->SetInputCallback(_UI_CALLBACK_{
         coursename = input1->GetText();
-        if(coursename.length()!=6) {
-            limit->SetContent("课程代号只能是由字母和数字组成的六个字符");
-            limit->Show();
-        }
+        
     });
     input1->SetBeginCallback(_UI_CALLBACK_{
         glabel->SetContent("请输入课程代号");
@@ -875,6 +883,10 @@ void lab::AdmAddCourse::Logic(ui::Screen *screen) noexcept
         if(coursename==""||courseinfo.courseName==""||courseinfo.teacher==""||courseinfo.location==""||courseinfo.weeks.empty()) {
             glabel->SetContent("请填写完整信息");
             glabel->Show();
+        }
+        else if(coursename.length()!=6) {
+            limit->SetContent("课程代号只能是由字母和数字组成的六个字符");
+            limit->Show();
         }
         else {
             Listen(new trm::Sender({trm::rqs::ADM_ADD_COUR,username,password,coursename,courseinfo}),_SD_CALLBACK_{
@@ -1001,10 +1013,7 @@ void lab::AdmDeleteCourse::Logic(ui::Screen *screen) noexcept
     });
     input->SetInputCallback(_UI_CALLBACK_{
         coursename = input->GetText();
-        if(coursename.length()!=6) {
-            limit->SetContent("课程代号只能是由字母和数字组成的六个字符");
-            limit->Show();
-        }
+        
     });
     input->SetBeginCallback(_UI_CALLBACK_{
         glabel->SetContent("请输入课程代号");
@@ -1021,6 +1030,12 @@ void lab::AdmDeleteCourse::Logic(ui::Screen *screen) noexcept
             glabel->SetContent("课程代号不能为空");
             glabel->Show();
         }
+        else if(coursename.length()!=6) {
+            limit->SetContent("课程代号只能是由字母和数字组成的六个字符");
+            limit->Show();
+        }
+        else
+        {
         Listen(new trm::Sender({trm::rqs::ADM_DELETE_COUR,username,password,coursename}),
         _SD_CALLBACK_{ // debug
             if (reply[0] == trm::rpl::TIME_OUT) {
@@ -1042,6 +1057,7 @@ void lab::AdmDeleteCourse::Logic(ui::Screen *screen) noexcept
                 debtn->Enable();
             }
         });
+        }
         btn1->Enable();
     }); // 这里的debtn其实是伪debtn
     debtn->SetClickCallback(_UI_CALLBACK_{
@@ -1375,30 +1391,35 @@ void lab::EnterReserve::Load(ui::Screen *screen) noexcept
                 btn2->SetPreset(ui::Control::Preset::WRAP_AT_CENTER);
                 btn2->SetVAnchor(45);
                 btn2->SetCaption("查看预约列表"); // 可能要稍作修改
+                btn2->SetHAnchor(10);
             } //private
             admaddbtn = new ui::Button;{
                 admaddbtn->AddTo(flat);
                 admaddbtn->SetPreset(ui::Control::Preset::WRAP_AT_CENTER);
                 admaddbtn->SetVAnchor(55);
                 admaddbtn->SetCaption("添设预约"); // private
+                admaddbtn->SetHAnchor(10);
             }
             admdebtn = new ui::Button;{
                 admdebtn->AddTo(flat);
                 admdebtn->SetPreset(ui::Control::Preset::WRAP_AT_CENTER);
                 admdebtn->SetVAnchor(65);
                 admdebtn->SetCaption("撤销预约"); // private
+                admdebtn->SetHAnchor(10);
             }
             modifybtn1 = new ui::Button;{
                 modifybtn1->AddTo(flat);
                 modifybtn1->SetPreset(ui::Control::Preset::WRAP_AT_CENTER);
                 modifybtn1->SetVAnchor(75);
                 modifybtn1->SetCaption("修改预约信息"); // private
+                modifybtn1->SetHAnchor(10);
             }
             modifybtn2 = new ui::Button;{
                 modifybtn2->AddTo(flat);
                 modifybtn2->SetPreset(ui::Control::Preset::WRAP_AT_CENTER);
                 modifybtn2->SetVAnchor(85);
                 modifybtn2->SetCaption("修改用户预约"); // private
+                modifybtn2->SetHAnchor(10);
             }
             vinput =new ui::VerticalBox();{
                 vinput->AddTo(flat);
@@ -1522,11 +1543,7 @@ void lab::EnterReserve::Logic(ui::Screen *screen) noexcept
     }
     idinput->SetInputCallback(_UI_CALLBACK_{
         idandphone.id=idinput->GetText();
-        if(idandphone.id.length() !=18)
-        {
-            limit2->SetContent("身份证号只能是18位数字或17位数字加字母X");
-            limit2->Show();
-        }
+        
     });
     idinput->SetBeginCallback(_UI_CALLBACK_{
         glabel->SetContent("请输入身份证号");
@@ -1538,11 +1555,7 @@ void lab::EnterReserve::Logic(ui::Screen *screen) noexcept
     });
     phinput->SetInputCallback(_UI_CALLBACK_{
         idandphone.phone=phinput->GetText();
-        if(idandphone.phone.length() !=11)
-        {
-            limit2->SetContent("手机号只能是11位数字");
-            limit2->Show();
-        }
+        
     });
     phinput->SetBeginCallback(_UI_CALLBACK_{
         glabel->SetContent("请输入手机号");
@@ -1562,6 +1575,16 @@ void lab::EnterReserve::Logic(ui::Screen *screen) noexcept
         {
             SwitchTo(new lab::ReserveTimeList);
         }
+        else if(idandphone.id.length() !=18)
+        {
+            limit2->SetContent("身份证号只能是18位数字或17位数字加字母X");
+            limit2->Show();
+        }
+        else if(idandphone.phone.length() !=11)
+        {
+            limit2->SetContent("手机号只能是11位数字");
+            limit2->Show();
+        }
         else
         {
             SwitchTo(new lab::Request);
@@ -1579,9 +1602,23 @@ void lab::EnterReserve::Logic(ui::Screen *screen) noexcept
         relbtn->Enable();
     });
     cfbtn1->SetClickCallback(_UI_CALLBACK_{
-        if(rtime=="")
+        if(ToStr(rdate)=="")
+        {
+            glabel->SetContent("日期不能为空");
+        }
+        else if(rtime=="")
         {
             SwitchTo(new lab::ReserveStatusList);
+        }
+        else if(idandphone.id.length() !=18)
+        {
+            limit2->SetContent("身份证号只能是18位数字或17位数字加字母X");
+            limit2->Show();
+        }
+        else if(idandphone.phone.length() !=11)
+        {
+            limit2->SetContent("手机号只能是11位数字");
+            limit2->Show();
         }
         else
         {
@@ -1589,7 +1626,20 @@ void lab::EnterReserve::Logic(ui::Screen *screen) noexcept
         }
     });
     cfbtn2->SetClickCallback(_UI_CALLBACK_{
-        SwitchTo(new lab::ReserveStatusList);
+        if(idandphone.id.length() !=18)
+        {
+            limit2->SetContent("身份证号只能是18位数字或17位数字加字母X");
+            limit2->Show();
+        }
+        else if(idandphone.phone.length() !=11)
+        {
+            limit2->SetContent("手机号只能是11位数字");
+            limit2->Show();
+        }
+        else
+        {
+            SwitchTo(new lab::ReserveStatusList);
+        }
     });
     relbtn->SetClickCallback(_UI_CALLBACK_{
         vinput->HideAll();
@@ -1619,7 +1669,7 @@ void lab::EnterReserve::Logic(ui::Screen *screen) noexcept
         SwitchTo(new lab::AdmCancelReserve);
     });
     modifybtn1->SetClickCallback(_UI_CALLBACK_{
-        SwitchTo(new lab::AdmCancelReserve());
+        SwitchTo(new lab::AdmCancelReserve(true));
     });
     modifybtn2->SetClickCallback(_UI_CALLBACK_{
         SwitchTo(new lab::AdmModifyReserve);
@@ -2066,11 +2116,7 @@ void lab::Request::Logic(ui::Screen *screen) noexcept
     });
     idinput->SetInputCallback(_UI_CALLBACK_{
         idandphone.id = idinput->GetText();
-        if(idandphone.id.length() !=18)
-        {
-            limit->SetContent("身份证号只能是18位数字或17位数字加字母X");
-            limit->Show();
-        }
+        
     });
     idinput->SetBeginCallback(_UI_CALLBACK_{
         label->SetContent("请输入身份证号");
@@ -2082,11 +2128,7 @@ void lab::Request::Logic(ui::Screen *screen) noexcept
     });
     phinput->SetInputCallback(_UI_CALLBACK_{
         idandphone.phone = phinput->GetText();
-        if(idandphone.phone.length() !=11)
-        {
-            limit->SetContent("手机号只能是11位数字");
-            limit->Show();
-        }
+        
     });
     phinput->SetBeginCallback(_UI_CALLBACK_{
         label->SetContent("请输入手机号");
@@ -2103,6 +2145,18 @@ void lab::Request::Logic(ui::Screen *screen) noexcept
         hbox->HideAll();
     });
     cfbtn->SetClickCallback(_UI_CALLBACK_{
+        if(idandphone.id.length() !=18)
+        {
+            limit->SetContent("身份证号只能是18位数字或17位数字加字母X");
+            limit->Show();
+        }
+        else if(idandphone.phone.length() !=11)
+        {
+            limit->SetContent("手机号只能是11位数字");
+            limit->Show();
+        }
+        else
+        {
         cfbtn->Enable(false);
         vbox->HideAll();
         hbox->ShowAll();
@@ -2130,6 +2184,7 @@ void lab::Request::Logic(ui::Screen *screen) noexcept
                rpllabel->SetContent("预约成功"); 
             }
         });
+        }
     });
     clbtn->SetClickCallback(_UI_CALLBACK_{
         vbox->HideAll();
@@ -2314,10 +2369,7 @@ void lab::Cancel::Logic(ui::Screen *screen) noexcept
     });
     idinput->SetInputCallback(_UI_CALLBACK_{
         idandphone.id = idinput->GetText();
-        if(idandphone.id.length() != 18) {
-            limit->SetContent("身份证号只能是18位数字或17位数字加字母X");
-            limit->Show();
-        }
+        
     });
     idinput->SetBeginCallback(_UI_CALLBACK_{
         label->SetContent("请输入身份证号");
@@ -2329,10 +2381,7 @@ void lab::Cancel::Logic(ui::Screen *screen) noexcept
     });
     phinput->SetInputCallback(_UI_CALLBACK_{
         idandphone.phone = phinput->GetText();
-        if(idandphone.phone.length() != 11) {
-            limit->SetContent("手机号只能是11位数字");
-            limit->Show();
-        }
+        
     });
     phinput->SetBeginCallback(_UI_CALLBACK_{
         label->SetContent("请输入手机号");
@@ -2349,6 +2398,20 @@ void lab::Cancel::Logic(ui::Screen *screen) noexcept
         hbox->HideAll();
     });
     cfbtn->SetClickCallback(_UI_CALLBACK_{
+        if(idandphone.id.length()!=18)
+        {
+            limit->SetContent("身份证号只能是18位数字或17位数字加字母X");
+        }
+        else if(idandphone.phone.length() != 11) {
+            limit->SetContent("手机号只能是11位数字");
+            limit->Show();
+        }
+        else if(idandphone.id==""||idandphone.phone=="")
+        {
+            glabel->SetContent("身份证号或者手机号不能为空");
+        }
+        else
+        {
         cfbtn->Enable(false);
         vbox->HideAll();
         hbox->ShowAll();
@@ -2372,6 +2435,7 @@ void lab::Cancel::Logic(ui::Screen *screen) noexcept
                rpllabel->SetContent("取消成功"); 
             }
         });
+        }
     });
 }
 
@@ -3189,11 +3253,7 @@ void lab::AdmModifyReserve::Logic(ui::Screen *screen) noexcept
     });
     input5->SetInputCallback(_UI_CALLBACK_{
         idandphone.id = input5->GetText();
-        if(idandphone.id.length()!=18)
-        {
-            limit->SetContent("身份证号必须为18位的数字或者17位的数字加X");
-            limit->Show();
-        }
+        
     });
     input5->SetBeginCallback(_UI_CALLBACK_{
         glabel->SetContent("请输入身份证号");
@@ -3205,11 +3265,7 @@ void lab::AdmModifyReserve::Logic(ui::Screen *screen) noexcept
     });
     input6->SetInputCallback(_UI_CALLBACK_{
         idandphone.phone = input6->GetText();
-        if(idandphone.phone.length()!=11)
-        {
-            limit->SetContent("手机号长度必须为11位");
-            limit->Show();
-        }
+        
     });
     input6->SetBeginCallback(_UI_CALLBACK_{
         glabel->SetContent("请输入手机号");
@@ -3226,6 +3282,16 @@ void lab::AdmModifyReserve::Logic(ui::Screen *screen) noexcept
         if(ToStr(rdate) == "" || rtime == "" || idandphone.id == "" || idandphone.phone == "") {
             glabel->SetContent("请填写完整信息");
             glabel->Show();
+        }
+        else if(idandphone.id.length()!=18)
+        {
+            limit->SetContent("身份证号必须为18位的数字或者17位的数字加X");
+            limit->Show();
+        }
+        else if(idandphone.phone.length()!=11)
+        {
+            limit->SetContent("手机号长度必须为11位");
+            limit->Show();
         }
         else {
             Listen(new trm::Sender({trm::rqs::ADM_MODIFY_RESERVE_STATUS,username,password,idandphone,rdate,rtime}), _SD_CALLBACK_{

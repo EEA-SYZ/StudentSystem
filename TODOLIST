@@ -19,3 +19,4 @@
 【扩展】 CourseList 课程列表 
 【扩展】 客户端导出、下载等功能
 【扩展】 MailSys、AccSys 搜索功能、排序功能、按标签筛选功能
+【更新】 使用 makefile 或者 cmake

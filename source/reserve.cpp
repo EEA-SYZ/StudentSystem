@@ -98,7 +98,7 @@ trm::Information ssys::ReserveSystem::CheckReserveStatus(const trm::Information&
 {
     assert(information[0] == trm::rqs::CHECK_RESERVE_STATUS); // Procession not matched.
     auto reserve=clientBase[information[3]][information[1]][information[2]];
-    if(reserve.Exists())//检查是否存在预约信息
+    if(reserve.Exists()&&ToStr(reserve)!="")//检查是否存在预约信息
     {
         return {trm::rpl::SUCC,information[1],information[2],reserve};
     } // idandphone?
@@ -136,7 +136,7 @@ trm::Information ssys::ReserveSystem::AdmModifyReserveNumber(const trm::Informat
     }
     auto dateInformation=trm::ReserveDate(information[3]);
     auto reserveList=reserveBase[dateInformation.month][dateInformation.week][dateInformation.date][information[4]];//找到指定日期的预约信息
-    if(!reserveList.Exists())//检查是否存在预约信息
+    if(!reserveList.Exists()||ToStr(reserveList)=="")//检查是否存在预约信息
     {
         return {trm::rpl::FAIL,trm::rpl::NO_MATCH_TIME};
     }
@@ -153,7 +153,7 @@ trm::Information ssys::ReserveSystem::AdmAddReserveTime(const trm::Information& 
     }
     auto dateInformation=trm::ReserveDate(information[3]);
     auto reserveList=reserveBase[dateInformation.month][dateInformation.week][dateInformation.date];//找到指定日期的预约信息
-    if(reserveList[information[4]].Exists())
+    if(reserveList[information[4]].Exists()&&ToStr(reserveList[information[4]])!="")
     {
         return {trm::rpl::FAIL,trm::rpl::TIME_HAVE_SET};
     }
@@ -170,7 +170,7 @@ trm::Information ssys::ReserveSystem::AdmDeleteReserveTime(const trm::Informatio
     }
     auto dateInformation=trm::ReserveDate(information[3]);
     auto reserveList=reserveBase[dateInformation.month][dateInformation.week][dateInformation.date];//找到指定日期的预约信息
-    if(!reserveList[information[4]].Exists())//检查是否存在预约信息
+    if(!reserveList[information[4]].Exists()||ToStr(reserveList[information[4]])=="")//检查是否存在预约信息
     {
         return {trm::rpl::FAIL,trm::rpl::NO_MATCH_TIME};
     }

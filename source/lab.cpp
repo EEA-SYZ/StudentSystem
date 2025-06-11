@@ -1575,16 +1575,6 @@ void lab::EnterReserve::Logic(ui::Screen *screen) noexcept
         {
             SwitchTo(new lab::ReserveTimeList);
         }
-        else if(idandphone.id.length() !=18)
-        {
-            limit2->SetContent("身份证号只能是18位数字或17位数字加字母X");
-            limit2->Show();
-        }
-        else if(idandphone.phone.length() !=11)
-        {
-            limit2->SetContent("手机号只能是11位数字");
-            limit2->Show();
-        }
         else
         {
             SwitchTo(new lab::Request);

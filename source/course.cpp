@@ -13,7 +13,7 @@ trm::Information ssys::CourseSystem::SearchCourseInformation(const trm::Informat
 {
     assert(information[0] == trm::rqs::SEARCH_COURSE_INFORMATION); // Procession not matched.
     auto it= studentBase[information[1]];//找到指定学生的课程列表
-    if(it[information[2]].Exists())
+    if(it[information[2]].Exists()&&ToStr(it[information[2]])!="")
        {
            return {trm::rpl::YES,information[2],it[information[2]]};
        }
@@ -44,11 +44,11 @@ trm::Information ssys::CourseSystem::AddCourse(const trm::Information& informati
     if (accessReply[0] != trm::rpl::YES) {
         return {trm::rpl::ACCESS_DENIED};
     }
-    if (studentBase[information[1]][information[3]].Exists()) 
+    if (studentBase[information[1]][information[3]].Exists()&&ToStr(studentBase[information[1]][information[3]])!="") 
       {
         return {trm::rpl::FAIL,trm::rpl::COURSE_EXISTS};
       }
-    if(!courseBase[information[3]].Exists()&&ToStr(courseBase[information[3]])=="")
+    if(!courseBase[information[3]].Exists()||ToStr(courseBase[information[3]])=="")
       {
         return {trm::rpl::FAIL,trm::rpl::NO_MATCH_COURSE};
       }
@@ -65,12 +65,14 @@ trm::Information ssys::CourseSystem::DeleteCourse(const trm::Information& inform
     if (accessReply[0] != trm::rpl::YES) {
         return {trm::rpl::ACCESS_DENIED};
     }
-    if(!studentBase[information[1]][information[3]].Exists()) 
+    if(!studentBase[information[1]][information[3]].Exists()|| ToStr(studentBase[information[1]][information[3]])=="") 
       {
         return {trm::rpl::FAIL,trm::rpl::NO_MATCH_COURSE};
       }
+    std::string temp= studentBase[information[1]][information[3]]; // 保存原来的课程信息
+    auto course =trm::CourseInformation{temp};
     studentBase[information[1]][information[3]].Clear();//删除课程
-    return {trm::rpl::SUCC,information[3]};
+    return {trm::rpl::SUCC,course.courseName};
 }
 
 trm::Information ssys::CourseSystem::AdmAddCour(const trm::Information& information) noexcept
@@ -80,7 +82,7 @@ trm::Information ssys::CourseSystem::AdmAddCour(const trm::Information& informat
     if (accessReply[0] != trm::rpl::YES) {
         return {trm::rpl::ACCESS_DENIED};
     }
-    if (courseBase[information[3]].Exists()&&ToStr(courseBase[information[3]])=="")
+    if (courseBase[information[3]].Exists()&&ToStr(courseBase[information[3]])!="")
       {
         return {trm::rpl::FAIL,trm::rpl::COURSE_EXISTS};
       }
@@ -95,7 +97,7 @@ trm::Information ssys::CourseSystem::AdmDeleteCour(const trm::Information& infor
     if (accessReply[0] != trm::rpl::YES) {
         return {trm::rpl::ACCESS_DENIED};
     }
-    if(!courseBase[information[3]].Exists()) 
+    if(!courseBase[information[3]].Exists()|| ToStr(courseBase[information[3]])=="") 
     {
         return {trm::rpl::FAIL,trm::rpl::NO_MATCH_COURSE};
     }

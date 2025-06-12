@@ -1497,7 +1497,14 @@ void lab::EnterReserve::Load(ui::Screen *screen) noexcept
 void lab::EnterReserve::Logic(ui::Screen *screen) noexcept
 {
     backbtn->SetClickCallback(_UI_CALLBACK_{
-        SwitchTo(new eea::MainPage);
+        if(fromLogin)
+        {
+            SwitchTo(new eea::Login);
+        }
+        else
+        {
+            SwitchTo(new eea::MainPage);
+        }
     });
     btn2->SetClickCallback(_UI_CALLBACK_{
         btn2->Hide();
@@ -1575,16 +1582,7 @@ void lab::EnterReserve::Logic(ui::Screen *screen) noexcept
         {
             SwitchTo(new lab::ReserveTimeList);
         }
-        else if(idandphone.id.length() !=18)
-        {
-            limit2->SetContent("身份证号只能是18位数字或17位数字加字母X");
-            limit2->Show();
-        }
-        else if(idandphone.phone.length() !=11)
-        {
-            limit2->SetContent("手机号只能是11位数字");
-            limit2->Show();
-        }
+        
         else
         {
             SwitchTo(new lab::Request);

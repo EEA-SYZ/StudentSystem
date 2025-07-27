@@ -656,3 +656,32 @@ SEND:
 	494GET_NOLIFY_LIST, 0, 0, notice, 
 SEND:
 	
+Server started.
+2025-07-27 22:49:10 GET:
+	35CHECK_ONLINE, 
+SEND:
+	640YES
+2025-07-27 22:49:15GET:
+	58CHECK_ACCOUNT, adm, 123, 
+SEND:
+	640YES, adm8c039e9e9dfbadf30最高管理权限name最高管理员, 
+2025-07-27 22:49:16GET:
+	507GET_NOLIFY_NUMBER, headline, news, notice, 
+SEND:
+	0, 0, 0, 
+2025-07-27 22:49:17GET:
+	494GET_NOLIFY_LIST, 0, 0, headline, 
+SEND:
+	
+2025-07-27 22:49:17GET:
+	494GET_NOLIFY_LIST, 0, 0, news, 
+SEND:
+	
+2025-07-27 22:49:17GET:
+	494GET_NOLIFY_LIST, 0, 0, notice, 
+SEND:
+	
+2025-07-27 22:49:21GET:
+	174LIST_ACCOUNT, adm, 123, 
+SEND:
+	adm, mailtest, 
